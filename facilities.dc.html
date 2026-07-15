@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Facilities — Valencia Basket UAE | All Sports Arena, Dubai</title>
+<meta name="description" content="Valencia Basket UAE trains at All Sports Arena, Dubai — full-size indoor courts, 15–20 minutes from Dubai Marina, 20 from New Dubai, 25 from Arabian Ranches.">
+<link rel="canonical" href="https://valenciabasket.ae/facilities">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@keyframes vbFadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+html, body { margin: 0; padding: 0; background: #ffffff; }
+body { font-family: 'Barlow', sans-serif; color: #070000; }
+a { color: #FF6C0E; text-decoration: none; }
+a:hover { color: #F18A00; }
+</style>
+</helmet>
+<div style="width: 100%; overflow-x: hidden; background: #ffffff">
+<dc-import name="Header" active="facilities" hint-size="100%,100px"></dc-import>
+
+<section data-screen-label="Facilities hero" style="position: relative; background: #070000; min-height: clamp(420px, 60vh, 560px); display: flex; align-items: flex-end">
+  <img src="https://images.unsplash.com/photo-1627627256672-027a4613d028?auto=format&fit=crop&w=1800&q=70" alt="Indoor basketball arena at All Sports Arena" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+  <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,0,0,0.25) 0%, rgba(7,0,0,0.85) 100%)"></div>
+  <div style="position: relative; max-width: 1200px; margin: 0 auto; width: 100%; padding: 0 clamp(20px, 5vw, 48px) clamp(48px, 6vw, 72px) clamp(20px, 5vw, 48px); box-sizing: border-box">
+    <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.3em; color: #FF6C0E; text-transform: uppercase; animation: vbFadeUp 0.6s ease both">Facilities</div>
+    <h1 style="animation: vbFadeUp 0.6s ease 0.08s both; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(42px, 6vw, 72px); line-height: 1; text-transform: uppercase; color: #ffffff; margin: 14px 0 0 0">All Sports Arena, Dubai</h1>
+    <p style="font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.8); margin: 18px 0 0 0; max-width: 560px">One home venue. Full-size indoor courts, professional flooring, and a parent-friendly setup — every session, every program.</p>
+  </div>
+</section>
+
+<section data-screen-label="Arena fact sheet" style="background: #ffffff; padding: clamp(56px, 8vw, 88px) clamp(20px, 5vw, 48px)">
+  <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: clamp(36px, 5vw, 64px); align-items: stretch">
+    <div style="min-width: 0; overflow: hidden; min-height: 340px"><img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1400&q=70" alt="Indoor hoop at All Sports Arena" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+    <div style="min-width: 0; display: flex; flex-direction: column; justify-content: center">
+      <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.28em; color: #FF6C0E; text-transform: uppercase; border-bottom: 2px solid #070000; padding-bottom: 14px">Arena fact sheet</div>
+      <sc-for list="{{ specs }}" as="s" hint-placeholder-count="5">
+        <div style="display: flex; gap: 24px; border-bottom: 1px solid #E6E4E2; padding: 18px 0">
+          <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: 0.08em; text-transform: uppercase; color: #070000; width: 150px; flex-shrink: 0">{{ s.label }}</div>
+          <div style="font-size: 15px; line-height: 1.55; color: #5B6670">{{ s.detail }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Map" style="background: #ffffff; padding: 0 clamp(20px, 5vw, 48px) clamp(56px, 8vw, 88px) clamp(20px, 5vw, 48px)">
+  <div style="max-width: 1200px; margin: 0 auto">
+    <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 16px">
+      <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(30px, 4vw, 40px); line-height: 1; text-transform: uppercase; color: #070000; margin: 0">Find the arena</h2>
+      <div style="font-size: 14px; color: #5B6670">15–20 min from Dubai Marina · 20 min from New Dubai · 25 min from Arabian Ranches · <a href="https://maps.google.com/maps?q=All+Sports+Arena+Dubai" style="font-weight: 600">Open in Google Maps</a></div>
+    </div>
+    <div style="margin-top: 24px; border: 1px solid #E6E4E2; height: clamp(300px, 40vw, 420px)">
+      <iframe src="https://maps.google.com/maps?q=All%20Sports%20Arena%20Dubai&z=13&output=embed" title="Map to All Sports Arena, Dubai" loading="lazy" style="width: 100%; height: 100%; border: 0; display: block; filter: grayscale(1) contrast(1.04)"></iframe>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Court diagram" style="background: #F7F6F5; padding: clamp(56px, 8vw, 88px) clamp(20px, 5vw, 48px)">
+  <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(40px, 6vw, 72px); align-items: center">
+    <div style="min-width: 0">
+      <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(34px, 5vw, 48px); line-height: 1; text-transform: uppercase; color: #070000; margin: 0">Built for training, set up for parents</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: #5B6670; margin: 18px 0 0 0; max-width: 480px">Courtside seating with full view of every session, easy parking, and cafés nearby. Drop off, watch, or make it your evening out — the arena works either way.</p>
+      <a href="./book-trial.dc.html" style="display: inline-block; margin-top: 28px; background: #FF6C0E; color: #ffffff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: 0.08em; text-transform: uppercase; padding: 15px 36px" style-hover="background: #F18A00; color: #ffffff; transform: translateY(-2px)">Book a Free Trial</a>
+    </div>
+    <svg viewBox="0 0 560 320" style="width: 100%; height: auto; display: block; min-width: 0" role="img" aria-label="Basketball court diagram">
+      <rect x="10" y="10" width="540" height="300" fill="#070000"></rect>
+      <rect x="24" y="24" width="512" height="272" fill="none" stroke="#FF6C0E" stroke-width="3"></rect>
+      <line x1="280" y1="24" x2="280" y2="296" stroke="#FF6C0E" stroke-width="3"></line>
+      <circle cx="280" cy="160" r="44" fill="none" stroke="#FF6C0E" stroke-width="3"></circle>
+      <rect x="24" y="104" width="80" height="112" fill="none" stroke="#FF6C0E" stroke-width="3"></rect>
+      <rect x="456" y="104" width="80" height="112" fill="none" stroke="#FF6C0E" stroke-width="3"></rect>
+      <path d="M 24 60 Q 150 160 24 260" fill="none" stroke="#FF6C0E" stroke-width="3"></path>
+      <path d="M 536 60 Q 410 160 536 260" fill="none" stroke="#FF6C0E" stroke-width="3"></path>
+      <circle cx="104" cy="160" r="5" fill="#FF6C0E"></circle>
+      <circle cx="456" cy="160" r="5" fill="#FF6C0E"></circle>
+    </svg>
+  </div>
+</section>
+
+<dc-import name="Footer" hint-size="100%,420px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      specs: [
+        { label: 'Courts', detail: 'Full-size indoor courts, FIBA-standard dimensions, professional sprung flooring.' },
+        { label: 'Climate', detail: 'Fully air-conditioned year-round — training quality is the same in August as in January.' },
+        { label: 'Parent seating', detail: 'Courtside seating with a full view of every session.' },
+        { label: 'Parking', detail: 'Free on-site parking a short walk from the court entrance.' },
+        { label: 'Getting here', detail: '15–20 min from Dubai Marina · 20 min from New Dubai · 25 min from Arabian Ranches.' },
+      ],
+      travel: [
+        { time: '15–20 min', from: 'from Dubai Marina' },
+        { time: '20 min', from: 'from New Dubai' },
+        { time: '25 min', from: 'from Arabian Ranches' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

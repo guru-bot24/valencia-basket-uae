@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "vbc-site",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8744", "--directory", "/Applications/code test - insole bot"],
+      "port": 8744
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Schools — Valencia Basket UAE | School Basketball Partnerships in Dubai</title>
+<meta name="description" content="Valencia Basket UAE partners with Dubai schools — on-campus programs, PE enrichment, after-school academies and school team coaching by FIBA-qualified staff.">
+<link rel="canonical" href="https://valenciabasket.ae/schools">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@keyframes vbFadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+html, body { margin: 0; padding: 0; background: #ffffff; }
+body { font-family: 'Barlow', sans-serif; color: #070000; }
+a { color: #FF6C0E; text-decoration: none; }
+a:hover { color: #F18A00; }
+</style>
+</helmet>
+<div style="width: 100%; overflow-x: hidden; background: #ffffff">
+<dc-import name="Header" active="schools" hint-size="100%,100px"></dc-import>
+
+<section data-screen-label="Schools hero" style="position: relative; background: #070000; padding: clamp(64px, 9vw, 100px) clamp(20px, 5vw, 48px)">
+  <img src="https://images.unsplash.com/photo-1577471488278-16eec37ffcc2?auto=format&fit=crop&w=1800&q=70" alt="School basketball court" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+  <div style="position: absolute; inset: 0; background: rgba(7,0,0,0.8)"></div>
+  <div style="position: relative; max-width: 1200px; margin: 0 auto">
+    <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.3em; color: #FF6C0E; text-transform: uppercase; animation: vbFadeUp 0.6s ease both">Schools</div>
+    <h1 style="animation: vbFadeUp 0.6s ease 0.08s both; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(42px, 6vw, 72px); line-height: 1; text-transform: uppercase; color: #ffffff; margin: 14px 0 0 0; max-width: 800px; text-wrap: balance">Bring Valencia Basket to your school</h1>
+    <p style="font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.78); margin: 20px 0 0 0; max-width: 560px">We partner with Dubai schools to deliver the club's methodology on campus — from PE enrichment to full after-school academies.</p>
+  </div>
+</section>
+
+<section data-screen-label="Partnership process" style="background: #ffffff; padding: clamp(56px, 8vw, 88px) clamp(20px, 5vw, 48px)">
+  <div style="max-width: 800px; margin: 0 auto">
+    <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(32px, 4.5vw, 44px); line-height: 1; text-transform: uppercase; color: #070000; margin: 0">How a partnership starts</h2>
+    <div style="margin-top: 44px; display: flex; flex-direction: column">
+      <sc-for list="{{ process }}" as="p" hint-placeholder-count="3">
+        <div style="display: flex; gap: clamp(20px, 4vw, 40px)">
+          <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: #FF6C0E; color: #ffffff; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px">{{ p.n }}</div>
+            <sc-if value="{{ p.line }}" hint-placeholder-val="{{ true }}"><div style="width: 3px; flex: 1; background: #E6E4E2; min-height: 40px"></div></sc-if>
+          </div>
+          <div style="padding-bottom: 36px">
+            <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; letter-spacing: 0.02em; text-transform: uppercase; color: #070000; line-height: 1.15; margin-top: 8px">{{ p.name }}</div>
+            <p style="font-size: 15.5px; line-height: 1.6; color: #5B6670; margin: 8px 0 0 0; max-width: 560px">{{ p.desc }}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="What's included" style="background: #070000; padding: clamp(44px, 6vw, 64px) clamp(20px, 5vw, 48px)">
+  <div style="max-width: 1200px; margin: 0 auto">
+    <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(26px, 3.5vw, 34px); letter-spacing: 0.03em; text-transform: uppercase; color: #ffffff">Every partnership includes</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 14px 40px; margin-top: 24px">
+      <sc-for list="{{ included }}" as="i" hint-placeholder-count="5">
+        <div style="display: flex; align-items: center; gap: 12px">
+          <div style="width: 8px; height: 8px; background: #FF6C0E; flex-shrink: 0"></div>
+          <div style="font-size: 15.5px; color: rgba(255,255,255,0.85)">{{ i }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="CTA band" style="background: #070000; padding: 52px clamp(20px, 5vw, 48px)">
+  <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 28px">
+    <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(26px, 4vw, 36px); line-height: 1.05; text-transform: uppercase; color: #ffffff; max-width: 640px">Talk to us about a partnership for 2026–27</div>
+    <a href="./contact.dc.html" style="transition: background 0.2s ease, transform 0.2s ease; display: inline-block; background: #FF6C0E; color: #ffffff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.08em; text-transform: uppercase; padding: 16px 42px" style-hover="background: #F18A00; color: #ffffff; transform: translateY(-2px)">Contact the club</a>
+  </div>
+</section>
+
+<dc-import name="Footer" hint-size="100%,420px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      process: [
+        { n: '1', name: 'Enquire', desc: 'Tell us about your school — student numbers, facilities and what you want basketball to do for your community. We reply within two working days.', line: true },
+        { n: '2', name: 'Site visit', desc: 'Our technical director visits your campus, meets your PE lead, and scopes the right format: after-school academy, PE enrichment or school team coaching.', line: true },
+        { n: '3', name: 'Term program begins', desc: 'Coaches, curriculum and equipment arrive on day one of term. We handle registration and parent communication end to end.', line: false },
+      ],
+      included: [
+        'The Valencia Basket / L\'Alqueria curriculum',
+        'FIBA-qualified, Spanish-licensed, background-checked coaches',
+        'All balls and training equipment',
+        'Player progress reports for parents',
+        'A pathway into academy programs, squads and Valencia trips',
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

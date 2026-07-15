@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Admissions — Valencia Basket UAE | How to Join &amp; Fees</title>
+<meta name="description" content="How to join Valencia Basket UAE in four steps — book a free trial, get a coach assessment, choose your program, start training. Term fees for all programs.">
+<link rel="canonical" href="https://valenciabasket.ae/admissions">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@keyframes vbFadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+html, body { margin: 0; padding: 0; background: #ffffff; }
+body { font-family: 'Barlow', sans-serif; color: #070000; }
+a { color: #FF6C0E; text-decoration: none; }
+a:hover { color: #F18A00; }
+</style>
+</helmet>
+<div style="width: 100%; overflow-x: hidden; background: #ffffff">
+<dc-import name="Header" active="admissions" hint-size="100%,100px"></dc-import>
+
+<section data-screen-label="Admissions hero" style="background: #070000; padding: clamp(56px, 8vw, 88px) clamp(20px, 5vw, 48px)">
+  <div style="max-width: 1200px; margin: 0 auto">
+    <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.3em; color: #FF6C0E; text-transform: uppercase; animation: vbFadeUp 0.6s ease both">Admissions</div>
+    <h1 style="animation: vbFadeUp 0.6s ease 0.08s both; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(42px, 6vw, 72px); line-height: 1; text-transform: uppercase; color: #ffffff; margin: 14px 0 0 0; max-width: 720px; text-wrap: balance">Joining takes four steps</h1>
+    <p style="font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.75); margin: 20px 0 0 0; max-width: 540px">Start with a free trial — there's no registration fee and no commitment until your child has trained with us.</p>
+  </div>
+</section>
+
+<section data-screen-label="Progress rail" style="background: #ffffff; padding: clamp(56px, 8vw, 88px) clamp(20px, 5vw, 48px)">
+  <div style="max-width: 1200px; margin: 0 auto">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px">
+      <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+        <div>
+          <div style="position: relative; height: 21px">
+            <div style="position: absolute; left: 0; right: {{ s.lineRight }}; top: 9px; height: 3px; background: #FF6C0E"></div>
+            <div style="position: relative; width: 21px; height: 21px; border-radius: 50%; background: #FF6C0E; border: 4px solid #ffffff; box-sizing: border-box; box-shadow: 0 0 0 1px #FF6C0E"></div>
+          </div>
+          <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; letter-spacing: 0.03em; text-transform: uppercase; color: #070000; line-height: 1; margin-top: 20px">{{ s.name }}</div>
+          <p style="font-size: 14.5px; line-height: 1.55; color: #5B6670; margin: 10px 0 0 0; max-width: 260px">{{ s.desc }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="max-width: 1200px; margin: 40px auto 0 auto">
+    <a href="./book-trial.dc.html" style="transition: background 0.2s ease, transform 0.2s ease; display: inline-block; background: #FF6C0E; color: #ffffff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 21px; letter-spacing: 0.08em; text-transform: uppercase; padding: 17px 44px" style-hover="background: #F18A00; color: #ffffff; transform: translateY(-2px)">Start — Book a Free Trial</a>
+  </div>
+</section>
+
+<section data-screen-label="Fees" style="background: #F7F6F5; padding: clamp(56px, 8vw, 88px) clamp(20px, 5vw, 48px)">
+  <div style="max-width: 900px; margin: 0 auto">
+    <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(34px, 5vw, 48px); line-height: 1; text-transform: uppercase; color: #070000; margin: 0">Term fees</h2>
+    <p style="font-size: 16px; line-height: 1.55; color: #5B6670; margin: 16px 0 0 0">Fees are per term (Sep–Dec, Jan–Mar, Mar–Jul) and include all coaching, court time and a club training kit in Term 1. Sibling discounts available.</p>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 36px; background: #ffffff">
+      <thead>
+        <tr>
+          <th style="text-align: left; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.1em; text-transform: uppercase; color: #ffffff; background: #070000; padding: 14px 20px">Program</th>
+          <th style="text-align: left; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.1em; text-transform: uppercase; color: #ffffff; background: #070000; padding: 14px 20px">Sessions / week</th>
+          <th style="text-align: left; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.1em; text-transform: uppercase; color: #ffffff; background: #070000; padding: 14px 20px">Fee / term</th>
+        </tr>
+      </thead>
+      <tbody>
+        <sc-for list="{{ fees }}" as="f" hint-placeholder-count="4">
+          <tr>
+            <td style="padding: 16px 20px; border-bottom: 1px solid #E6E4E2; font-weight: 600; color: #070000">{{ f.program }}</td>
+            <td style="padding: 16px 20px; border-bottom: 1px solid #E6E4E2; color: #070000">{{ f.sessions }}</td>
+            <td style="padding: 16px 20px; border-bottom: 1px solid #E6E4E2; color: #070000; font-weight: 600">{{ f.fee }}</td>
+          </tr>
+        </sc-for>
+      </tbody>
+    </table>
+    <p style="font-size: 14px; color: #5B6670; margin-top: 16px">Fees are indicative and confirmed at your trial session. Squad (U12–U18) fees are quoted on selection. No payment is required to book a trial.</p>
+  </div>
+</section>
+
+<section data-screen-label="FAQ strip" style="background: #ffffff; padding: clamp(56px, 8vw, 88px) clamp(20px, 5vw, 48px)">
+  <div style="max-width: 900px; margin: 0 auto">
+    <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(30px, 4.5vw, 42px); line-height: 1; text-transform: uppercase; color: #070000; margin: 0">Common questions</h2>
+    <div style="display: flex; flex-direction: column; margin-top: 28px">
+      <sc-for list="{{ faqs }}" as="q" hint-placeholder-count="4">
+        <div style="border-bottom: 1px solid #E6E4E2; padding: 20px 0">
+          <div style="font-weight: 600; font-size: 16.5px; color: #070000">{{ q.q }}</div>
+          <p style="font-size: 15px; line-height: 1.6; color: #5B6670; margin: 8px 0 0 0">{{ q.a }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<dc-import name="Footer" hint-size="100%,420px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      steps: [
+        { name: 'Trial', desc: 'Book a free session online or on WhatsApp. Your child trains with their age group.' },
+        { name: 'Placement', desc: 'Coaches assess level during the trial and recommend the right program and group.' },
+        { name: 'Register', desc: 'Confirm the program and weekly schedule that fits your family. Fees are per term.' },
+        { name: 'Train', desc: 'Kit up and join the pathway. Players can join at any point in the term.' },
+      ].map((s, i, a) => ({ ...s, lineRight: i === a.length - 1 ? 'calc(100% - 21px)' : '-20px' })),
+      fees: [
+        { program: 'Mini Basket (6–8)', sessions: '1–2', fee: 'AED 1,900' },
+        { program: 'Youth Academy (9–12)', sessions: '2–3', fee: 'AED 2,400' },
+        { program: 'Teens (13–15)', sessions: '2–3', fee: 'AED 2,600' },
+        { program: 'Elite & Teams (16–18)', sessions: '3–4', fee: 'AED 2,900' },
+      ],
+      faqs: [
+        { q: 'Can my child join mid-term?', a: 'Yes — players can join at any point, and the fee is pro-rated to the sessions remaining.' },
+        { q: 'What should they bring to the trial?', a: 'Sports clothes, indoor trainers and a water bottle. We provide the balls and bibs.' },
+        { q: 'My child has never played. Is that okay?', a: 'Completely. Groups are organised by age and level — beginners are placed with beginners.' },
+        { q: 'Are there sibling discounts?', a: 'Yes — 10% off the second sibling and beyond. Mention it at your trial.' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

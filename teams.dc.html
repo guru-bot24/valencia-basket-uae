@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Teams — Valencia Basket UAE | Competitive Squads U12–U18</title>
+<meta name="description" content="Valencia Basket UAE competitive squads — U12, U14, U16 and U18 teams competing in Dubai leagues and tournaments, selected from the academy pathway.">
+<link rel="canonical" href="https://valenciabasket.ae/teams">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@keyframes vbFadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+html, body { margin: 0; padding: 0; background: #ffffff; }
+body { font-family: 'Barlow', sans-serif; color: #070000; }
+a { color: #FF6C0E; text-decoration: none; }
+a:hover { color: #F18A00; }
+</style>
+</helmet>
+<div style="width: 100%; overflow-x: hidden; background: #ffffff">
+<dc-import name="Header" active="teams" hint-size="100%,100px"></dc-import>
+
+<section data-screen-label="Teams hero" style="position: relative; background: #070000; padding: clamp(64px, 9vw, 100px) clamp(20px, 5vw, 48px)">
+  <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?auto=format&fit=crop&w=1800&q=70" alt="Arena basketball hoop" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+  <div style="position: absolute; inset: 0; background: rgba(7,0,0,0.8)"></div>
+  <div style="position: relative; max-width: 1200px; margin: 0 auto">
+    <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.3em; color: #FF6C0E; text-transform: uppercase; animation: vbFadeUp 0.6s ease both">Teams</div>
+    <h1 style="animation: vbFadeUp 0.6s ease 0.08s both; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(42px, 6vw, 72px); line-height: 1; text-transform: uppercase; color: #ffffff; margin: 14px 0 0 0; max-width: 760px; text-wrap: balance">Wear the crest. Earn the minutes.</h1>
+    <p style="font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.78); margin: 20px 0 0 0; max-width: 560px">Our competitive squads are selected from the academy pathway and compete in Dubai leagues and tournaments — playing the Valencia way.</p>
+  </div>
+</section>
+
+<section data-screen-label="Squads" style="background: #ffffff; padding: clamp(56px, 8vw, 88px) clamp(20px, 5vw, 48px)">
+  <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px">
+    <sc-for list="{{ squads }}" as="s" hint-placeholder-count="4">
+      <div style="background: #F7F6F5; border-top: 4px solid #FF6C0E; padding: 30px 28px">
+        <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 58px; line-height: 1; color: #070000">{{ s.name }}</div>
+        <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #FF6C0E; margin-top: 8px">{{ s.ages }}</div>
+        <p style="font-size: 14.5px; line-height: 1.55; color: #5B6670; margin: 14px 0 0 0">{{ s.desc }}</p>
+        <div style="font-size: 13px; color: #5B6670; margin-top: 16px; border-top: 1px solid #E6E4E2; padding-top: 14px"><strong style="color: #070000">Trains:</strong> {{ s.trains }}</div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="max-width: 1200px; margin: 48px auto 0 auto; background: #070000; padding: clamp(28px, 4vw, 44px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 28px">
+    <div>
+      <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(26px, 3.5vw, 34px); line-height: 1.05; text-transform: uppercase; color: #ffffff">Squad selection is by trial and coach invitation</div>
+      <p style="font-size: 15px; line-height: 1.55; color: rgba(255,255,255,0.7); margin: 10px 0 0 0; max-width: 560px">Every squad player also trains in their academy program. Start with a free trial and ask the coaches about the pathway to a team.</p>
+    </div>
+    <a href="./book-trial.dc.html" style="transition: background 0.2s ease, transform 0.2s ease; display: inline-block; background: #FF6C0E; color: #ffffff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.08em; text-transform: uppercase; padding: 16px 42px" style-hover="background: #F18A00; color: #ffffff; transform: translateY(-2px)">Book a Free Trial</a>
+  </div>
+</section>
+
+<dc-import name="Footer" hint-size="100%,420px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      squads: [
+        { name: 'U12', ages: 'Born 2015–2016', desc: 'First competitive step out of the Youth Academy — structured games with a development-first scoreboard.', trains: '2 squad sessions + academy program' },
+        { name: 'U14', ages: 'Born 2013–2014', desc: 'League competition with full tactical framework. Spacing and tempo become non-negotiable.', trains: '2–3 squad sessions per week' },
+        { name: 'U16', ages: 'Born 2011–2012', desc: 'High-intensity competition and individual development plans for every roster player.', trains: '3 squad sessions per week' },
+        { name: 'U18', ages: 'Born 2009–2010', desc: 'The final stage of the pathway — competing to the club standard, with Valencia trial selection.', trains: '3–4 squad sessions per week' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

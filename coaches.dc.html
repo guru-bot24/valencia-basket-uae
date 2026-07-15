@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Coaches — Valencia Basket UAE | FIBA-Qualified Spanish Coaching Staff</title>
+<meta name="description" content="Meet the FIBA-qualified, Spanish-licensed coaching staff of Valencia Basket UAE — experience from the highest levels of European basketball.">
+<link rel="canonical" href="https://valenciabasket.ae/coaches">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@keyframes vbFadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+html, body { margin: 0; padding: 0; background: #ffffff; }
+body { font-family: 'Barlow', sans-serif; color: #070000; }
+a { color: #FF6C0E; text-decoration: none; }
+a:hover { color: #F18A00; }
+</style>
+</helmet>
+<div style="width: 100%; overflow-x: hidden; background: #ffffff">
+<dc-import name="Header" active="coaches" hint-size="100%,100px"></dc-import>
+
+<section data-screen-label="Coaches hero" style="background: #070000; padding: clamp(56px, 8vw, 88px) clamp(20px, 5vw, 48px)">
+  <div style="max-width: 1200px; margin: 0 auto">
+    <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.3em; color: #FF6C0E; text-transform: uppercase; animation: vbFadeUp 0.6s ease both">Coaches</div>
+    <h1 style="animation: vbFadeUp 0.6s ease 0.08s both; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(42px, 6vw, 72px); line-height: 1; text-transform: uppercase; color: #ffffff; margin: 14px 0 0 0; max-width: 780px; text-wrap: balance">Spanish coaching, club standards</h1>
+    <p style="font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.75); margin: 20px 0 0 0; max-width: 580px">FIBA-qualified and Spanish-licensed coaches with experience at the highest levels of European basketball, dedicated to your child's growth.</p>
+  </div>
+</section>
+
+<section data-screen-label="Staff grid" style="background: #ffffff; padding: clamp(56px, 8vw, 88px) clamp(20px, 5vw, 48px)">
+  <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px">
+    <sc-for list="{{ coaches }}" as="c" hint-placeholder-count="6">
+      <div style="border: 1px solid #E6E4E2">
+        <div style="height: 240px; background: {{ c.tileBg }}; display: flex; align-items: center; justify-content: center; overflow: hidden">
+          <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 96px; line-height: 1; letter-spacing: 0.02em; color: {{ c.tileFg }}">{{ c.monogram }}</div>
+        </div>
+        <div style="padding: 22px 24px 26px 24px">
+          <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.02em; text-transform: uppercase; color: #070000; line-height: 1">{{ c.name }}</div>
+          <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #FF6C0E; margin-top: 8px">{{ c.role }}</div>
+          <div style="font-size: 14px; color: #5B6670; margin-top: 10px">{{ c.cred }}</div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section data-screen-label="CTA band" style="background: #F7F6F5; padding: 52px clamp(20px, 5vw, 48px)">
+  <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 28px">
+    <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(26px, 4vw, 36px); line-height: 1.05; text-transform: uppercase; color: #070000; max-width: 620px">Meet the coaches at a free trial session</div>
+    <a href="./book-trial.dc.html" style="transition: background 0.2s ease, transform 0.2s ease; display: inline-block; background: #FF6C0E; color: #ffffff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.08em; text-transform: uppercase; padding: 16px 42px" style-hover="background: #F18A00; color: #ffffff; transform: translateY(-2px)">Book a Free Trial</a>
+  </div>
+</section>
+
+<dc-import name="Footer" hint-size="100%,420px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      coaches: [
+        { name: 'Head Coach', role: 'Technical Director', cred: 'FIBA-qualified · Spanish licence · Spanish club system', monogram: 'HC', tileBg: '#FF6C0E', tileFg: '#070000' },
+        { name: 'Youth Academy Coach', role: 'Ages 9–12 · Flagship', cred: 'FIBA-qualified · Spanish licence', monogram: 'YA', tileBg: '#070000', tileFg: '#FF6C0E' },
+        { name: 'Mini Basket Coach', role: 'Ages 6–8', cred: 'FIBA-qualified · Child development specialist', monogram: 'MB', tileBg: '#FF6C0E', tileFg: '#ffffff' },
+        { name: 'Teens Coach', role: 'Ages 13–15', cred: 'FIBA-qualified · Spanish licence', monogram: 'TC', tileBg: '#070000', tileFg: '#ffffff' },
+        { name: 'Performance Coach', role: 'Elite & Teams · 16–18', cred: 'FIBA-qualified · S&C certified', monogram: 'PC', tileBg: '#FF6C0E', tileFg: '#070000' },
+        { name: 'Assistant Coach', role: 'All Programs', cred: 'FIBA-qualified', monogram: 'AC', tileBg: '#070000', tileFg: '#FF6C0E' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
