@@ -4,7 +4,7 @@
     {
       "name": "vbc-site",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8744", "--directory", "/Applications/code test - insole bot"],
+      "runtimeArgs": ["-m", "http.server", "8744", "--directory", "/Users/gurudarshan/projects/website-design"],
       "port": 8744
     }
   ]
