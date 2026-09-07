@@ -1,0 +1,21 @@
+1. Apply the Future Ballers page design to the other two program pages.
+Use the exact design/layout of the Future Ballers landing page (/programs/future-ballers) as the shared template for the other two program pages — Mini Basket (/programs/mini-basket) and Youth Academy (/programs/youth-academy). All three should use the same design and structure, with only the content swapped per age group (program name, age badge, copy, focus areas, stats, session info, and any existing placeholders). Keep the age-appropriate text differences, but the visual design/layout should now match Future Ballers across all three.
+
+2. Fix the "View Training Options" buttons on the /programs page (currently a bug).
+On the Programs page, each program card's "View Training Options" button currently links to the Private Training page for all programs — this is incorrect. Fix each button to link to that program's own landing page:
+
+Future Ballers card → /programs/future-ballers
+Mini Basket card → /programs/mini-basket
+Youth Academy card → /programs/youth-academy
+Verify each button goes to the matching page, not to Private Training.
+
+3. Make the homepage program cards link to the landing pages.
+On the homepage, the program cards should each link to their corresponding landing page (Future Ballers → /programs/future-ballers, Mini Basket → /programs/mini-basket, Youth Academy → /programs/youth-academy). Apply this on both desktop and mobile.
+
+Desktop vs mobile paths — confirm both work:
+
+The destination for each program is the same on desktop and mobile (each program's landing page). Only the route to get there differs.
+Desktop: the "Programs" nav dropdown links are already correct — leave those working. Plus the homepage cards (change 3) and the Programs-page buttons (change 2) must all reach the correct landing pages.
+Mobile: there is no Programs dropdown menu. So the paths on mobile are: (a) homepage program cards → landing pages, and (b) Programs page → tap "View Training Options" on a program → that program's landing page. Make sure both work on mobile since the dropdown isn't available there.
+
+Test all routes on both desktop and mobile: nav dropdown (desktop), homepage cards (both), and Programs-page "View Training Options" buttons (both) — every one should land on the correct program page, and none should go to Private Training.

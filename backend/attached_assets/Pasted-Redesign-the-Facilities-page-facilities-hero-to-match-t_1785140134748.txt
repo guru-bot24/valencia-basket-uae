@@ -1,0 +1,25 @@
+Redesign the Facilities page (/facilities) hero to match the Events page style, and feature the arena photo properly below it instead of burying it under a dark overlay.
+
+1. Hero band (match the Events & Camps page hero exactly)
+
+Solid black background (#000 / same dark as the Events hero), no photo, no vignette.
+Same height, padding, and container width as the Events page hero for visual consistency across the site.
+Small orange pill/eyebrow above the title: "OUR HOME VENUE — AL QUOZ, DUBAI".
+H1 in white, uppercase, bold condensed display type, same size/weight/letter-spacing as the "EVENTS & CAMPS" H1: ALL SPORTS ARENA.
+Sub-line in muted grey below, same treatment as the Events sub-line: "One dedicated home from August 2026."
+Keep this as the page's single H1.
+
+2. Arena showcase image (directly below the hero, full brightness)
+
+Place the existing arena photo as a full-width showcase image immediately under the black hero band, edge to edge with the content container (match the site's max-width).
+Show it bright and clear — no dark overlay, no vignette, no text on top of it. This is the "step inside" reveal.
+Rounded corners consistent with other image cards on the site, subtle border if the site uses one.
+Add a small caption chip in the bottom-left corner: semi-transparent dark background, white text — "Multi-court indoor facility · All Sports Arena, Al Quoz".
+Reasonable fixed aspect ratio (approx 16:7) so it reads as a banner, not a full-screen block; it should crop gracefully on mobile (maintain aspect, no letterboxing).
+Mark this image slot with a code comment as the primary venue photo, so additional photos from the August shoot can be added into a gallery later.
+
+3. Keep the rest of the page ("What's inside" feature grid, travel band, map, CTA, etc.) unchanged below the showcase image.
+
+Keep everything on-brand (orange 
+#FF6C0E / 
+#F18A00, black, grey, white), fully responsive on desktop and mobile. On mobile: hero text scales down cleanly and the showcase image sits directly beneath with comfortable side gutters.

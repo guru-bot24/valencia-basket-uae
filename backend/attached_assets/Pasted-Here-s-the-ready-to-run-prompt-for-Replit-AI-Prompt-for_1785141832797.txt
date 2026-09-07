@@ -1,0 +1,109 @@
+Here's the ready-to-run prompt for Replit AI:
+
+Prompt for Replit AI
+
+Update the SEO meta titles and meta descriptions across the site to the exact values below. For each page, set the <title> and <meta name="description">, and keep any OG/Twitter title+description tags in sync. Render server-side so they're crawlable, and ensure each is unique per page. Change meta only — do not touch page content.
+
+Note: three pages have updated copy reflecting recent changes (Programs — "Camps" removed from description; Facilities — rewritten for the single All Sports Arena venue; Spring Break Camp and Summer Camp descriptions trimmed to display fully in search). Use the values exactly as written.
+
+Home — /
+
+Title: Basketball Academy in Dubai | Valencia Basket UAE
+Desc: Valencia Basket UAE brings world-class Spanish basketball methodology to Dubai. Youth basketball academy offering programs for ages 5-18. Join now!
+
+Programs — /programs
+
+Title: Basketball Training Programs for Kids & Youth (5-18 yrs) in Dubai | Valencia Basket
+Desc: From first dribbles to professional pathways, explore our basketball programs for Mini Basket, Youth Academy, Teens, Elite Select and Private Training. Join now!
+
+Private Training — /programs/private-training
+
+Title: Basketball Private Training Programs for Ages 5-18 | Valencia Basket UAE
+Desc: Accelerate your development with focused, personalised instruction from our expert staff. 1-on-1 and small group basketball training sessions. Join now!
+
+Methodology — /methodology
+
+Title: Elite Spanish Basketball Coaching Methodology | Valencia Basket Academy UAE
+Desc: Check out the proven Valencia Basket methodology, a system built on strong values, tactical intelligence, and long-term player development. Learn more!
+
+Coaches — /coaches
+
+Title: Meet Our FIBA-Certified Basketball Coaches | Valencia Basket Academy UAE
+Desc: Meet the coaching staff and management team at Valencia Basket Academy UAE. FIBA-certified and Spanish-licensed coaches dedicated to player development!
+
+Facilities — /facilities
+
+Title: Basketball Training Venue in Dubai | Valencia Basket Academy UAE
+Desc: Valencia Basket UAE trains at All Sports Arena in Al Quoz, Dubai — professional FIBA-standard indoor courts. Book a free trial today!
+
+Admissions — /admissions
+
+Title: Basketball Academy Admissions & Registration | Valencia Basket Academy UAE
+Desc: Join Valencia Basket Academy UAE. Learn about our admissions process, term dates, pricing, and frequently asked questions for parents. Join now!
+
+Teams — /teams
+
+Title: Boys & Girls Basketball Team Rosters | Valencia Basket Academy UAE
+Desc: Representing Valencia Basket UAE in local and international competitions, view our boys and girls team rosters. Click to know more!
+
+16U Boys — /teams/16u-boys
+
+Title: Under 16 Boys Basketball Team | Valencia Basket Academy UAE
+Desc: View the official roster and coaching staff for 16U Boys. Elite/Competition level team at Valencia Basket UAE. Join now!
+
+14U Boys — /teams/14u-boys
+
+Title: Under 14 Boys Basketball Team | Valencia Basket Academy UAE
+Desc: View the official roster and coaching staff for 14U Boys. Development/Competition level team at Valencia Basket UAE. Join now!
+
+12U Boys — /teams/12u-boys
+
+Title: Under 12 Boys Basketball Team | Valencia Basket Academy UAE
+Desc: View the official roster and coaching staff for 12U Boys. Skill Acquisition level team at Valencia Basket UAE. Join now!
+
+10U Boys — /teams/10u-boys
+
+Title: Under 10 Boys Basketball Team | Valencia Basket Academy UAE
+Desc: View the official roster and coaching staff for 10U Boys. Foundation level team at Valencia Basket UAE. Join now!
+
+8U Boys — /teams/8u-boys
+
+Title: Under 8 Boys Basketball Team | Valencia Basket Academy UAE
+Desc: View the official roster and coaching staff for 8U Boys. Discovery level team at Valencia Basket UAE. Join now!
+
+16U Girls — /teams/16u-girls
+
+Title: Under 16 Girls Basketball Team | Valencia Basket Academy UAE
+Desc: View the official roster and coaching staff for 16U Girls. Elite/Competition level team at Valencia Basket UAE. Join now!
+
+14U Girls — /teams/14u-girls
+
+Title: Under 14 Girls Basketball Team | Valencia Basket Academy UAE
+Desc: View the official roster and coaching staff for 14U Girls. Development level team at Valencia Basket UAE. Join now!
+
+12U Girls — /teams/12u-girls
+
+Title: Under 12 Girls Basketball Team | Valencia Basket Academy UAE
+Desc: View the official roster and coaching staff for 12U Girls. Foundation level team at Valencia Basket UAE. Join now!
+
+Events — /events
+
+Title: Basketball Camps & Events in Dubai | Valencia Basket UAE
+Desc: View our upcoming basketball camps, clinics & the exclusive Valencia training trip to Spain. Find opportunities to compete, learn & grow today!
+
+Spring Break Camp — /events/spring-break-camp
+
+Title: Basketball Spring Break Camp for Kids in Dubai (24th - 27th March 2026)
+Desc: A 4-day intensive basketball camp for kids during spring break. Perfect for players looking to sharpen their skills and stay active over the holidays.
+
+Valencia Trip — /events/valencia-trip
+
+Title: Basketball Trip to Valencia Basket Club, Spain (15th - 19th June, 2026)
+Desc: An exclusive 5-day basketball experience at the home of Valencia Basket. Train at L'Alqueria del Basket and experience the ROIG Arena. Join now!
+
+Summer Camp — /events/summer-camp
+
+Title: Basketball Summer Camp for Kids in Dubai (July - August 2026)
+Desc: Our flagship summer program returns with multiple weekly sessions throughout July and August. Age-appropriate training, competitions and fun activities.
+
+After applying, verify the rendered HTML on each page shows the correct title and description server-side.

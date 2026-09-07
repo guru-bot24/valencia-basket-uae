@@ -1,0 +1,15 @@
+The trial booking form appears on both the homepage and the Contact Us page, and both redirect to the same /thank-you page on successful submission. I want the thank-you page to know which page the submission came from, tracked as the full URL of the originating page, for source-based analytics tracking.
+
+Implementation:
+
+Pass the source through the redirect as the full page URL. When the form submits successfully, redirect to the thank-you page with the originating page's full URL as the source parameter — e.g.:
+From the homepage → /thank-you?source=https://valenciabasket.ae/
+From the Contact Us page → /thank-you?source=https://valenciabasket.ae/contact
+Use the full URL of the page the form was submitted from as the source value (URL-encoded so it's a valid query parameter). Do NOT use short labels like home or contact — use the actual full URL. This should work for any page the form is on, present or future (always the real originating URL).
+Make the thank-you page read the source URL parameter so the originating URL is available on that page (accessible in the page's logic/props). Handle it being absent gracefully (fallback to unknown/direct, don't error).
+Preserve existing behaviour: the thank-you page must still work exactly as now — same design, child's-name personalization, WhatsApp button, etc. This only adds the source parameter and the ability to read it. Don't break the redirect or personalization.
+Do NOT put any personal data in the URL — no name, email, or phone. The source parameter should contain only the originating page URL, nothing else.
+
+Note: I'm not wiring the analytics/conversion event yet — just make the originating URL available on the thank-you page so tracking can be added later with the full source URL.
+
+Verify: submitting from the homepage lands on /thank-you with the homepage's full URL as the source parameter, submitting from the contact page carries the contact page's full URL, the thank-you page reads it correctly, and all existing thank-you page behaviour (design, personalization, buttons) still works on desktop and mobile.

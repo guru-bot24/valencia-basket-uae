@@ -1,0 +1,33 @@
+Collin's spotted something specific — and he knows what he's looking at. Let me interpret it, because it's a real technical point.
+
+What Collin means: A correct GTM install has two parts:
+
+The <head> script (the main JavaScript snippet) — loads GTM.
+The <body> <noscript> iframe (right after the opening <body> tag) — a fallback for when JavaScript is disabled.
+
+Both are needed for a complete install. Collin is saying that on the thank-you page specifically, he's only seeing part of the GTM code — "a single line" / "there isn't full code there" — meaning one of those two parts (likely the <noscript> body portion, or the full head snippet) appears to be missing or incomplete on that page.
+
+Here's the tension with what Replit just told you: Replit reported GTM is in the root layout and every page inherits both the head script and the body noscript. If that's true, the thank-you page should have the full code. So there are a few possibilities:
+
+The thank-you page has its own separate/partial GTM line — someone (maybe an earlier build) added a stray single line of GTM directly on the thank-you page, on top of the root-layout one. That would be a duplicate/fragment that Collin is seeing.
+The thank-you page is rendered differently — if it's built in a way that bypasses part of the root layout (e.g. a special route), it might not get the full inherited install.
+Collin is viewing rendered source and the noscript isn't showing for some rendering reason.
+
+Rather than guess, the right move is to have Replit look at the thank-you page specifically and reconcile it with Collin's observation. Here's the prompt:
+
+Prompt for Replit AI
+
+Our SEO agency has flagged a GTM issue specifically on the thank-you page (/thank-you). They report that the thank-you page appears to have only a single partial line of GTM rather than the full GTM installation, and that both the <head> script AND the <body> <noscript> iframe need to be present. Container ID is GTM-WRL3KPHD.
+
+Previously you confirmed GTM is installed once in the root layout (app/layout.tsx) with both the head script and the body noscript, and that all pages inherit it. Please reconcile that with the agency's observation by investigating the thank-you page specifically:
+
+Check the thank-you page (/thank-you) for any GTM code added directly on the page itself — separate from the root layout. Is there a stray/partial GTM snippet (e.g. a single line) added directly to this page? If so, that's likely a duplicate or fragment — report exactly what's there.
+Confirm what actually renders on the thank-you page — view the rendered HTML of /thank-you and verify whether BOTH the full <head> GTM script AND the <body> <noscript> iframe are present in the output. Report what you find (present/missing for each).
+Check whether the thank-you page bypasses the root layout in any way — does it render through the normal root layout (inheriting the full GTM), or is it built/routed in a way that doesn't get the full inherited install?
+Fix so the thank-you page has the complete, correct GTM install (both head script and body noscript), with NO duplicates:
+If there's a stray partial GTM line added directly to the thank-you page, remove it so the page relies solely on the root-layout install.
+Ensure the page renders through the root layout so it inherits both the full head script and the body noscript.
+The end state: the thank-you page has exactly ONE complete GTM install (both parts), same as every other page — no partial fragments, no duplicates.
+Confirm by showing the rendered <head> and start-of-<body> of the thank-you page proving both GTM parts are present and there's only one instance.
+
+Report what was actually on the thank-you page, what you changed, and confirm both GTM parts now render correctly there with no duplicates.

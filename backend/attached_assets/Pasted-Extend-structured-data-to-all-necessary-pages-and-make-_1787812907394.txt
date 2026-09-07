@@ -1,0 +1,35 @@
+Extend structured data to all necessary pages, and make it editable in the admin panel. Follow the seo_pages override pattern that already exists — code defines the schema shape, the database stores nullable value overrides, and empty inherits the default.
+
+1. Generate schema for these pages in lib/seo/structuredData.ts:
+
+Page	Type
+Sitewide	SportsOrganization — name, logo, address, phone, sameAs for the Instagram, TikTok, Facebook and LinkedIn URLs in the footer
+/	WebSite
+/events and each event	Event — name, startDate, endDate, location, eventAttendanceMode, from the events table
+/coaches	Person per coach, with sameAs once social profiles are added
+3 program pages	Course
+/facilities	SportsActivityLocation
+/admissions	WebPage
+All inner pages	BreadcrumbList
+/blog posts	BlogPosting (Phase 3 of the blog work)
+
+Keep the existing /faqs FAQPage and /contact SportsActivityLocation as they are.
+
+2. Add a seo_schema_overrides table: id, path (unique), schema_type, overrides (jsonb), enabled (boolean, default true), updated_at. Follow the seo_pages conventions in shared/schema.ts.
+
+3. Merge in lib/seo/resolve.ts using the same null-inherits-default logic already there. Add buildSchemaForPath(path) returning the merged JSON-LD.
+
+4. Rebuild the Structured Data tab in SeoManager.tsx:
+
+List every page that emits schema, not just those with overrides
+Per page: schema type, an enable/disable toggle, and typed input fields for each editable property — never a raw JSON textarea
+Each field shows its inherited default as placeholder, so blank clearly means "use default"
+Per-field "Reset to default"
+Live JSON-LD preview updating as fields change
+Validate on save: required properties present, URLs well-formed, dates ISO 8601. Block the save on failure with a field-level error.
+
+5. Lock fields that derive from live page data — event dates and names, coach names, blog publish dates. Show them read-only with a note that they follow the page content. Overriding these creates markup that contradicts the page, which is a manual-action risk.
+
+6. Call revalidatePath on the affected route after any override is saved.
+
+Validate each schema type against Google's Rich Results Test before marking done.

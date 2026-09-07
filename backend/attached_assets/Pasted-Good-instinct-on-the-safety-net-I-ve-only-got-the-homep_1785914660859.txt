@@ -1,0 +1,33 @@
+Good instinct on the safety net — I've only got the homepage inventory Replit mapped earlier, and you've made changes since (removed Teams, added program pages, reordered things). So rather than assume the 8 sections are still exactly those 8, the prompt tells Replit to re-map the current homepage first, then apply the target order — and to surface any section I don't know about rather than silently dropping it. Here's the prompt:
+
+Prompt for Replit AI
+
+Reorder the homepage sections into a conversion-optimized structure. Important: first re-inventory the current homepage as it exists right now — it may have changed since it was last mapped. List every section currently on the homepage, top to bottom, with a short label for each, and identify any section not accounted for in my target order below. Do not delete or drop any existing section — if the homepage contains a section I haven't named below, keep it, place it in the most sensible position, and flag it to me in your report so I can confirm.
+
+Target order (place known sections in this sequence):
+
+Hero — unchanged, stays first.
+Trust Bar — move up to position 2 (credibility immediately after the hook).
+Programs Grid — what you offer.
+Methodology / Why Us — differentiation.
+Facilities Preview — where they train.
+Testimonials — social proof, placed after the claims it validates.
+Event Strip — moved down here (it's conditional/secondary; renders nothing when there are no events).
+Book Trial / CTA — stays last, the conversion moment.
+
+Any additional section you find that isn't listed here (e.g. a stats bar, Spain-connection band, gallery, newsletter signup, partner logos, etc.) must be preserved — slot it into a sensible position and tell me where you put it and why.
+
+Two additional changes while reordering:
+
+A. Add a secondary "Book a Free Trial" CTA mid-page. Right now the only booking prompt is at the very bottom. Add a secondary call-to-action button (linking to the trial booking form) after the Programs Grid or the Methodology section, so a parent who's convinced partway down can act without scrolling to the end. Style it consistent with the site's existing CTA buttons.
+
+B. Fix a factual error in the Trust Bar. The Trust Bar currently lists "UEFA Qualified Coaches." UEFA is football's governing body — this is a basketball academy, so this is incorrect. Change it to the correct basketball credential — "FIBA-Qualified Coaches" (or "Spanish-Licensed Coaches" if that's more accurate to your staff). Use "FIBA-Qualified Coaches" unless you'd flag otherwise. Keep the other Trust Bar items unchanged.
+
+Requirements:
+
+Preserve every section's content and functionality — this is a reordering, not a rewrite. Only the sequence changes (plus the two additions above).
+Keep all internal links, anchors, and CTAs working after the move.
+Ensure the page flows cleanly with no broken spacing, orphaned dividers, or gaps between the reordered sections, on both desktop and mobile.
+Conditional sections (like the Event Strip that hides when empty) must still hide/show correctly in their new position.
+
+After the change, report back: (1) the full list of homepage sections in their new order, (2) any section you found that wasn't in my target list and where you placed it, and (3) confirmation the mid-page CTA and the UEFA→FIBA fix are done.

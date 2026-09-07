@@ -1,0 +1,316 @@
+# VBC Blog — Phases 1 to 4
+
+Audit accepted. Everything below is written against what you found. Follow the existing conventions exactly — Drizzle in `shared/schema.ts`, `requireAdmin()` from `lib/adminAuth.ts`, `buildPageMetadata()` for SEO, tokens in `app/globals.css`.
+
+Stop for my review at the end of each phase. Do not start a later phase early.
+
+---
+
+## Phase 1 — Schema
+
+Define these in `shared/schema.ts` alongside the existing tables, then run `npm run db:generate`. Keep the column names exactly as written.
+
+```
+blog_categories
+  id             serial PK
+  name           text NOT NULL UNIQUE
+  slug           text NOT NULL UNIQUE
+  description    text
+  parent_id      integer REFERENCES blog_categories(id) ON DELETE SET NULL
+  display_order  integer NOT NULL DEFAULT 0
+  created_at     timestamptz NOT NULL DEFAULT now()
+  updated_at     timestamptz NOT NULL DEFAULT now()
+
+blog_posts
+  id                  serial PK
+  title               text NOT NULL
+  slug                text NOT NULL UNIQUE
+  excerpt             text
+  content             text NOT NULL
+  featured_image_src  text
+  featured_image_alt  text
+  author_name         text NOT NULL
+  status              text NOT NULL DEFAULT 'draft'
+                      CHECK (status IN ('draft','published','scheduled'))
+  published_at        timestamptz
+  is_featured         boolean NOT NULL DEFAULT false
+  view_count          integer NOT NULL DEFAULT 0
+  meta_title          text
+  meta_description    text
+  og_image            text
+  focus_keyword       text
+  no_index            boolean NOT NULL DEFAULT false
+  created_at          timestamptz NOT NULL DEFAULT now()
+  updated_at          timestamptz NOT NULL DEFAULT now()
+
+blog_post_categories
+  post_id      integer NOT NULL REFERENCES blog_posts(id) ON DELETE CASCADE
+  category_id  integer NOT NULL REFERENCES blog_categories(id) ON DELETE CASCADE
+  PRIMARY KEY (post_id, category_id)
+
+blog_tags
+  id    serial PK
+  name  text NOT NULL UNIQUE
+  slug  text NOT NULL UNIQUE
+
+blog_post_tags
+  post_id  integer NOT NULL REFERENCES blog_posts(id) ON DELETE CASCADE
+  tag_id   integer NOT NULL REFERENCES blog_tags(id) ON DELETE CASCADE
+  PRIMARY KEY (post_id, tag_id)
+```
+
+Indexes:
+
+```sql
+CREATE INDEX idx_blog_posts_live  ON blog_posts (status, published_at DESC);
+CREATE INDEX idx_blog_postcat_cat ON blog_post_categories (category_id);
+CREATE INDEX idx_blog_cat_order   ON blog_categories (display_order, name);
+```
+
+### Notes on specific columns
+
+**`meta_title` / `meta_description` / `og_image` / `no_index`** deliberately mirror the `seo_pages` column names, and are nullable with the same inherit-on-empty semantics: blank means fall back to `title` and `excerpt`. This keeps the blog's SEO model identical to the one `resolve.ts` already implements, so there's one mental model rather than two.
+
+**`featured_image_alt`** follows the `events.image_alt` precedent — alt text lives on the row, falling back to the post title when empty. Do **not** route blog images through `seo_image_alts`: that table is keyed off the code-defined registry in `lib/seo/images.ts`, and dynamic post images can't be registered at build time. Leave the managed-image system untouched.
+
+**`featured_image_src`** stores a path or URL, matching the event editor's Image Path field (`/images/event-photo.jpg`). No upload mechanism exists in this project and this phase does not add one.
+
+### Full-text search
+
+Drizzle doesn't express generated tsvector columns cleanly, so add this as a hand-written migration in `migrations/`, following the precedent of `migrations/0000_add-image-description-review-columns.sql`, and mirror it into `scripts/sql/` the way `seo-manager.sql` is kept:
+
+```sql
+ALTER TABLE blog_posts ADD COLUMN search_vector tsvector
+  GENERATED ALWAYS AS (
+    setweight(to_tsvector('english', coalesce(title,'')),   'A') ||
+    setweight(to_tsvector('english', coalesce(excerpt,'')), 'B') ||
+    setweight(to_tsvector('english', coalesce(content,'')), 'C')
+  ) STORED;
+CREATE INDEX idx_blog_posts_search ON blog_posts USING GIN (search_vector);
+```
+
+Declare `search_vector` in the Drizzle schema as a plain column so queries can reference it, but never write to it.
+
+### Rules that hold everywhere
+
+- A post is **live** only when `status = 'published' AND published_at <= now()`. Every public query filters on this, which also means `scheduled` posts go live on their own — no cron job.
+- Slugs auto-generate from the title (lowercase, alphanumeric and hyphens, repeats collapsed) but stay editable, matching how the event editor already does it. On collision append `-2`, `-3`.
+- A post can sit in several categories.
+
+Seed 6 categories and 20 realistic posts about youth basketball training, academy life and player development in Dubai. No lorem ipsum.
+
+**Stop for review.**
+
+---
+
+## Phase 2 — Data layer
+
+All blog queries go in `lib/blog/queries.ts`, importing `db` the same way `lib/storage.ts` does. Public pages are Server Components and call these **directly**. Do not build public API routes and then fetch them from a Server Component — that's a network hop to your own process for nothing.
+
+### `getBlogHomeData({ page, perPage })`
+
+The most important function. Returns categories ordered by `display_order` then `name`, each with its 4 latest live posts, plus the featured block.
+
+Two hard requirements:
+
+**1. Never select `content`.** Return only `id, title, slug, excerpt, featured_image_src, featured_image_alt, author_name, published_at`. Shipping 20 full post bodies to a page that renders two-line excerpts is what makes this page slow.
+
+**2. No N+1.** Don't loop categories issuing a query each. Fetch the page's categories, then get all their posts in one query with a window function:
+
+```sql
+SELECT * FROM (
+  SELECT p.id, p.title, p.slug, p.excerpt, p.featured_image_src,
+         p.featured_image_alt, p.author_name, p.published_at, pc.category_id,
+         ROW_NUMBER() OVER (PARTITION BY pc.category_id
+                            ORDER BY p.published_at DESC) AS rn
+  FROM blog_posts p
+  JOIN blog_post_categories pc ON pc.post_id = p.id
+  WHERE p.status = 'published' AND p.published_at <= now()
+    AND pc.category_id = ANY($1)
+) t WHERE rn <= 4;
+```
+
+Group in JS afterwards. Categories with no live posts are dropped.
+
+Returns:
+
+```ts
+{
+  featured: BlogCard[],        // up to 4 live posts with is_featured, newest first
+  categories: Array<{
+    id: number; name: string; slug: string;
+    postCount: number; posts: BlogCard[];
+  }>,
+  page: number; perPage: number; total: number; totalPages: number;
+}
+```
+
+`perPage` paginates **categories**, not posts. That's what keeps the page flat as categories grow.
+
+### The rest
+
+| Function | Notes |
+|---|---|
+| `listPosts({ page, perPage, categorySlug, q, sort })` | `categorySlug` and `q` combine. `q` uses `search_vector @@ websearch_to_tsquery('english', $q)`, ordered by `ts_rank`. Cards only, no `content`. |
+| `getPostBySlug(slug)` | Full post with categories and tags. Returns null if not live. |
+| `getRelatedPosts(postId)` | 3 live posts sharing the most categories, excluding itself. |
+| `listCategories()` | Flat list with live post counts and `parent_id` so the UI can nest. |
+| `getCategoryBySlug(slug)` | Name, description, live post count. |
+
+Cache the public pages with `revalidate`, and call `revalidatePath()` on the affected routes whenever a post is created, updated, published or deleted, so edits appear immediately without the page being uncached.
+
+**Stop for review.**
+
+---
+
+## Phase 3 — Public pages
+
+Routes: `app/blog/page.tsx`, `app/blog/category/[slug]/page.tsx`, `app/blog/[slug]/page.tsx`. Server Components throughout. Client components only for the search input and category dropdown.
+
+### Brand
+
+Tailwind v4, tokens in `app/globals.css` — extend the existing `@theme` block rather than adding a `tailwind.config` file.
+
+Primary orange `#FF6C0E` is already defined; reuse the existing token instead of hardcoding `bg-[#FF6C0E]` in new code. Add the brand's secondary orange `#F18A00` as a token if it isn't there yet. Black `#070000`, grey `#5B6670`, white round out the palette.
+
+No navy, no blue anywhere. Typography, buttons and spacing match the existing public pages — the blog should not read as a bolted-on section.
+
+### `/blog`
+
+Heading "Blog" on the left. On the right, a search input and category dropdown side by side.
+
+Search and dropdown both navigate to `/blog/category/[slug]?q=…` (or `/blog?q=…` when no category is chosen) rather than filtering in place — one code path for filtered results, and results become linkable. Debounce search 300ms.
+
+Below: a **Featured** section with its heading on the left, an outlined "View All Posts" button on the right, then a row of cards.
+
+Then one section per category, same shape each time — category name, "View All" button to `/blog/category/[slug]`, up to 4 cards.
+
+Pagination over categories at the bottom, rendered only when `totalPages > 1`, driven by a `?page=` search param.
+
+**Post card:** `next/image` at a fixed 16:9 aspect ratio, then title (2-line clamp), excerpt (2-line clamp), date as `DD/MM/YYYY`. Whole card is one link. Cards in a row are equal height regardless of title length. Set `sizes` correctly and show a neutral placeholder when `featured_image_src` is null. Don't hand-roll `loading="lazy"` — `next/image` handles it.
+
+Alt text comes from `featured_image_alt`, falling back to the post title, exactly as the event pages do.
+
+Grid: 1 column under 640px, 2 to 1024px, 3 above.
+
+### `/blog/category/[slug]`
+
+Same search + dropdown bar, pre-filled from the URL. Category name and description, then a grid of that category's posts, 12 per page, paginated. Read `q` and `page` from `searchParams` so back/forward works.
+
+Empty state when nothing matches: one short line plus a link back to `/blog`.
+
+### `/blog/[slug]`
+
+Title, author, date, category badges, featured image, then rendered content at a readable measure (~68ch). Related posts at the bottom. `notFound()` when the slug doesn't resolve to a live post.
+
+Sanitise `content` before rendering — never pass stored HTML straight to `dangerouslySetInnerHTML`.
+
+Increment `view_count` from a Server Action, fire-and-forget, so it neither blocks render nor defeats caching.
+
+### SEO
+
+`/blog` is a static path, so **register it in `lib/seo/registry.ts`** like the other 16 pages and have `app/blog/page.tsx` call `buildPageMetadata("/blog")`. Nothing new needed there.
+
+Post and category pages are dynamic and can't live in a code registry. Add `buildPostMetadata(post)` and `buildCategoryMetadata(category)` to `lib/seo/resolve.ts`, reusing the same merge-and-fallback logic already in that file:
+
+- `meta_title` → falls back to the post title
+- `meta_description` → falls back to `excerpt`
+- `og_image` → falls back to `featured_image_src`
+- `no_index` respected
+- canonical always set
+
+Keep the "null or empty inherits the default" semantics identical to `seo_pages`, so the two systems behave the same way.
+
+Add `BlogPosting` structured data to post pages in `lib/seo/structuredData.ts` — headline, datePublished, dateModified, author, image, mainEntityOfPage. Generate it from code the way the existing FAQ and contact structured data are generated. It stays read-only in the admin, consistent with the current design.
+
+Extend `app/sitemap.ts` to include `/blog`, every live post and every category with live posts.
+
+`loading.tsx` with skeleton cards, not spinners. `error.tsx` per route.
+
+**Stop for review.**
+
+---
+
+## Phase 4 — Blog tab in the existing admin
+
+Add a **Blog** tab to the existing tab set in `app/admin/page.tsx` (currently Trial Bookings, Event Registrations, Events, Website SEO). Reuse `requireAdmin()` and the `admin_token` cookie — no second login, no separate layout.
+
+`app/admin/page.tsx` already carries the tab shell and `EventFormDialog`. Put the blog UI in `app/admin/BlogManager.tsx`, sitting alongside `SeoManager.tsx`, rather than growing `page.tsx` further.
+
+Two views inside the tab: Posts and Categories.
+
+### Posts list
+
+Table: checkbox · Title · Author · Categories · Status · Date · Views. Sortable column headers. Row hover reveals Edit / View / Delete.
+
+Above it: search box, status filter, category filter, and a bulk-actions dropdown (Publish, Move to Draft, Delete) with an Apply button. 20 rows per page. Deletes confirm first.
+
+### Post editor
+
+Follow `EventFormDialog`'s conventions — Zod validation, auto-generated editable slug, same submit and error-handling patterns.
+
+Two columns.
+
+**Main column:**
+- Large title input
+- Permalink line beneath showing the full URL, with an Edit button revealing the slug field
+- Rich text editor with toolbar: paragraph / H2 / H3, bold, italic, bullet and numbered lists, blockquote, link, image, undo/redo. Live word count below. Use TipTap; store HTML in `content`.
+- Excerpt textarea below the editor
+
+**Sidebar, in this order:**
+
+1. **Publish** — status, datetime picker for `published_at`, Save Draft / Publish / Update, Preview, Delete.
+2. **Featured image** — an **Image Path** text input matching the event editor (`/images/foo.jpg`), a live thumbnail preview of whatever path is entered, and an Alt Text field writing to `featured_image_alt` with the post title shown as placeholder fallback. No file upload in this phase.
+3. **Categories** — scrollable checkbox list, multi-select, filter box above it, and a `+ Add Category` link at the bottom opening an inline form (name + optional parent) that ticks the new category on save without leaving the page.
+4. **Tags** — comma-separated input rendering removable chips.
+5. **SEO** — a live Google-result preview showing URL, `meta_title` and `meta_description` as they'd appear in search. Character counters on both: title amber past 60, red past 70; description amber past 155, red past 160. Placeholders show the inherited fallback (post title, excerpt) so it's obvious what empty means. Plus `focus_keyword`, `og_image` and a `no_index` toggle.
+
+Warn before navigating away with unsaved changes.
+
+### Categories view
+
+Split screen.
+
+Left: Add Category form — Name, Slug (auto-filled from name, editable), Parent Category dropdown, Description, Add Category button.
+
+Right: search box above a table with sortable Name / Description / Slug / Count columns, checkboxes for bulk delete, pagination. Count is live posts in that category. Clicking a name loads it into the left form for editing. Deleting a category that has posts warns first and unassigns — it never deletes posts.
+
+### Route handlers
+
+Under `app/api/admin/blog/`, guarded by `requireAdmin()`, matching how the events endpoints are written:
+
+```
+GET    /api/admin/blog/posts?page&perPage&q&status&category&sort
+POST   /api/admin/blog/posts
+GET    /api/admin/blog/posts/[id]
+PATCH  /api/admin/blog/posts/[id]
+DELETE /api/admin/blog/posts/[id]
+POST   /api/admin/blog/posts/bulk        { ids: number[], action: 'publish'|'draft'|'delete' }
+
+GET    /api/admin/blog/categories?page&perPage&q&sort
+POST   /api/admin/blog/categories
+PATCH  /api/admin/blog/categories/[id]
+DELETE /api/admin/blog/categories/[id]
+```
+
+Validate every write with Zod and return field-level errors the forms display inline. Call `revalidatePath` on `/blog`, the affected category page and the post page after any mutation.
+
+---
+
+## Do not do these
+
+- Don't add a second auth system or admin layout — extend `app/admin/page.tsx` and use `requireAdmin()`
+- Don't touch `lib/seo/images.ts` or write blog images into `seo_image_alts`; blog alt text lives on `blog_posts.featured_image_alt`
+- Don't make structured data admin-editable — it stays code-generated
+- Don't build file upload; the Image Path input matches the existing event editor
+- Don't create public API routes and then fetch them from Server Components
+- Don't put `content` in any list or card query
+- Don't loop queries per category anywhere
+- Don't use navy or blue — orange, black, grey, white only
+- Don't hardcode `bg-[#FF6C0E]` in new code; use the `globals.css` token
+- Don't add a `tailwind.config` file — this is Tailwind v4, tokens live in `app/globals.css`
+- Don't render stored HTML without sanitising it
+- Don't add comments, likes, newsletters or an analytics dashboard
+- Don't install a UI kit with its own design system
+
+Start with Phase 1.

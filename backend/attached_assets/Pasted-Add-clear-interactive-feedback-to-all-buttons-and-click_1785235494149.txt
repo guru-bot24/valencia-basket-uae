@@ -1,0 +1,28 @@
+Add clear interactive feedback to all buttons and clickable elements across the site. Currently buttons give no visual response when hovered, so they don't feel clickable. Apply consistent hover and active states sitewide.
+
+Desktop — hover states:
+
+Add a cursor: pointer to every button and clickable control (confirm none are missing it).
+On hover, give each button a visible change. Use a consistent treatment matched to each button style:
+Primary buttons (black "Submit Request" / "Book a Free Trial", orange CTAs): on hover, darken the background slightly (e.g. orange 
+#FF6C0E → a darker shade like 
+#E85D00; black → a dark grey 
+#1a1a1a) and add a subtle shadow (e.g. box-shadow: 0 4px 14px rgba(0,0,0,0.18)) and a slight lift (transform: translateY(-1px)).
+Secondary / outline buttons: on hover, fill with a light tint of the brand colour or brighten the border and text.
+Icon buttons and social icons: on hover, change colour to brand orange or lighten/darken, as fits the footer/header style.
+Text links: underline or colour-shift on hover.
+Add a smooth transition (e.g. transition: all 0.2s ease) so the change animates rather than snapping.
+
+Mobile / touch — active states:
+
+Hover doesn't exist on touch devices, so add an :active (pressed) state to every button: a brief background darken and/or scale-down (transform: scale(0.98)) so tapping gives visible feedback.
+Ensure -webkit-tap-highlight-color isn't removed in a way that leaves taps with zero feedback; if it's customised, make sure the :active state compensates.
+Confirm all buttons meet a minimum touch target size (~44×44px).
+
+Consistency & accessibility:
+
+Keep the hover/active treatment consistent for each button type across every page (same primary-button hover everywhere, etc.).
+Also add a visible :focus-visible state (e.g. an outline or ring) for keyboard navigation and accessibility.
+Apply this to all interactive elements: nav links, dropdown items, form submit buttons, CTAs, "View Event Details", pagination, footer icons, the floating WhatsApp button — anything clickable.
+
+Test on desktop (hover + keyboard focus) and mobile (tap/press feedback) to confirm every button now visibly responds to interaction.

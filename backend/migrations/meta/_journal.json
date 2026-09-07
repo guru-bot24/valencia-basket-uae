@@ -1,0 +1,62 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1787309378213,
+      "tag": "0000_add-image-description-review-columns",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1787810535242,
+      "tag": "0001_gorgeous_mach_iv",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787810535243,
+      "tag": "0002_blog_search_vector",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1787821000000,
+      "tag": "0004_calm_pyro",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1788245770659,
+      "tag": "0005_blog_post_editor",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1788246599802,
+      "tag": "0006_blog_password_attempts",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1788246832314,
+      "tag": "0007_blog_password_attempt_clients",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1788248594989,
+      "tag": "0008_seo_page_controls",
+      "breakpoints": true
+    }
+  ]
+}

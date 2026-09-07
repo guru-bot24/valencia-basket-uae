@@ -1,0 +1,31 @@
+Prompt for Replit AI
+
+Restructure the main header navigation to the following four items, in this order:
+
+Programs — keep its existing dropdown with the current sub-items (Future Ballers, Mini Basket, Youth Academy, Elite/Select, Private Training), unchanged.
+Events — single link (no dropdown), to /events.
+About — a NEW dropdown containing three sub-items: Methodology (/methodology), Staff (/staff or the current staff/coaches URL), and Location (/facilities or the current location URL). "About" itself is a grouping label.
+Contact Us — single link, to /contact.
+
+Remove the now-grouped items (Methodology, Staff, Location) as standalone top-level nav items — they should only appear under the "About" dropdown now. Keep the logo, social icons, and "Book a Free Trial" button in the header as they are.
+
+Desktop behaviour:
+
+Programs and About both show their dropdowns on hover/click, consistent with how the Programs dropdown currently works.
+Match the existing dropdown styling exactly (same look for both) so About feels identical to Programs.
+Decide consistently whether clicking the "About" label navigates anywhere — since there's no dedicated About page, "About" should act purely as a dropdown trigger (it does not navigate); only its sub-items are links. (Programs keeps its current behaviour.)
+
+Mobile behaviour (important — must work cleanly):
+
+In the mobile hamburger menu, BOTH "Programs" and "About" must use the same accordion pattern already implemented for Programs: a label with a chevron beside it, tapping expands the sub-items in place, chevron rotates to show open/closed state, and tapping the chevron collapses it.
+"About" on mobile: since it has no page of its own, tapping the "About" label simply expands/collapses the accordion (it does not navigate). Its sub-items (Methodology, Staff, Location) link to their pages.
+"Programs" on mobile: keep its existing state-aware behaviour (expand on first tap, navigate to /programs on second tap when open, chevron collapses).
+Events and Contact Us remain single links in the mobile menu.
+Ensure both accordions can be open/closed independently, tap targets are finger-friendly (~44px), and the expanded lists don't break the menu layout or overflow on small screens.
+
+Consistency:
+
+Both dropdowns (desktop) and both accordions (mobile) should look and behave consistently with each other and with the site's existing styling and brand.
+Update any internal links or references if the removed top-level items (Methodology, Staff, Location) were linked from the header elsewhere.
+
+Test on desktop (both dropdowns open/close correctly, correct links) and mobile (both accordions expand/collapse independently, chevrons rotate, all sub-items link correctly, Events and Contact are single links). Confirm no dead links and the four-item order is correct.

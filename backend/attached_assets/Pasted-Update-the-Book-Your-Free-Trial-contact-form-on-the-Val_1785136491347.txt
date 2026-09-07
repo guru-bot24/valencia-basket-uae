@@ -1,0 +1,34 @@
+Update the "Book Your Free Trial" contact form on the Valencia Basket Academy UAE website with the following field structure, validation, and behaviour.
+
+Field order and specs (top to bottom):
+
+Parent/Guardian Name — required. Text input. Min 2 characters. Allow letters, spaces, hyphens, apostrophes only. Reject numbers/symbols. Trim whitespace.
+Child's Name — required. Same rules as above. (Rename the existing "Player Name" field to this.)
+Child's Age Group — required. Dropdown with placeholder "Select age group" (unselectable, not a submittable value). Options: 4–6 years, 7–10 years, 11–18 years. (Replaces the current free-text "Player Age".)
+Area/Locality — required. Dropdown with placeholder "Select area" (unselectable). Options: Al Barsha, Al Quoz, Bluewaters Island, Bur Dubai, Business Bay, Deira, DIFC, Dubai Internet City / Dubai Media City, Dubai Marina, Dubai Silicon Oasis, Dubai South, Dubailand, Downtown Dubai, International City, JBR, Jebel Ali, Jumeirah, Mirdif, Palm Jumeirah, Sheikh Zayed Road Corridor, Other / Outside Dubai.
+Current Level — optional. Dropdown with placeholder "Select level". Options: Beginner, Some experience, Plays competitively.
+Email — required. Standard email format validation. Auto-lowercase on submit. Add a soft "did you mean gmail.com?" suggestion for common typos (gmial.com, gmai.com, gmail.co).
+Phone — required. Country-code selector defaulting to +971, with other countries selectable. Validate the number against the selected country's format (for +971, expect 9 digits after the code). Strip spaces, dashes, brackets before storing. Store in full international format (e.g. +971501234567). Add a checkbox directly below: "This number is on WhatsApp" (boolean, no validation).
+How did you hear about us? — required. Dropdown with placeholder "Please select". Options: Instagram, TikTok, Google Search, Friend/Referral, School, Event, Walk-in, Other.
+Notes / Preferred Days — optional. Textarea. Max 500 characters. Strip HTML/script tags.
+Hidden fields (not visible to user) — auto-capture and submit: utm_source, utm_medium, utm_campaign, landing page URL, referrer, and submission timestamp. Default each to "direct" or empty so direct visitors still submit cleanly.
+
+Validation behaviour:
+
+Mark all required fields with a red asterisk (*) next to the label.
+Validate each field on blur (when the user leaves it), and again on submit.
+Show errors inline, directly below the relevant field, in plain language (e.g. "Please enter a valid UAE phone number"). No single error dump at the top.
+Disable the submit button until all required fields are valid, or show clear errors on click.
+Validate on the server side as well, not only in the browser — re-check all required fields and formats on the backend before accepting the submission.
+
+Spam protection:
+
+Add a honeypot field (hidden from real users; reject submission if filled).
+Reject submissions completed in under 3 seconds (bot behaviour).
+
+Design:
+
+Keep the existing visual style (orange/black/white theme, current fonts and layout). Only change field structure and validation, not the look.
+Ensure the form is mobile-responsive and the country-code selector works cleanly on mobile.
+
+On successful submit: show a confirmation message ("Thanks! We'll be in touch on WhatsApp shortly to confirm your trial.") and preserve all captured data including hidden fields.

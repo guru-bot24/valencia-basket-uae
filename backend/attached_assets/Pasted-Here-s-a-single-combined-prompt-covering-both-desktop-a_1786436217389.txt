@@ -1,0 +1,38 @@
+Here's a single combined prompt covering both desktop and mobile:
+
+Prompt for Replit AI
+
+Update the homepage Programs section cards (Future Ballers, Mini Basket, Youth Academy, and any other program cards) to fix mobile usability and improve desktop, as follows.
+
+Current problem: the program description text is hidden and only appears on hover. On desktop the hover works, but on mobile/touch there's no hover — so mobile users can't read the descriptions and have no clear way to tap through to the program pages.
+
+Desktop:
+
+Keep the existing hover-to-reveal behaviour for the description text (hover still reveals/animates the description as it does now — don't remove that).
+Add a "Learn More" button that is always visible on each card (not hidden behind hover). Style it in brand orange, consistent with the site's other buttons, labelled e.g. "LEARN MORE →".
+
+Mobile (touch breakpoints):
+
+Make the description text always visible — remove the hover dependency so the program name, age group, and description show at all times.
+"Learn More" button always visible too, finger-friendly (min ~44px tall), same brand styling.
+
+Button links (all cards, both desktop and mobile):
+
+Future Ballers → /programs/future-ballers
+Mini Basket → /programs/mini-basket
+Youth Academy → /programs/youth-academy
+(and any other program card → its correct landing page)
+
+End state:
+
+Desktop: description text reveals on hover (unchanged) + "Learn More" button always visible.
+Mobile: description text always visible + "Learn More" button always visible.
+
+Requirements:
+
+Match the existing card styling, brand palette (orange/black/white), and the site's button hover/active states.
+Cards must reflow properly — multiple columns on desktop, stacking to fewer/single column on mobile — with the text and button laid out neatly in each card.
+On desktop, ensure the always-visible "Learn More" button sits cleanly with the hover-reveal text — the button should not overlap, jump, or shift when the description animates in on hover.
+All tap/click targets work reliably on both mouse and touch, with no reliance on hover for the button or (on mobile) the text.
+
+Verify: on desktop, the hover text-reveal still works AND the Learn More button shows without hovering, with no layout jump on hover; on mobile, the description text is always visible and the button is easily tappable. Every "Learn More" button links to the correct program landing page on both desktop and mobile.

@@ -1,0 +1,6 @@
+- [Venue naming](venue-naming.md) — home venue is "AllSports Arena" (one word), per its Google listing; never "All Sports Arena".
+- [Next.js module state](nextjs-module-state.md) — route handlers and page renders get separate module copies; module-level cache invalidation across them is a no-op.
+- [Blog content data safety](blog-content-data-safety.md) — never seed invented blog content; integration tests must use rollback-only fixtures.
+- [Drizzle migration ordering](drizzle-migration-ordering.md) — journal timestamps must exceed every migration already applied, including removed historical entries.
+- [Publish build isolation](publish-build-isolation.md) — production builds must not run database-dependent integration tests or browser installation hooks.
+- [Blog image persistence](blog-image-persistence.md) — featured-image uploads use validated database-backed data URLs until durable object storage is introduced.

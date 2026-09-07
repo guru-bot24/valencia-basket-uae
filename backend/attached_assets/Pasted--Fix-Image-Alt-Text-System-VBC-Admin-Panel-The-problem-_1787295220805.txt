@@ -1,0 +1,48 @@
+# Fix Image Alt Text System — VBC Admin Panel
+
+## The problem
+
+In the SEO Manager's "Image Alt Text" tab, images are currently tracked by **placement**, not by the actual image file. Look at `lib/seo/images.ts` — each entry has a `key` like `home.hero` or `programs.hero`, and `seo_image_alts` stores overrides against that key.
+
+This means: if the same image file is used on two different pages (for example, an event photo that appears on the Events page AND as a clickable card on the Homepage), editing its alt text in one place does NOT update it in the other. They're stored as two unrelated records that happen to point at the same file. This creates drift and confusion — someone edits the alt text on one page, has no idea it also appears elsewhere, and now the site has two different descriptions for the same image.
+
+## What I need
+
+Refactor the Image Alt Text system so that **the image file itself is the source of truth**, not the placement:
+
+1. **One alt text per image file, synced everywhere it's used.** If an image appears on 3 pages, there's one alt text record, and editing it from any of those 3 pages updates all of them. No duplicate/conflicting records for the same file.
+
+2. **Show where each image is used.** In the admin panel, each image entry should list every page/placement it appears on (e.g. "Used on: Home, Events"), so it's clear at a glance that editing it affects multiple pages.
+
+3. **Confirm the impact on save.** When saving an edit, tell the admin how many pages/placements were just updated (e.g. "Updated on 2 pages") so there's no confusion about scope.
+
+4. **Handle the Homepage event card properly.** Right now the event image shown as a card on the Homepage is sourced from the Events data and its alt text is handled separately (falls back to the event title) — it's invisible in the current Images tab. Surface it in the Images tab too, clearly labeled as coming from Events, with a link to edit it at the source (the event editor) rather than duplicating a separate alt text field for it.
+
+5. **Support decorative images.** Add a way to explicitly mark an image as decorative, which should render `alt=""` instead of leaving the field looking unfinished or forcing someone to invent a description for something with no meaningful content (backgrounds, dividers, etc).
+
+6. **Add basic quality checks on the alt text input**, shown as inline hints while editing:
+   - Warn if it starts with "image of / photo of / picture of"
+   - Warn if it's just the filename
+   - Warn if it's identical to another image's alt text
+   - Warn if it's very short (under ~15 characters) or over 125 characters
+
+7. **Make sure the actual site reflects saved changes**, not just the admin panel — check how alt text currently reaches the live pages (hardcoded in components vs. pulled from the database at render) and fix that pipeline so an edit in the admin panel is reflected on the live site without a manual redeploy, with appropriate caching/revalidation.
+
+## What's already there (don't rebuild from scratch)
+
+- Admin panel: `/admin`, main component `app/admin/SeoManager.tsx`, "Image Alt Text" tab
+- Registry: `lib/seo/images.ts`, 34 managed image entries, 8 on the homepage
+- DB table: `seo_image_alts` (currently keyed by placement — this is what needs to change)
+- API: `app/api/admin/seo/images/route.ts` (GET/PUT)
+- Event images: handled separately in the event editor, alt falls back to event title
+
+Keep the existing Pages, Redirects, and Structured Data tabs untouched — this is scoped to the Image Alt Text tab and its supporting data/API only.
+
+## Before you start
+
+Please first check the codebase for:
+- Every place `MANAGED_IMAGES` / image alt values are actually used in rendering (hardcoded alt attributes vs. dynamic lookups), so the fix covers all of them
+- Whether any current image entries already share the same file across multiple `key`s, so we know the scale of the existing duplication
+- How the site is deployed/cached (static generation vs. server-rendered) so the "changes go live without redeploy" requirement is handled correctly
+
+Then propose your approach briefly before implementing, especially the data model change, so I can confirm before you touch the database schema.

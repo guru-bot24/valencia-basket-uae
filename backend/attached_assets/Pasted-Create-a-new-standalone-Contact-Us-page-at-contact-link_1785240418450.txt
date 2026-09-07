@@ -1,0 +1,41 @@
+Create a new standalone Contact Us page at /contact, linked in the main nav and footer, following the site's existing brand guidelines (orange 
+#FF6C0E / 
+#F18A00, black 
+#070000, grey 
+#5B6670, white; Barlow Condensed display type; uppercase headings; one H1 per page). It must look polished as an individual page on both desktop and mobile.
+
+Layout
+
+Hero band — full-width black background matching the Events/Facilities page hero style. Small orange eyebrow "GET IN TOUCH", H1 "CONTACT US" (uppercase, white, the page's only H1), and a one-line subtitle in muted grey: "Questions about programs, trials, or partnerships? We're here to help."
+Two-column body (stacks to one column on mobile, contact info first): Left column — contact information (dark panel):
+Extract the real contact details from the current live website (WhatsApp/phone number, email address, venue address, opening hours, and social media links — Instagram, TikTok, WhatsApp). Use those actual values. If any of these are missing or not found on the current site, list exactly what's missing and ask me to provide it rather than inserting placeholder or invented data.
+Display each as an icon + label + value row: WhatsApp, Email, Venue (AllSports Arena, Al Quoz, Dubai), Hours. Orange icons in rounded tiles.
+Make the phone/WhatsApp a click-to-chat wa.me link, the email a mailto: link, and the address link to the Google Maps listing.
+Social icons row, styled consistently with the footer icons.
+Embedded Google Map of AllSports Arena (same map/location used on the Facilities page), responsive.
+Right column — general enquiry form (white panel):
+Fields: Name (required), Phone (required, with the same country-code selector and validation used on the trial form — type="tel", scrollable country dropdown), Email (required, format-validated), Subject (dropdown: General enquiry / Programs & pricing / Partnerships & schools / Media / Careers), Message (required textarea).
+Required fields marked with a red asterisk; inline validation on blur and submit; server-side validation as well; honeypot + min-fill-time spam protection (same approach as the trial form).
+Hidden auto-captured fields: UTM source/medium/campaign, landing page, referrer, timestamp.
+Primary submit button "SEND MESSAGE" in brand orange with the hover/active states used sitewide.
+Below the form, a small secondary line: "Ready to join? Book a free trial →" linking to the trial booking form — so general enquiries and trial bookings stay separate.
+
+Form submission / admin
+
+This general enquiry form must submit to a separate destination from the trial booking form — route these submissions to their own place in the admin panel (a distinct list/inbox/table), so general enquiries don't mix with trial leads. Wire it up so I can access and view general enquiry submissions separately in the admin.
+
+On success — show a confirmation (inline or a modal consistent with the trial form's success state): "Thanks for reaching out. We'll get back to you shortly." Preserve all captured data including hidden fields.
+
+SEO
+
+Meta title: Contact Valencia Basket Academy UAE | Basketball in Dubai
+Meta description: Get in touch with Valencia Basket Academy UAE. Contact us about programs, free trials, school partnerships and more. Based at AllSports Arena, Al Quoz, Dubai.
+Add LocalBusiness / SportsActivityLocation structured data (JSON-LD) with the academy name, the extracted address, phone, geo-coordinates, opening hours, and URL — matching the Google Maps listing exactly for NAP consistency.
+Ensure the page is server-rendered/crawlable and added to the sitemap.
+
+Responsive
+
+Desktop: two-column layout as described.
+Mobile: single column, contact info block first then the form, comfortable gutters, finger-friendly inputs and buttons, the map and form full-width. Verify no overflow and that the country-code dropdown and subject dropdown are fully scrollable.
+
+Report back the contact details you extracted from the current site, flag anything missing for me to supply, and confirm the general enquiry submissions are routed to their own admin location separate from trial leads.

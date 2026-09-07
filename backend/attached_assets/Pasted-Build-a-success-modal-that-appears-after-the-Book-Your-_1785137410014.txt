@@ -1,0 +1,56 @@
+Build a success modal that appears after the "Book Your Free Trial" form is submitted successfully. It should feel premium, minimal, and match the look below. It must look and behave well on both desktop and mobile.
+
+Trigger & overlay
+
+Show the modal only after a successful form submission; hide/blur the form behind it.
+Full-screen fixed overlay backdrop: rgba(0,0,0,0.4), centers the card both axes, fade-in transition (~200ms).
+Card scales/fades in gently (e.g. from scale(0.96) + opacity 0 to full).
+
+Card
+
+Max-width 440px, width 100% minus page padding, background 
+#16130F (warm near-black), border-radius 16px, overflow: hidden, soft drop shadow 0 24px 60px rgba(0,0,0,0.4), position: relative.
+A 3px solid 
+#E8722C (brand orange) bar across the very top edge.
+Inner padding ~2.5rem 2rem 2rem on desktop; reduce to ~2rem 1.25rem 1.5rem on mobile.
+
+Contents (centered, top to bottom)
+
+Close (×) button — top-right, 34px circle, background rgba(255,255,255,0.06), faint white icon. Closes the modal.
+Brand row — the existing VBC site logo (~30px), beside the text "VALENCIA BASKET" in white, 13px, weight 500, letter-spacing 0.8px. Centered, with ~2.25rem margin below.
+Success mark — 76px white circle containing a dark (
+#16130F) checkmark icon, with a soft halo ring box-shadow: 0 0 0 8px rgba(255,255,255,0.05).
+Heading — "Request received", white, 30px (26px on mobile), weight 500, letter-spacing -0.5px.
+Body — rgba(255,255,255,0.62), 15px, line-height 1.65, max-width 340px: "Thanks for booking [Child's Name]'s free trial. Our team will reach out on WhatsApp within 24 hours to confirm the details." Dynamically insert the child's name from the form (rendered in solid white); if empty, fall back to "your free trial".
+"What happens next" list — a container with background rgba(255,255,255,0.04), border 0.5px solid rgba(255,255,255,0.08), border-radius 12px, horizontal padding ~1.25rem. Three rows, each row display:flex; align-items:center; gap:13px; padding:0.85rem 0, with a 0.5px solid rgba(255,255,255,0.06) bottom divider on the first two rows (none on the last). Each row has:
+A 32px rounded-square tile (border-radius 8px, background rgba(232,114,44,0.14)) containing an orange (
+#E8722C) icon at 17px.
+A text block: a primary line in white, 13.5px, weight 500; and a secondary line in rgba(255,255,255,0.45), 12px.
+Row 1 — WhatsApp icon — "We message you to confirm" / "Within 24 hours on WhatsApp"
+Row 2 — calendar icon — "Pick a slot that suits you" / "Flexible timings across the week"
+Row 3 — basketball icon — "Train and meet the coaches" / "Experience the methodology first-hand"
+Primary button (WhatsApp) — full width, background 
+#25D366 (WhatsApp green), text 
+#0A2416, weight 500, 14px, border-radius matching the site's buttons, padding ~14px. WhatsApp icon + label "Message us on WhatsApp". Links to a WhatsApp deep-link: https://wa.me/<NUMBER>?text=<url-encoded message> where the message is pre-filled, e.g. "Hi, I just booked a free trial for [Child's Name]". Replace <NUMBER> with the academy's WhatsApp number in international format, no plus or spaces.
+Secondary button ("Back to site") — full width, transparent background, border 0.5px solid rgba(255,255,255,0.14), text rgba(255,255,255,0.7), 13.5px, weight 500, ~0.75rem margin above. Closes the modal.
+
+Interaction
+
+Closeable via: the × button, "Back to site", the Escape key, and clicking the backdrop (but not clicks inside the card).
+Subtle hover states: primary button darkens slightly (~
+#20BD5A), secondary button border/text brighten, × button background lightens.
+Trap focus within the modal while open and return focus to the page on close; the modal should be keyboard-accessible and screen-reader friendly (appropriate role="dialog", aria-modal="true", and an accessible label).
+
+Responsive
+
+Desktop: centered card as described.
+Mobile: card should sit comfortably with ~16px side gutters, near-full width, slightly reduced padding and heading size (as noted). Buttons stay full width and finger-friendly (min ~44px tall). Ensure the whole modal fits without awkward scrolling on small screens; if content is tall, allow the card to scroll internally rather than the page.
+
+Styling notes
+
+Use the site's existing font family throughout.
+Colours: dark 
+#16130F, white and translucent-white accents, brand orange 
+#E8722C used only for the top bar and the three step icons, WhatsApp green 
+#25D366 for the primary button only.
+Keep it flat and clean — no gradients, no heavy shadows beyond the card's drop shadow.

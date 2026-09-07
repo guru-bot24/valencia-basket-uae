@@ -1,0 +1,24 @@
+Create the Terms and Conditions page at /terms (replacing the "coming soon" placeholder if one exists) and wire the footer "Terms and Conditions" link to it.
+
+Content: Use the full Terms and Conditions text provided below (I'll paste it). Render it as a clean, readable legal page — clear section headings, readable body text, sensible max-width for readability, consistent with the site's typography but kept simple and document-like (a clean white page with clear headings, like a standard legal page — not a marketing layout).
+
+Apply these corrections when building:
+
+Add an "Effective date" line at the top — use a placeholder [Effective date: __________] I can fill in, or today's date flagged for me to confirm.
+The text references "Section 14" for contact details (in the Photography/Media Release section) — since the page may not rigidly number sections, change hard section-number references to descriptive ones (e.g. "the contact details in the Contact Us section below") so there are no broken/incorrect references.
+Flag every instance of the short name "VBA UAE" — this may be a typo for the correct brand short name (Valencia Basket UAE / VBC). Do not silently change it; list the occurrences so I can confirm the correct name, and I'll tell you what to replace it with. (It should match whatever we use on the Privacy Policy page for consistency.)
+
+Structure & formatting:
+
+Page heading: "Terms and Conditions" with "Valencia Basket UAE" beneath.
+Clear section headings for each part (Registration and Enrollment, Fees and Payment, Refunds/Cancellations, Make-Up Sessions, Schedule Changes/Force Majeure, Uniform Policy, Health/Assumption of Risk, Photography and Media Release, Code of Conduct, Parent/Guardian Responsibilities, Competitive Programs, Intellectual Property, Limitation of Liability, Data Protection, Governing Law, Changes, Contact Us).
+Use proper bulleted lists for the listed items.
+Make the email (info@valenciabasket.ae) a clickable mailto: link and the phone number a clickable tel:/WhatsApp link.
+In the "Data Protection" section, make the reference to the Privacy Policy a working link to /privacy-policy.
+Fully responsive and readable on desktop and mobile.
+
+SEO:
+
+Meta title e.g. "Terms and Conditions | Valencia Basket Academy UAE", brief meta description. Server-rendered, add to sitemap.
+
+Verify the page renders cleanly, the footer link works, email/phone/Privacy Policy links are clickable, section references are correct, and it reads well on mobile.

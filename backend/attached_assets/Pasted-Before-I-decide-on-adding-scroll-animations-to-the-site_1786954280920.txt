@@ -1,0 +1,28 @@
+Before I decide on adding scroll animations to the site, I need to understand the current build and what motion already exists. Please investigate and report — don't change anything, just document.
+
+1. What animation/motion already exists on the site?
+
+List every place there's currently animation — scroll-triggered reveals, hover effects, transitions, the Spain Connection arc-draw, the trust bar marquee, the thank-you page entrance, etc.
+Is there any existing "animate on scroll into view" behaviour, or is motion mostly hover/transition-based?
+
+2. How is animation currently implemented?
+
+Is there an animation library installed (e.g. Framer Motion, GSAP, AOS, react-intersection-observer, CSS-only, Tailwind transitions)? Name what's in use.
+Is there a consistent/shared animation approach, or is motion added ad-hoc per component?
+
+3. Site structure relevant to animation:
+
+What are the main reusable building blocks — section components, card components (program cards, staff cards, trust items), grids — that scroll animations would attach to?
+Is there a shared layout/wrapper where a site-wide scroll-animation system could be added cleanly, so it applies consistently rather than page-by-page?
+
+4. Performance & tech context:
+
+Is the site server-rendered (Next.js App Router)? Any performance considerations for adding scroll animations (bundle size, hydration, mobile performance)?
+Is prefers-reduced-motion currently respected anywhere?
+
+5. Your recommendation:
+
+Based on the current build, what's the cleanest way to add consistent scroll-into-view animations (fade-up on sections/grids) that would apply site-wide with minimal code and good mobile performance? Would you use the existing setup, or add a lightweight library?
+Flag anything that would make scroll animations tricky or risky given how the site is currently built.
+
+Report this as a clear summary so I can decide what scroll animations to add and how. Do not make any changes yet — this is investigation and recommendation only.

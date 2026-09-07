@@ -1,0 +1,28 @@
+Restructure the staff/coaches page ("Our Team") into four distinct sections, grouping people by their actual role. Currently some non-coaching roles (General Manager, Operations Manager) are incorrectly grouped under "Coaching Staff" — fix this by separating roles into proper sections.
+
+The four sections, in this order (top to bottom):
+
+Leadership — Coach Maros Kovacik (Director & Head Coach). (Already exists — keep the current featured leadership layout.)
+Management & Operations (NEW section) — move the non-coaching management/operations roles here, out of "Coaching Staff":
+Coach Saiid (General Manager)
+Rabih (Operations Manager)
+(any other admin/management/operations roles currently on the page)
+Coaching Staff — only the people whose actual role is coaching:
+Coach Majil (Coach)
+Coach Ahmed (Coach)
+(any other genuine coaches — but NOT the GM or Ops Manager, who now live in Management & Operations)
+Alumni Coaches — former coaches. (Already exists — keep as is, with the black & white treatment.)
+
+Requirements:
+
+Each section has a clear heading (LEADERSHIP / MANAGEMENT & OPERATIONS / COACHING STAFF / ALUMNI COACHES) styled consistently with the existing section headings.
+Keep the existing card design, name styling (bold), and role labels (orange) for everyone — only the grouping changes.
+Active members (Leadership, Management & Operations, Coaching Staff) keep the full-colour photo treatment; Alumni keep black & white.
+Keep everyone's existing photo, name, role, and bio intact — this is a re-grouping, not a content change. Just move Saiid and Rabih into the new Management & Operations section.
+Each section's grid should reflow cleanly (multiple columns on desktop, stacking on mobile), and sections with fewer people should still look balanced, not awkwardly empty.
+Keep the mobile bio display working (always-visible, not hover-only) across all sections.
+Ensure clean spacing and dividers between the four sections on desktop and mobile.
+
+Verify: four clearly-separated sections in the correct order; Saiid (GM) and Rabih (Ops) now appear under "Management & Operations" (not Coaching Staff); Coaching Staff contains only actual coaches; everything styled consistently and looking clean on desktop and mobile.
+
+Report back the final list of who's in each section so I can confirm.

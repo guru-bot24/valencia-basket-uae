@@ -1,0 +1,15 @@
+Rebuild the Facilities page (/facilities) around a single venue, All Sports Arena, since all other facilities are being removed. The page currently feels bare with one venue — restructure it into a full, rich single-venue page using the sections below. Design all image areas as intentional, on-brand placeholders now (using the site's existing brand SVG/graphic style and orange, not stock hotlinks or empty boxes), structured so real photos can be dropped in later without layout changes. Add a clear code comment at each image slot marking it as a photo placeholder to be replaced.
+
+Sections, in order:
+
+Hero — full-width, All Sports Arena as the title, short tagline ("One dedicated home from August 2026"), on-brand placeholder background image slot.
+"What's inside" feature grid — a responsive grid of 6–8 feature tiles, each an icon + short label, replacing the old multi-venue grid. Features: FIBA-standard indoor courts, air-conditioned / climate-controlled, parent viewing area, changing rooms, free on-site parking, equipment provided, first-aid & safety, [leave one flexible]. Use the brand orange for icons, consistent with the rest of the site.
+Travel-time band — keep and expand the existing "under 25 minutes from most of Dubai" section. Show more Dubai zones as time chips: Dubai Marina, JLT, Downtown, New Dubai, Arabian Ranches, Mirdif (use placeholder minutes I'll confirm — mark them as TODO in a comment).
+Embedded Google Map — a live embedded map centered on All Sports Arena with the pin, plus a short "Getting here" note and parking line, and a "Open in Google Maps" button. (Use the existing maps location already set up in the footer.)
+"Why this venue" narrative — a short 2–3 sentence block on the academy having one consistent, professional training base from August 2026, tied to the Valencia / L'Alqueria methodology. On-brand.
+Photo gallery strip — a horizontal strip of 4–6 image placeholder slots for session/venue photos, same intentional-placeholder treatment, ready for real images later.
+Closing CTA — "Come see it yourself" with a "Book a free trial" button linking to the trial form.
+
+Keep everything on-brand (orange 
+#FF6C0E / 
+#F18A00, black, grey, white — no other colours), one H1 only (the hero), fully responsive on desktop and mobile, and make sure removing the other venues doesn't leave any dead links or empty wrappers elsewhere on the site. Update the page meta title/description to reflect a single venue if needed.

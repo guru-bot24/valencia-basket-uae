@@ -1,0 +1,28 @@
+Add subtle scroll-into-view "fade-up" animations to the homepage only for now, using the approach you recommended: a small shared useInView hook + a <Reveal> wrapper component, no new animation library.
+
+Implementation (per your recommendation):
+
+Create a small hooks/useInView.ts hook wrapping IntersectionObserver (same pattern SpainConnection already uses). No new dependencies.
+Create a <Reveal> client component ("use client") that applies opacity-0 translate-y-4 (or similar small upward offset) until the element enters the viewport, then transitions smoothly to opacity-100 translate-y-0.
+Respect prefers-reduced-motion inside the hook — if the user has reduced motion enabled, render content immediately with no animation.
+Fire once: each reveal animates the first time it enters the viewport, then stays visible — it must NOT re-animate every time the user scrolls back up and down past it (disconnect the observer after the first trigger).
+
+Where to apply it (homepage sections only):
+
+Wrap the major homepage sections at the section level (heading + content/grid together), NOT individual cards — to keep it readable and performant on low-end phones.
+Apply to: Trust bar, Programs grid, Methodology/Why-Us, Facilities preview, Testimonials, Event strip, and the Book-a-Trial CTA section.
+Do NOT animate: the hero section (it's above the fold — must be visible immediately with no fade), the nav, or the footer.
+The Spain Connection section already has its own scroll animation (the arc-draw) — leave it as is; either don't wrap it or ensure the new reveal doesn't conflict with its existing animation.
+
+Style & behaviour:
+
+Keep the animation subtle and fast — short upward travel, quick transition (~300–500ms), gentle easing. This is quiet polish, not a dramatic effect.
+Apply on both desktop and mobile (it's lightweight enough for mobile), consistent across both.
+Ensure content is never blocked or delayed in a way that hurts readability — the fade should feel like enhancement, not a gate.
+
+Technical notes (per your analysis):
+
+The <Reveal> wrapper is a client component; any server component that imports it stays server-rendered — only the wrapper hydrates. This is the correct App Router pattern (same as SpainConnection).
+Do NOT use Framer Motion or AOS — use the lightweight hook + CSS approach only.
+
+Verify: on the homepage, sections gently fade up as they scroll into view, each firing once; the hero/nav/footer are not animated; reduced-motion is respected; the Spain Connection animation still works; and it performs smoothly on both desktop and mobile.

@@ -1,0 +1,74 @@
+# VBC Blog Admin — Post Editor Build Prompt
+
+Build the **blog post editor screen** for the new "Blog" tab inside the existing VBC admin panel. This screen is where an admin creates or edits a single blog post. Match the structure and behavior below exactly — it's modeled on a proven WordPress-style post editor (title, content, publish controls, featured image, SEO snippet editor, categories/tags).
+
+## Layout: 2-column editor
+
+**Left column (main, ~70% width):**
+
+1. **Title field** — large, full-width single-line input at the top, no border except bottom underline on focus, placeholder "Add title". Auto-generates the slug from this text (editable separately, see below).
+2. **Permalink row** — directly under the title, small text showing the full URL preview (e.g. `valenciabasket.ae/blog/{slug}`), with an inline "Edit" link/button that turns the slug portion into an editable text input. Include Save/Cancel on edit.
+3. **Content editor toolbar** — a sticky formatting toolbar above the content area with:
+   - Add Media / Insert Image button
+   - Block-format dropdown (Paragraph, Heading 1–4, Quote)
+   - Bold, Italic
+   - Bullet list, Numbered list
+   - Blockquote
+   - Align left/center/right
+   - Insert Link
+   - Text color
+   - Special character insert
+   - Undo/Redo
+   - Fullscreen/expand toggle
+   - A "Code" view toggle (switch between WYSIWYG "Visual" and raw HTML "Code" view)
+4. **Content editor body** — large rich-text (WYSIWYG) textarea below the toolbar, resizable, supports embedded images and links.
+5. **Word count** — small text bottom-left of the editor ("Word count: 655").
+6. **Last edited by** — small text bottom-right ("Last edited by {admin name} on {date} at {time}").
+
+**Right column (sidebar, ~30% width), stacked collapsible panels — each panel has a header with an expand/collapse chevron:**
+
+### Panel 1 — Publish
+- Status: **Draft / Published / Scheduled** — shown as text with inline "Edit" link that expands a dropdown
+- Visibility: **Public / Private / Password Protected** — same inline-edit pattern
+- Publish date/time — shown as text with inline "Edit" link that opens a date-time picker; default to "Immediately" for new posts
+- Optional "Lock Modified Date" toggle switch
+- SEO score badge (see SEO panel below) mirrored here as a colored pill (red/yellow/green) with score out of 100
+- Bottom row, two actions: **"Move to Trash"** (text link, left, red) and **primary button** (right) — reads "Publish" for new drafts or "Update" for already-published posts
+
+### Panel 2 — Featured Image
+- If no image set: a dashed-border clickable box, "Set featured image"
+- If image set: thumbnail preview of the image, caption "Click the image to edit or update", and a "Remove featured image" text link below it
+
+### Panel 3 — SEO (Rank Math–style snippet editor)
+- Collapsed state shows: SEO score bar, a preview of the current meta title + slug + meta description, and an **"Edit Snippet"** button
+- Clicking "Edit Snippet" opens a modal/expanded panel with tabs: **General | Social | Advanced**
+  - **General tab:**
+    - "Generate with AI" button (optional/future) + device preview toggle (desktop/mobile icons)
+    - Live Google-style search result preview (URL, blue title link, gray description) that updates as you type
+    - **Title field** — with live character count and pixel-width count against a recommended max (e.g. "66/60 (615px/580px)"), color-coded progress bar (red → yellow → green)
+    - **Permalink/slug field** — same character-count + progress bar pattern
+    - **Meta description field** (textarea) — same character-count + progress bar pattern
+  - **Social tab:** Open Graph title/description/image override fields for social share previews
+- **Focus Keyword** field below the snippet summary — tag-style input where the admin types a target keyword; shows a small star/score icon per keyword; supports multiple keywords
+
+### Panel 4 — Categories
+- Two tabs: "All Categories" / "Most Used"
+- Scrollable checklist of existing categories with checkboxes (multi-select) — e.g. News, Match Reports, Player Spotlights, Club Announcements, Events, Youth Academy
+- **"+ Add Category"** link at the bottom — inline expands to a text input + "Add new category" button so admins can create a category without leaving the editor
+
+### Panel 5 — Tags
+- Text input + "Add" button (press Enter or click Add to commit a tag as a removable chip/pill)
+- Helper text: "Separate tags with commas"
+- "Choose from the most used tags" link that shows a cloud of existing tags to click-to-add
+
+## Behavior notes
+- All sidebar panels are independently collapsible (up/down chevron in each header) and reorderable if possible (nice-to-have, not required for v1).
+- Autosave the draft periodically (every 60s) and on major field blur, matching the "Save Draft" pattern.
+- The primary action button in the Publish panel should be disabled while required fields (Title, at least one Category) are empty, with inline validation messaging.
+- Slug/permalink auto-generates from title but never overwrites a manually edited slug once touched.
+- SEO score badge recalculates live as Title, Meta Description, and Focus Keyword change (basic rules: keyword present in title/description/slug/first paragraph, title length, description length).
+
+## Tech alignment with existing VBC blog build
+- This screen is the **Create/Edit Blog Post** view referenced in the admin dashboard scope already defined for the VBC blog project — it should read/write the existing `Blog Posts` model (Title, Content, Excerpt, Featured Image, Author, Category FK, Status, dates, Tags, Slug, Meta description) and the `Categories` model (Name, Slug, Description, Display Order).
+- Category creation from within this screen should call the same admin "manage categories" endpoint used elsewhere, so new categories immediately appear in the public blog's category filter.
+- Follow the existing VBC admin panel's visual language (colors, spacing, component library) rather than replicating WordPress's exact styling — the screenshots are a **structural/behavioral reference only**, not a visual one.

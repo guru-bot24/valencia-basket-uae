@@ -1,0 +1,151 @@
+WEBSITE DESIGN BRIEF (for Replit build)
+Project: Valencia Basket UAE (Spanish Basketball Academy in the UAE)
+
+1) PURPOSE / GOALS
+Build a premium, modern, conversion-focused website for Valencia Basket UAE that:
+- Communicates Spanish elite player-development DNA (values inspired by L’Alqueria del Basket: excellence, methodology, innovation, long-term athlete development, culture, humility, professionalism).
+- Fits the UAE context: international families, safety, structure, premium experience.
+- Converts visitors into leads for “Book a Trial” / “Admissions” / “Camps & Clinics.”
+
+Primary conversion actions:
+- Book a Trial (top priority)
+- Enquire / Contact (secondary)
+- View Programs (supporting)
+
+2) DESIGN DIRECTION (VISUAL + FEEL)
+Design inspiration: mouratoglou.com (style reference only; do not copy assets or code).
+Desired look:
+- Premium sports brand, minimalist, bold editorial typography.
+- Strong hero sections with high-impact imagery/video feel.
+- Clean grid layouts, generous whitespace, modern UI.
+- Subtle motion/scroll animations (tasteful, not flashy).
+- Color palette: black/white base with 1 strong accent (warm orange/amber acceptable; keep it classy).
+- Font: modern sans-serif (Inter recommended). Use strong weights and spacing.
+
+3) TECH + IMPLEMENTATION REQUIREMENTS (REPLIT-FRIENDLY)
+Use:
+- Next.js 14 (App Router) + TypeScript
+- TailwindCSS
+- Framer Motion (subtle animations)
+- React Hook Form + Zod (form validation)
+- Optional: shadcn/ui for components
+
+Quality requirements:
+- Fully responsive (mobile-first) with excellent typography scaling.
+- Performance: optimized images, lazy loading.
+- Accessibility: semantic headings, keyboard navigation, contrast-safe colors.
+- SEO: per-page metadata, OpenGraph, sitemap.xml, robots.txt.
+
+Constraint:
+- Do NOT use the official Valencia Basket logo unless user provides it. Use a clean text-based brand mark: “Valencia Basket UAE”.
+
+4) INFORMATION ARCHITECTURE (PAGES)
+A) Home
+B) Programs
+   - Mini (5–7)
+   - Youth (8–12)
+   - Teens (13–18)
+   - Elite/Select
+   - Camps & Clinics
+   - Private Training
+C) Methodology
+D) Coaches & Leadership
+E) Facilities
+F) Events
+G) Admissions
+H) Parents (FAQs, Safety, Communication, Education balance)
+I) Contact / Book a Trial (primary lead form)
+J) Legal: Privacy Policy + Terms
+
+5) NAVIGATION & UX RULES
+- Sticky top navigation with clear hierarchy.
+- Primary CTA button always visible: “Book a Trial”.
+- Programs in nav should be a dropdown.
+- Footer must include: contact details placeholders, social placeholders, quick links.
+
+6) CONTENT + MESSAGING REQUIREMENTS
+Write real copy (NO lorem ipsum). Tone: confident, premium, disciplined, warm.
+Key messaging themes:
+- “Spanish methodology. UAE home.”
+- “A complete player pathway.”
+- “Skill + Game IQ + Athletic development + Character.”
+- “Built on high-performance academy values inspired by L’Alqueria del Basket.”
+- “Safe, structured, and parent-friendly.”
+
+7) HOMEPAGE SECTION REQUIREMENTS
+Home page must include these sections in this order:
+1. Hero (big headline, subheadline, 2 CTAs: Book a Trial + View Programs)
+2. Trust Bar (3–5 credibility points: Spanish Curriculum • Qualified Coaches • Player Pathway • Safe Environment • Performance Support)
+3. Programs Preview (6 cards linking to Programs page anchors)
+4. Methodology Pillars (4–6 pillars):
+   - Skill Development
+   - Athletic Performance / Strength & Conditioning
+   - Game IQ
+   - Character & Culture
+   - Recovery & Injury Prevention
+   - Competition Exposure
+5. Facilities Preview (short + images)
+6. Events Preview (upcoming camps/clinics/showcases)
+7. Testimonials (3–6)
+8. CTA Strip (Book a Trial)
+9. Footer
+
+8) DESIGN COMPONENTS (REUSABLE)
+Create reusable UI components:
+- Hero
+- SectionHeader
+- ProgramCard
+- PillarCard
+- CoachCard
+- TestimonialCard
+- CTASection
+- FAQAccordion
+- PageHeader / Breadcrumbs (optional)
+
+Use consistent spacing (Tailwind scale) and a unified grid.
+
+9) FORMS (LEAD CAPTURE)
+Primary form: “Book a Trial”
+Fields:
+- Player Name
+- Player Age
+- Current Level (Beginner / Intermediate / Advanced / Elite)
+- Preferred Location (placeholder dropdown)
+- Preferred Days/Times
+- Parent/Guardian Name
+- Phone
+- Email
+- Notes
+
+Rules:
+- Validate via Zod (required fields + email format).
+- On submit: show success toast + store the submission in a simple local JSON file or mock storage (no external DB needed). Add a TODO note for real backend integration.
+
+Add secondary contact form on Contact page (short version).
+
+10) IMAGES / ASSETS
+- Use free-to-use placeholder images (e.g., Unsplash). Include source links in README.
+- Do not use copyrighted team photos/logos.
+- Use images that feel: elite training, disciplined youth, modern facilities, international vibe.
+
+11) SEO REQUIREMENTS
+- Per page: title + meta description.
+- OpenGraph tags.
+- Structured data (JSON-LD) for Organization/SportsActivityLocation with placeholders.
+- Generate sitemap.xml + robots.txt.
+
+12) DELIVERABLES
+- A working Next.js codebase in Replit.
+- Clean file structure (app/ pages, components/, lib/, styles/).
+- README:
+  - How to run locally in Replit
+  - How to deploy to Vercel
+  - Image sources and credits
+  - Where to update copy, programs, and contact info
+
+13) EXTRA (NICE TO HAVE)
+- A simple weekly schedule section (static table data).
+- A blog/news placeholder route (optional).
+- Language toggle UI placeholder (English/Arabic) without translating content—just the scaffolding.
+
+BUILD IT NOW following this brief as the single source of truth.

@@ -1,0 +1,21 @@
+Prompt for Replit AI (VBC project)
+
+Improve the Website SEO section of the admin panel with two usability upgrades. First confirm the current state of each area, then build.
+
+1. Add thumbnails to the image alt-text editor.
+
+Currently the alt-text editor shows editable alt-text fields but no way to see which image each field refers to. Next to each alt-text field, add a small thumbnail preview of the actual image, plus the image's filename/path, so I can recognise which image I'm describing.
+Confirm: how many images does each page's editor currently list? (e.g. the homepage — I believe it has ~9 images; confirm the actual count and that all are covered.)
+Add a visual indicator for images that have no custom alt text yet (i.e. still using the default/fallback), so I can see at a glance which images still need attention.
+Optional nice-to-have: a small character counter and a brief hint on writing good alt text.
+
+2. Make the structured-data (schema) view a collapsible dropdown layout.
+
+Present the structured data as a list of collapsible rows — one per page. Each row header shows: page name, the page URL, and the last-modified date (use the page's actual last-modified date automatically if available).
+Clicking a row expands it to reveal that page's structured data (the schema output for that page) in a readable box. Collapsed by default so it's clean; expand on click.
+Keep this read-only (as agreed — no free-form schema editing), just better organised and easier to navigate.
+Optional: next to each page, a link to open Google's Rich Results Test for that URL, so I can validate the schema.
+
+Before building: briefly confirm the current state of both areas — is the alt-text editor and the structured-data view already implemented, and how? (I can't tell fully from the UI.) Then implement these improvements. Don't break any existing SEO admin functionality (meta editing, redirects, previews, etc.).
+
+Report back: confirm the homepage image count, that thumbnails now show, and that the structured-data view is now a clean collapsible per-page layout with name/URL/last-modified.

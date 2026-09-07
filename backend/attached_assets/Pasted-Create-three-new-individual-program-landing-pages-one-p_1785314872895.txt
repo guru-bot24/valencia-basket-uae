@@ -1,0 +1,33 @@
+Create three new individual program landing pages, one per age tier. Build them using the site's existing design language and component library — reuse the same styling, typography, spacing, section patterns, buttons, and brand treatment already used across the other pages (Facilities, Events, Contact, etc.) so they feel native to the site. Don't follow a rigid externally-specified layout; use your judgment to lay each page out the way the rest of the site is built.
+
+Make each page feel distinct, not identical. While they share the site's design system, give each age group its own visual identity — vary the layout, imagery, section arrangement, and accent treatment so a parent lands on a page that feels tailored to their child's age rather than a generic template repeated three times. Future Ballers should feel playful and young; Mini Basket energetic and skill-focused; Youth Academy more serious, competitive, and pathway-oriented. Differentiate them through layout and tone within the existing brand palette (orange/black/white) — not by inventing new off-brand styles.
+
+Pages / routes:
+
+/programs/future-ballers — Future Ballers — ages 4–6 (tone: fun, coordination, confidence, first steps)
+/programs/mini-basket — Mini Basket — ages 7–10 (tone: fundamentals, energy, skill-building)
+/programs/youth-academy — Youth Academy — ages 11–18 (tone: development, competition, pathways)
+
+Content source:
+
+Pull the real details that already exist on the current /programs page for each program (descriptions, focus areas, any session info) and use them.
+Where a detail doesn't exist (session length, weekly frequency, coach-to-player ratio, session structure, etc.), insert a clearly-marked placeholder like [PLACEHOLDER: session length — confirm] and list every placeholder per page in a code comment. Do not invent specific figures as if real — flag them.
+
+Each page should cover (arranged however best fits the site's design):
+
+A hero with the program name, age group, and a short pitch, consistent with how other page heroes look.
+What the child will learn / focus areas for that age.
+Practical info (session length, frequency, ratio) — placeholders if unknown.
+A sense of what a session looks like.
+Clear calls to action.
+
+CTAs: all "Book a Free Trial" / booking CTAs link to the existing home-page trial booking form — do NOT embed a form on these pages. Secondary CTAs can link to relevant existing pages (Contact, Programs, Methodology).
+
+Linking & SEO:
+
+Link each program card on the main /programs page to its new dedicated page, and update the "Programs" nav dropdown to point each item to its new page (keep Elite/Select as-is).
+Unique meta title + description per page (e.g. Future Ballers → Basketball for Kids Ages 4-6 in Dubai (Future Ballers) | Valencia Basket UAE; write equivalent unique meta for the other two). Server-render and add to the sitemap. No dead internal links.
+
+Responsive: all three must look polished on desktop and mobile, consistent with the rest of the site's responsive behaviour.
+
+After building, report back the list of placeholders per page for me to fill, and confirm all booking CTAs point to the existing trial form.

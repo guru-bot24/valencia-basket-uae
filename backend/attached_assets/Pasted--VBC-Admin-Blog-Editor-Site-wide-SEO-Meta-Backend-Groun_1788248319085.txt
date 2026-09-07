@@ -1,0 +1,51 @@
+# VBC Admin — Blog Editor & Site-wide SEO/Meta Backend
+
+Grounded in the Step 0 production audit (Next.js 16 App Router / React 19 / TypeScript, PostgreSQL + Drizzle, custom `/admin` dashboard, hosted on Replit Autoscale behind Cloudflare). Do not reinvent anything the audit shows already exists — extend it.
+
+---
+
+## Part A — Blog Post Editor (new/updated UI in the existing "Blog" admin tab)
+
+Builds on the existing `/api/admin/blog`, `/api/admin/blog/[id]`, and `/api/admin/blog/meta` routes and the `blog_posts` table. Match the existing admin's component library (`components/ui`: Buttons, Cards, Tables, Tabs, Dialogs, Inputs, Textareas, Checkboxes, Toasts) — do not introduce a new design system.
+
+### Layout: 2-column editor
+
+**Left column (main):**
+1. **Title field** — large single-line input, placeholder "Add title". Drives slug auto-generation.
+2. **Permalink row** — shows `valenciabasket.ae/blog/{slug}` with inline "Edit" to override the slug manually (never silently overwrite a manually-edited slug on later title changes).
+3. **Content editor toolbar** — Add Media, block-format dropdown (Paragraph/H1–H4/Quote), Bold, Italic, bullet/numbered list, blockquote, align L/C/R, insert link, text color, undo/redo, fullscreen toggle, Visual/Code (raw HTML) toggle.
+4. **Content body** — standard rich-text (WYSIWYG) editor area below the toolbar.
+5. Word count (bottom-left), "Last edited by {admin} on {date}" (bottom-right).
+
+**Right column (sidebar, collapsible panels):**
+
+- **Publish panel** — Status (Draft/Published/Scheduled) and Visibility as text + inline-edit, Publish date/time picker (default "Immediately"), SEO score pill, "Move to Trash" (left) / "Publish" or "Update" primary button (right).
+- **Featured Image panel** — set/replace/remove image, using the existing upload path (`blog_posts.featured_image_src`).
+- **SEO panel** — see Part B; this is the blog-post instance of the same site-wide SEO fields, reusing the same component.
+- **Categories panel** — checklist (multi-select) of existing categories + "+ Add Category" inline create.
+- **Tags panel** — comma-separated tag input + "most used tags" picker.
+
+---
+
+## Part B — Site-wide SEO & Meta Details Panel
+
+**This is an extend-not-rebuild task.** The schema and routes already exist:
+- Fields already in place: `metaTitle`, `metaDescription`, `canonicalUrl`, `ogTitle`, `ogDescription`, `ogImage`, `noIndex`
+- Tables already in place: `seo_pages` (per-route overrides), `seo_schema_overrides` (structured data), `seo_redirects` (managed redirects)
+- Routes already in place: `/api/admin/seo/pages`, `/api/admin/seo/images`, `/api/admin/seo/schema`, `/api/admin/seo/redirects`
+- `app/sitemap.ts` and `app/robots.ts` already generate sitemap/robots output
+
+**Before writing any code, audit the existing "Website SEO" admin tab UI itself** to see which of the schema fields are actually exposed and editable there today vs. only present in the schema. Likely gaps to check/fill:
+1. Is `canonicalUrl` actually editable in the UI, or only stored? (Audit didn't confirm UI coverage, only schema/route coverage.)
+2. Meta Robots — currently only `noIndex` (boolean) exists. Add a proper Index/Noindex + Follow/Nofollow control if a combined robots directive is needed.
+3. Twitter/X Card fields — not found in the audit (only OG fields exist). Add `twitterTitle`, `twitterDescription`, `twitterImage` with fallback to the OG/meta fields if left blank, matching the existing OG-field pattern.
+4. Focus Keyword input (tag-style, for internal SEO scoring only — doesn't need to affect the live `<head>` output) — not found in the audit; add if wanted for the score-pill UI in Part A.
+5. Schema/structured-data type selection — `seo_schema_overrides` exists; confirm whether the admin UI already lets you pick a schema type (Article/Organization/Event/Product) per page, or only raw override JSON. Build a type-picker + field-mapped form on top of it if it's currently JSON-only.
+
+Every field added here should read/write through the **existing** `seo_pages` (or `seo_schema_overrides`/`seo_redirects`) tables and API routes — do not create a parallel meta-storage system, and do not duplicate fields that already exist on `blog_posts` for blog-specific overrides.
+
+---
+
+## Suggested build order
+1. Part B (SEO panel audit + gap-fill) — smallest, builds on existing infra, immediate value. Send Replit a targeted follow-up asking exactly which of the schema fields are already editable in the current "Website SEO" tab UI vs. only present in the database, before writing any new fields.
+2. Part A (blog post editor UI) — uses Part B's SEO component as a subpanel.

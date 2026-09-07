@@ -1,0 +1,36 @@
+We've restructured the program age tiers. The old structure had four age-based tiers; the new structure has three. Additionally, keep the separate invitation-based Elite / Select program exactly as it is — it is NOT an age tier and must be preserved.
+
+Search the entire codebase and content for references to the old program names and age bands, and update to the new structure below. This is a rename + consolidation of the age tiers — "Teens" is absorbed into "Youth", but "Elite / Select" stays as its own program.
+
+New age-tier structure (these three, by age):
+
+Future Ballers (Kids) — ages 4–6
+Mini Basket — ages 7–10
+Youth — ages 11–18
+
+Plus, keep unchanged:
+
+Elite / Select — invitation/selection-based program. Do NOT remove, rename, or fold this into Youth. Leave its card, description, and any links intact. It simply is no longer described as an age tier (16–18); it's a selection program that sits alongside the three age tiers.
+
+Old references to find and update/remove:
+
+"Mini Basket" previously ages 6–8 → now ages 7–10
+"Youth Academy" previously ages 9–12 → rename to "Youth", now ages 11–18
+"Teens" (ages 13–15) → remove as a separate program; absorbed into "Youth"
+"Elite" / "Elite & Competitive Teams" (ages 16–18) → keep the Elite / Select program, but remove the "ages 16–18" age-tier framing from it (it's invitation-based, not age-based). Keep competitive team rosters under /teams unchanged.
+Add the new Future Ballers (Kids) ages 4–6 program, which didn't exist before
+
+Where to search and update (find all — likely spots, not exhaustive):
+
+Programs page (/programs): program cards, age badges, anchor IDs (#mini, #youth, #teens, #elite), descriptions. Keep the #elite / Elite-Select card; remove or repurpose the #teens card.
+Homepage player-pathway / program section and any age-band chips
+Nav dropdown items referencing program names
+Trial/booking form age-group dropdown → should read: 4-6 years, 7-10 years, 11-18 years (age tiers only; Elite/Select isn't an age-group option)
+Meta titles/descriptions listing program names or age range ("ages 5-18" / "6-18" → "4-18")
+Internal links pointing to #teens (dead — remove/redirect); keep #elite links working
+Hardcoded age strings ("Ages 6–18", "Ages 13–15"), structured data, handbook/PDF references
+Sitewide age-range copy ("6–18" → "4–18")
+
+For each location, update name, age band, and description to fit the new model: three age tiers (Future Ballers, Mini Basket, Youth) plus the standalone invitation-based Elite / Select. Remove dead #teens anchors/links. After the change, confirm: no remaining "Teens" as a program, no "ages 16–18" age-tier framing on Elite/Select, Elite/Select still present as an invitation program, and sitewide age range reads 4–18. Report the list of files/sections changed.
+
+Do not change competitive team rosters under /teams (16U, 14U, etc. — those are competition squads).

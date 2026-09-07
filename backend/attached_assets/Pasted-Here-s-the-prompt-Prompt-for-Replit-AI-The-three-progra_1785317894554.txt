@@ -1,0 +1,36 @@
+Here's the prompt:
+
+Prompt for Replit AI
+
+The three program landing pages (Future Ballers, Mini Basket, Youth Academy) currently share the Future Ballers design and look too identical when scrolling. Keep them in the same design family and brand language, but introduce controlled structural variations so each page has its own distinct feel. Use the Future Ballers page as the base, and vary the other two (and lightly Future Ballers itself) using these specific levers — do not invent new off-brand styles, only rearrange and reweight existing elements:
+
+Lever 1 — Alternate image/content sides.
+Vary which side images sit on across the pages and sections so they don't all mirror each other:
+
+Future Ballers: image-left / content-right as the primary rhythm.
+Mini Basket: flip it — image-right / content-left as the primary rhythm.
+Youth Academy: alternate section-by-section (zigzag) so it differs from both.
+
+Lever 2 — Accent weight scaled to age (younger = lighter/playful, older = darker/elite).
+Keep the same orange/black/white palette, but shift the balance per page:
+
+Future Ballers (4–6): more orange, softer/rounder corners, lighter and more playful — more white space, bigger friendly tiles.
+Mini Basket (7–10): balanced — energetic, mid-weight use of orange and black.
+Youth Academy (11–18): more black/dark sections, tighter spacing, sharper corners, more restrained orange — a more serious, competitive, "elite" feel.
+This should make the visual weight visibly progress with age while staying clearly the same brand.
+
+Lever 3 — Reorder one or two sections per page so the scroll rhythm differs.
+The pages don't need identical section order. Lead each with what that audience cares about first:
+
+Future Ballers: lead with the fun / "what they'll learn" focus.
+Mini Basket: lead with skills/session structure.
+Youth Academy: lead with stats, development, and pathway/competition emphasis.
+Also vary which sections use a dark background vs white so the pages don't share the same light/dark rhythm.
+
+Constraints:
+
+All three must still read as the same family — same components, typography, buttons, and brand palette. The variation is in arrangement, image side, section order, and accent weight only — not new colours, fonts, or off-brand elements.
+Keep all existing content, copy, placeholders, and CTAs intact; CTAs still link to the existing home-page trial booking form.
+Keep everything responsive — variations must hold up cleanly on both desktop and mobile (on mobile, alternating image sides will naturally stack, so ensure the stack order still makes sense per page).
+
+After the change, the three pages should feel distinct when scrolled back-to-back while obviously belonging to the same site. Report what you varied on each page.

@@ -1,0 +1,255 @@
+// PLACEHOLDERS ON THIS PAGE:
+// [PLACEHOLDER: session length — confirm] — e.g. "90 minutes"
+// [PLACEHOLDER: coach-to-player ratio — confirm] — e.g. "1:12"
+// [PLACEHOLDER: weekly frequency — confirm] — currently shown as Sun/Tue/Thu from /programs, verify if correct
+// [PLACEHOLDER: league / competition details — confirm] — which leagues do Youth players compete in?
+
+import type { Metadata } from "next";
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Target, Shield, TrendingUp, Trophy, Check } from "lucide-react";
+import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
+import { getStructuredData } from "@/lib/seo/structuredDataResolve";
+import { StructuredData } from "@/components/seo/StructuredData";
+
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildPageMetadata("/programs/youth-academy");
+}
+
+const pillars = [
+  {
+    icon: Target,
+    title: "Technical Mastery",
+    points: ["Shooting form & mechanics", "Dribbling under pressure", "Finishing at the rim", "Footwork & spacing"],
+  },
+  {
+    icon: Shield,
+    title: "Defensive Excellence",
+    points: ["Defensive footwork", "On-ball & help defense", "Transition defense", "Reading offensive actions"],
+  },
+  {
+    icon: TrendingUp,
+    title: "Tactical Development",
+    points: ["Half-court offense sets", "Pick-and-roll concepts", "Defensive schemes", "Fast break execution"],
+  },
+  {
+    icon: Trophy,
+    title: "Competition",
+    points: [
+      "Competitive leagues",
+      "Internal tournaments",
+      // HIDDEN — add league/competition details once confirmed
+      "Performance reviews",
+    ],
+  },
+];
+
+const focusAreas = [
+  { icon: Target,     title: "Technical Mastery",    desc: "Shooting mechanics, dribbling under pressure, finishing at the rim — high-repetition skill work with immediate coach feedback." },
+  { icon: Shield,     title: "Defensive Excellence", desc: "Footwork, on-ball and help defense, transition defense, and reading offensive actions at game speed." },
+  { icon: TrendingUp, title: "Tactical Development", desc: "Half-court offense, pick-and-roll concepts, defensive schemes, and fast break execution applied in real game situations." },
+  { icon: Trophy,     title: "Competition",          desc: "Competitive leagues, internal tournaments, and structured 5v5 scrimmages to test development under real pressure." },
+];
+
+export default async function YouthAcademy() {
+  const alt = await getAltResolver();
+  const schema = await getStructuredData("/programs/youth-academy", "Youth Academy");
+  return (
+    <>
+      <StructuredData data={schema} />
+      {/* ── HERO — Lever 2: no decorative circles, clean/sharp/elite ── */}
+      <div className="bg-black text-white py-24">
+        <div className="container mx-auto px-4 md:px-6 text-center">
+          <span className="inline-block rounded-full bg-primary text-white px-4 py-1.5 font-bold uppercase text-xs tracking-widest mb-6">
+            Ages 11–18 Years
+          </span>
+          <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6">
+            Youth <span className="text-primary">Academy</span> Program
+          </h1>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+            Building the complete player. Technical mastery, tactical intelligence, physical conditioning, and the competitive mindset to perform under pressure.
+          </p>
+          <div className="flex justify-center">
+            <Link href="/#book-trial">
+              <Button size="lg" className="uppercase font-bold tracking-wider rounded-none h-14 px-10 text-base">
+                Book a Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* ── IMAGE LEFT / CONTENT RIGHT — Lever 1: mirrors Future Ballers ── */}
+      {/* Lever 2: tighter py-16, compact stats */}
+      <section className="bg-white py-16">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* image LEFT — mobile: stacks first */}
+            <div className="order-1 relative">
+              <div className="absolute -inset-4 border-2 border-primary/30 z-0 translate-x-4 translate-y-4" />
+              <div className="relative z-10 aspect-[4/3] w-full overflow-hidden">
+                <Image
+                  src="/images/youth-program.jpeg"
+                  alt={alt("youth-academy.hero")}
+                  fill
+                  className="object-cover shadow-2xl"
+                  priority
+                />
+              </div>
+            </div>
+            {/* content RIGHT — mobile: stacks second */}
+            <div className="order-2">
+              <span className="text-primary font-bold uppercase tracking-widest text-sm mb-4 block">The Program</span>
+              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-6">
+                Serious Development.<br /><span className="text-primary">Real Pathways.</span>
+              </h2>
+              <p className="text-gray-600 leading-relaxed text-lg mb-6">
+                Youth Academy is where basketball becomes a pursuit. Players aged 11–18 are ready for more: more intensity, more tactical depth, and more competitive challenge. This program delivers all three, rooted in the Valencia Basket methodology from Spain.
+              </p>
+              <p className="text-gray-600 leading-relaxed text-lg mb-8">
+                Sessions blend high-repetition technical work with tactical concepts and progress into competition preparation and league play. Top performers are considered for invitation to the Elite / Select program.
+              </p>
+              {/* Lever 2: tighter stat tiles, less padding */}
+              <div className="grid grid-cols-2 gap-3">                <div className="bg-gray-50 border-l-4 border-primary px-3 py-2">
+                  <span className="block text-xs font-bold uppercase text-gray-400 mb-0.5">Session Length</span>
+                  <span className="font-bold text-gray-900 text-sm">90 mins</span>
+                </div>
+                
+                {/* HIDDEN — un-hide and replace value once coach-to-player ratio is confirmed */}
+                {false && (
+                  <div className="bg-gray-50 border-l-4 border-primary px-3 py-2">
+                    <span className="block text-xs font-bold uppercase text-gray-400 mb-0.5">Coach : Player Ratio</span>
+                    <span className="font-bold text-gray-900 text-sm">[PLACEHOLDER: coach-to-player ratio — confirm]</span>
+                  </div>
+                )}
+                <div className="bg-gray-50 border-l-4 border-primary px-3 py-2">
+                  <span className="block text-xs font-bold uppercase text-gray-400 mb-0.5">Venue</span>
+                  <span className="font-bold text-gray-900 text-sm">AllSports Arena, Al Quoz</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── HOW WE DEVELOP PLAYERS — Lever 2: tighter cards (p-6, w-10 icons) ── */}
+      <section className="bg-neutral-900 text-white py-16">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-12">
+            <span className="inline-block rounded-full bg-primary text-white px-4 py-1.5 font-bold uppercase text-xs tracking-widest mb-4">
+              Training Pillars
+            </span>
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">
+              How We Develop Players
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {pillars.map(({ icon: Icon, title, points }) => (
+              <div key={title} className="bg-white/5 border border-white/10 p-6 hover:border-primary/50 transition-all duration-300">
+                <div className="w-10 h-10 bg-primary/15 flex items-center justify-center mb-5">
+                  <Icon className="h-5 w-5 text-primary" />
+                </div>
+                <h3 className="font-black uppercase tracking-tight text-sm mb-3">{title}</h3>
+                <ul className="space-y-2">
+                  {points.map((p) => (
+                    <li key={p} className="flex items-start gap-2 text-gray-400 text-sm">
+                      <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOCUS AREAS — Lever 2: tighter p-6, smaller icons w-12 ── */}
+      <section className="bg-gray-50 py-16">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-12">
+            <span className="inline-block rounded-full bg-primary text-white px-4 py-1.5 font-bold uppercase text-xs tracking-widest mb-4">
+              What We Cover
+            </span>
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">Focus Areas</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {focusAreas.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="bg-white border border-gray-200 p-6 flex flex-col items-center text-center gap-3 hover:border-primary transition-colors">
+                <div className="w-12 h-12 bg-primary/10 flex items-center justify-center">
+                  <Icon className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-black uppercase text-base tracking-tight">{title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── SESSION — Lever 1: steps LEFT / image RIGHT (mirrors Future Ballers) ── */}
+      {/* Lever 2: tighter py-16, smaller step numbers */}
+      <section className="bg-black text-white py-16">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* steps LEFT — mobile: stacks first */}
+            <div className="order-1">
+              <span className="text-primary font-bold uppercase tracking-widest text-sm mb-4 block">Session Structure</span>
+              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-8">
+                What a Session Looks Like
+              </h2>
+              <div className="space-y-5">
+                {[
+                  { step: "01", title: "Activation",      desc: "Dynamic warm-up: mobility, activation drills, and mental focus before training begins." },
+                  { step: "02", title: "Technical Block", desc: "High-repetition individual skill work — shooting form, ball-handling series, or footwork patterns with immediate coach feedback." },
+                  { step: "03", title: "Tactical Work",   desc: "Small-group and team drills applying the session's concept in game-realistic scenarios." },
+                  { step: "04", title: "Competition",     desc: "5v5 scrimmage or structured game situations — applying everything under competitive pressure." },
+                  { step: "05", title: "Review",          desc: "Coach-led debrief on key moments, individual notes, and targets for the next session." },
+                ].map(({ step, title, desc }) => (
+                  <div key={step} className="flex gap-5">
+                    <span className="text-primary font-black text-xl leading-none shrink-0 w-8">{step}</span>
+                    <div>
+                      <h4 className="font-bold uppercase tracking-wide mb-1 text-sm">{title}</h4>
+                      <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* image RIGHT — mobile: stacks second */}
+            <div className="order-2 aspect-[3/4] w-full relative">
+              <Image src="/images/youth-program.jpeg" alt={alt("youth-academy.session")} fill className="object-cover" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA — Lever 2: most compact (py-16) ── */}
+      <section className="bg-primary py-16 text-white text-center">
+        <div className="container mx-auto px-4 md:px-6">
+          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">
+            Ready to Level Up?
+          </h2>
+          <p className="text-xl mb-8 max-w-xl mx-auto opacity-90">
+            Book a free trial session and let our coaches assess exactly where your game is — and where it can go.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/#book-trial">
+              <Button size="lg" className="bg-black text-white hover:bg-white hover:text-primary uppercase font-bold tracking-wider rounded-none h-14 px-10 text-base border-0">
+                Book a Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="/contact">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary uppercase font-bold tracking-wider rounded-none h-14 px-10 text-base">
+                Ask a Question
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

@@ -1,0 +1,40 @@
+I want to add a fuller SEO management section to the VBC admin panel, so SEO fields that are currently code-managed can also be edited from the admin. Build this additively and safely — do NOT affect any existing admin features (trial bookings, event registrations, events management, admin users/auth) or the existing code-level SEO that already works.
+
+Context (from your earlier review): VBC already implements meta titles, descriptions, canonicals, OG/Twitter tags, no-index where needed, robots.txt, an XML sitemap, some schema (FAQ + Contact), and code-level image alt text. Events are the only CMS/database-managed content; everything else is hard-coded. I want an admin layer on top of this.
+
+Build a "Website SEO Manager" in the admin with:
+
+1. Per-page meta editing.
+
+A list of the site's main pages (home, programs, each program detail, methodology, coaches, facilities, admissions, FAQ, contact, policies, events listing, etc.).
+For each page: editable meta title, meta description, canonical URL (optional override), and a no-index toggle.
+Override model: an admin value overrides the code default; if the admin field is left empty, fall back to the existing code-defined value. This preserves all current working defaults — nothing regresses if a field is blank.
+A Google search-result preview showing how the title/description will appear.
+
+2. Open Graph / social preview per page.
+
+Editable OG/Twitter title, description, and image per page (falling back to the meta values and a default share image if empty), with a simple preview of how it looks when shared.
+
+3. Universal alt text for images.
+
+Editable alt text for images — at minimum for event images (currently defaulting to the event title) via the existing events admin, and for other CMS/admin-managed images where they exist.
+For hard-coded page images: propose the simplest way to make their alt text admin-editable (e.g. a small alt-text override map keyed by image), but keep it lightweight. If it's disproportionate effort for the hard-coded images, tell me and we'll scope those out — prioritise event and any CMS images first.
+
+4. Redirect manager.
+
+An admin UI to list/add/edit/remove 301 redirects. Note: a www→non-www redirect already exists in next.config.ts — don't duplicate or conflict with it; this manager is for additional content redirects (e.g. old URL → new URL). Confirm how these redirects are applied so they work alongside the existing config-level one.
+
+5. Read-only structured-data (schema) visibility.
+
+A simple read-only view showing what structured data is output for a given page (the existing FAQ/Contact schema, Organization/LocalBusiness, Event schema, etc.). NO free-form schema editor — just visibility so I can confirm what's being output. If adding editable/guided schema fields is straightforward for the Organization/LocalBusiness data specifically, you may include that; otherwise keep it read-only.
+
+Guardrails (important):
+
+Do NOT break or risk any existing admin features — trial bookings, event registrations, events management (creation/editing/deletion), and admin user/auth must all keep working exactly as now. This SEO Manager is purely additive.
+Do NOT regress the existing code-level SEO — all current meta/canonical/OG/sitemap/robots/schema behaviour must remain intact; the admin only overrides where a value is explicitly set, falling back to code defaults otherwise.
+Match the existing VBC admin UI style so the SEO Manager feels native.
+Store SEO overrides in the database, applied at render time via the existing Next.js metadata system.
+
+Before building: give me a short plan — how you'll implement the override layer (DB-stored overrides feeding Next.js metadata), how the hard-coded-image alt text would work, and a sensible build order (I'd expect: per-page meta + preview first, then alt text, then redirects, then OG, then schema visibility). Confirm nothing existing is at risk. Then build.
+
+Report the plan first, then build in stages.

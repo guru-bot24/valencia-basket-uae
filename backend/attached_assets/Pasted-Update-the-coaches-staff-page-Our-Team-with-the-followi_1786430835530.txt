@@ -1,0 +1,33 @@
+Update the coaches/staff page ("Our Team") with the following changes:
+
+1. Remove coaches
+
+Remove Nour and Brian entirely from the page (and from the underlying data/admin if the team is data-driven).
+
+2. Group into Active and Alumni
+
+Split the team into two clearly-headed sections:
+Active section first (heading e.g. "Our Team" or "Coaching Staff") — all current coaches and staff.
+Alumni Coaches section below it (clear heading "Alumni Coaches") — containing Andreu, Ruben, and Carles. Move these three out of the active group into this alumni group.
+Keep the same card style/grid for both sections; the only differences are the grouping heading and the colour treatment (below).
+
+3. Colour treatment tied to grouping
+
+Active coaches/staff: display their photos always in full colour (remove the current default-black-and-white-with-hover behaviour for these — they should be colour at all times, on both desktop and mobile).
+Alumni coaches: display their photos in black & white (grayscale) at all times — this visually signals their alumni/past status. (Optional subtle touch: a slight colour reveal on hover for alumni on desktop is fine, but default state is B/W.)
+
+4. Fix the bio for mobile (important)
+
+Currently the coach bio (e.g. Coach Saiid's description) only appears on hover, which means mobile/touch users can't see it at all.
+Fix so bios are accessible on mobile: on desktop, keep the hover-to-reveal bio; on mobile/touch, either show the bio by default beneath the name, or make it reveal on tap. Ensure every coach with a bio is readable on mobile without a mouse.
+
+5. General polish (keep it simple — no major restructure)
+
+Keep the existing two-column-on-mobile / four-column-on-desktop grid (or whatever the current responsive grid is), just cleanly split into the two sections.
+Ensure consistent card sizing and spacing across both sections.
+Make sure the page looks clean and the grid reflows properly on desktop, tablet, and mobile with the coaches removed (no orphaned gaps from the deleted Nour/Brian).
+Keep each coach's name + role label styling as-is (name bold, role in orange).
+
+After the change, verify: Nour and Brian are gone; Andreu, Ruben, and Carles appear under "Alumni Coaches" in black & white; active coaches are in full colour on both desktop and mobile; bios are readable on mobile; and the grid looks clean on all screen sizes.
+
+Report back the final active vs alumni lists so I can confirm.

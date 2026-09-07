@@ -1,0 +1,25 @@
+Create the FAQs page at /faqs (replacing the "coming soon" placeholder if one exists) and wire the footer "FAQs" link to it.
+
+Content: Use the FAQ text provided below (I'll paste it). Render it as a clean, readable FAQ page grouped by category (About the Academy, Programs and Age Groups, Trials/Registration/Fees, Schedule and Location, Attendance/Health/Safety, Parents and Communication). Use an accordion/expandable format (click a question to reveal its answer) if it suits the site's style, or clean Q&A blocks — whichever reads better and matches the brand. Consistent with site typography; simple and readable.
+
+Important — do NOT publish placeholder/bracketed text. Flag these for me to resolve before go-live:
+
+The registration-fee question currently has a bracketed placeholder answer ([Confirm: is there a separate admission/registration fee...]). Do not render the bracket — flag it and leave that Q&A out (or stubbed and clearly marked) until I provide the answer or tell you to remove the question.
+The progress-updates answer contains a note "I will separately confirm the communication channels used for schedule changes and other updates." Flag this — it's an unfinished note, not a real answer. Leave it marked for me to complete.
+Flag every instance of "VBA UAE" (likely a typo for the correct brand short name used on the Privacy/Terms pages) so I can confirm the replacement — keep it consistent with those pages.
+
+Links: turn the inline "Read more" (about the Spain partnership) into a link to /methodology, and "Click for full directions and details" (location) into a link to /facilities. Make the email a mailto: link and the phone a tel:/WhatsApp link.
+
+Structure & formatting:
+
+Page heading "Frequently Asked Questions" with "Valencia Basket UAE" beneath.
+Group questions under their category headings.
+Fully responsive and readable on desktop and mobile.
+
+SEO:
+
+Meta title e.g. "FAQs | Valencia Basket Academy UAE", brief meta description.
+Add FAQ structured data (JSON-LD FAQPage schema) for the questions/answers — this can earn rich results in Google and is genuinely valuable for an FAQ page. (Only include finalised Q&As in the schema, not the flagged placeholders.)
+Server-rendered, add to sitemap.
+
+Verify the page renders cleanly grouped by category, footer link works, internal/email/phone links work, placeholders are flagged (not published raw), and it reads well on mobile.

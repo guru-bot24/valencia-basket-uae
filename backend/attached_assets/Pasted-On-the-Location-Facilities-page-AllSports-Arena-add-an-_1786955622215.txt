@@ -1,0 +1,29 @@
+On the Location/Facilities page (AllSports Arena), add an image carousel that auto-rotates through the venue images. I will provide the images directly (2 images for now, with more added later — build it to handle any number of images, not hardcoded to 2).
+
+Carousel behaviour:
+
+Display one image at a time, filling the image area (use object-fit: cover so images fill the frame cleanly regardless of their exact dimensions).
+Auto-advance to the next image every few seconds (~4–5 seconds per slide), looping continuously back to the first after the last.
+Left and right arrow controls so users can manually go to the previous/next image. Style the arrows consistently with the site's brand (orange/dark/white), positioned over the sides of the image, finger-friendly on mobile.
+Optionally add small dot indicators below/over the carousel showing which slide is active and how many there are — nice for orientation as more images are added.
+Pause auto-advance on hover (desktop) and while the user is interacting, so it doesn't jump away while they're looking.
+Smooth transition between slides (a gentle fade or slide, consistent with the site's motion style).
+
+Placement:
+
+Use it for the main venue image area on the Location/Facilities page — replace the current primary venue image/placeholder with this carousel. (If there's an existing "Inside the Arena" gallery or hero image slot, integrate the carousel there — confirm where you place it.)
+
+Structure for easy updates:
+
+Build the carousel to take a list/array of images, so adding more later is just adding image files to that list — no layout changes needed. Add a clear code comment showing where/how to add more images.
+Add descriptive alt text for each image (e.g. "AllSports Arena — [view]").
+
+Responsive & performance:
+
+Works cleanly on desktop and mobile — arrows and dots are tappable on mobile, images scale properly, no overflow or distortion.
+Optimise images (serve appropriately sized/compressed versions, lazy-load where sensible) so the carousel doesn't slow the page.
+Respect prefers-reduced-motion — if the user has reduced motion enabled, don't auto-advance (let them use the arrows), and avoid heavy transition animation.
+
+I will tag/provide the 2 images in Replit. Verify: the carousel auto-rotates through the images with working arrows (and dots), pauses on hover, loops correctly, handles being given more images later without code changes, and looks good on desktop and mobile.
+
+Report back once done and confirm where on the page you placed it.
