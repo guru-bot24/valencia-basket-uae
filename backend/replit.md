@@ -144,3 +144,4 @@ server/                 # Entry point (spawns Next.js dev server)
 - `SMTP_FROM`: From email address (defaults to SMTP_USER)
 - `NOTIFICATION_EMAIL`: Email address to receive form submission alerts (required for email alerts)
 - Node.js with ES modules support
+
