@@ -89,7 +89,7 @@ export default function ThankYouClient({
             {/* Brand lockup */}
             <div className="mb-9 flex items-center gap-2.5">
               <Image
-                src="/images/logo.png"
+                src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/logo.png"
                 alt={logoAlt}
                 width={34}
                 height={34}

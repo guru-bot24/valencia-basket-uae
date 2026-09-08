@@ -58,7 +58,7 @@ export default async function Home() {
                 title="Future Ballers (Kids)" 
                 age="4-6 Years" 
                 description="Playful first steps into basketball — coordination, confidence, and fun."
-                image="/images/mini-basket-team.jpg"
+                image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"
                 imageAlt={alt("home.future-ballers")}
                 href="/programs/future-ballers"
               />
@@ -66,7 +66,7 @@ export default async function Home() {
                 title="Mini Basket" 
                 age="7-10 Years" 
                 description="Fun, fundamentals, and coordination. The perfect start to structured basketball."
-                image="/images/youth-team-small.jpg"
+                image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg"
                 imageAlt={alt("home.mini-basket")}
                 href="/programs/mini-basket"
               />
@@ -74,7 +74,7 @@ export default async function Home() {
                 title="Youth Academy" 
                 age="11-18 Years" 
                 description="Technical mastery, tactical understanding, and competition preparation."
-                image="/images/youth-program.jpeg"
+                image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg"
                 imageAlt={alt("home.youth-academy")}
                 href="/programs/youth-academy"
               />
@@ -82,7 +82,7 @@ export default async function Home() {
                 title="Elite / Select" 
                 age="Invitation Only" 
                 description="High-performance training for top-tier talent aiming for professional pathways."
-                image="/images/team-award.jpg" 
+                image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/team-award.jpg" 
                 imageAlt={alt("home.elite")}
                 href="/programs#elite"
               />
@@ -90,7 +90,7 @@ export default async function Home() {
                 title="Private Training" 
                 age="1-on-1" 
                 description="Personalized attention to correct mechanics and accelerate growth."
-                image="/images/1v1-a.jpg"
+                image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg"
                 imageAlt={alt("home.private-training")}
                 href="/programs/private-training"
               />
@@ -135,7 +135,7 @@ export default async function Home() {
                 <div className="absolute -inset-4 border-2 border-primary/30 z-0 translate-x-4 translate-y-4" />
                 <div className="relative z-10 w-full aspect-[4/3]">
                   <Image 
-                    src="/images/methodology.jpeg" 
+                    src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/methodology.jpeg" 
                     alt={alt("home.methodology")} 
                     fill
                     className="object-cover transition-all duration-700 shadow-2xl"
@@ -184,7 +184,7 @@ export default async function Home() {
             </div>
             <div className="relative w-full h-[500px] overflow-hidden group">
               <Image 
-                src="/images/allsports-arena-render.jpg" 
+                src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/allsports-arena-render.jpg" 
                 alt={alt("home.arena")} 
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -236,7 +236,7 @@ export default async function Home() {
       {/* BOOK TRIAL SECTION */}
       <Reveal>
         <section id="book-trial" className="py-20 md:py-32 bg-primary relative">
-          <div className="absolute inset-0 bg-[url('/images/team-spirit.jpg')] bg-cover bg-center mix-blend-multiply opacity-20" />
+          <div className="absolute inset-0 bg-[url('https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/team-spirit.jpg')] bg-cover bg-center mix-blend-multiply opacity-20" />
           <div className="container mx-auto px-4 md:px-6 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="text-white">

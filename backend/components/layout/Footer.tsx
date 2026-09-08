@@ -11,7 +11,7 @@ export function Footer({ logoAlt }: { logoAlt: string }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div className="space-y-6">
             <div className="flex flex-col items-start">
-               <Image src="/images/logo.png" width={56} height={56} alt={logoAlt} style={{ width: "auto" }} className="h-14 mb-4" />
+               <Image src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/logo.png" width={56} height={56} alt={logoAlt} style={{ width: "auto" }} className="h-14 mb-4" />
               <span className="text-xl font-black tracking-tighter uppercase leading-none text-white">
                 Valencia Basket
               </span>

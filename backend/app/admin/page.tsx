@@ -496,7 +496,7 @@ function EventFormDialog({
                 data-testid="input-event-image"
                 value={image || ""}
                 onChange={(e) => setImage(e.target.value)}
-                placeholder="/images/event-photo.jpg"
+                placeholder="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/event-photo.jpg"
               />
             </div>
             <div className="space-y-2">

@@ -11,7 +11,7 @@ export function Hero({ imageAlt = "Valencia Basket UAE Action" }: { imageAlt?: s
         <div className="absolute inset-0 bg-black/30 z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 z-10" />
         <Image 
-          src="/images/hero-players-2.jpg" 
+          src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/hero-players-2.jpg" 
           alt={imageAlt}
           fill
           priority

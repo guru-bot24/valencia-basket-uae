@@ -154,7 +154,7 @@ export default async function Methodology() {
             <div className="order-2 lg:order-1">
               <div className="relative w-full aspect-[4/3]">
                 <Image
-                  src="/images/methodology.jpeg"
+                  src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/methodology.jpeg"
                   alt={alt("methodology.spain")}
                   fill
                   className="object-cover transition-all duration-700 shadow-2xl"

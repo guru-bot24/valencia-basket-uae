@@ -12,14 +12,20 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev",
+      },
     ],
   },
   async rewrites() {
+    // Fallback only: covers any /images/* path not already migrated to a
+    // direct R2 URL (e.g. legacy DB rows). Direct references bypass this.
     return {
       beforeFiles: [
         {
           source: "/images/:path*",
-          destination: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/:path*",
+          destination: `${process.env.R2_PUBLIC_URL || "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev"}/:path*`,
         },
       ],
       afterFiles: [],

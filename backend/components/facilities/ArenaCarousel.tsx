@@ -5,19 +5,19 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // ─── ADD MORE IMAGES HERE ──────────────────────────────────────────────────
-// Drop the image file into /public/images/ and add a { key, src, alt } entry below.
+// Drop the image file into /publichttps://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/ and add a { key, src, alt } entry below.
 // No other code changes needed — the carousel handles any number of slides.
 // `key` must match an entry in lib/seo/images.ts for the alt text to be
 // editable from the admin SEO Manager; without one the hard-coded alt is used.
 const SLIDES = [
   {
     key: "facilities.arena-render",
-    src: "/images/allsports-arena-render.jpg",
+    src: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/allsports-arena-render.jpg",
     alt: "AllSports Arena — facility overview render",
   },
   {
     key: "facilities.arena-courts",
-    src: "/images/All-sports-arena.jpg",
+    src: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/All-sports-arena.jpg",
     alt: "AllSports Arena — multi-court indoor facility",
   },
 ] as const;

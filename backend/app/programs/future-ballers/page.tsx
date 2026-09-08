@@ -88,7 +88,7 @@ export default async function FutureBallers() {
               <div className="absolute -inset-4 border-2 border-primary/30 z-0 translate-x-4 translate-y-4" />
               <div className="relative z-10 aspect-[4/3] w-full overflow-hidden">
                 <Image
-                  src="/images/mini-basket-team.jpg"
+                  src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"
                   alt={alt("future-ballers.hero")}
                   fill
                   className="object-cover shadow-2xl"
@@ -216,7 +216,7 @@ export default async function FutureBallers() {
             </div>
             {/* image RIGHT — mobile: stacks second */}
             <div className="order-2 aspect-[3/4] w-full relative">
-              <Image src="/images/mini-basket-team.jpg" alt={alt("future-ballers.session")} fill className="object-cover" />
+              <Image src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg" alt={alt("future-ballers.session")} fill className="object-cover" />
             </div>
           </div>
         </div>

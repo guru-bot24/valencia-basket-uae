@@ -59,7 +59,7 @@ export default async function PrivateTraining() {
           <div>
             <div className="relative w-full aspect-[4/3]">
               <Image 
-                src="/images/1v1-a.jpg" 
+                src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg" 
                 alt={alt("private-training.session")} 
                 fill
                 className="object-cover shadow-2xl rounded-sm"

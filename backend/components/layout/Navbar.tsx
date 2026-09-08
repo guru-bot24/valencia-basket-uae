@@ -95,7 +95,7 @@ export function Navbar({ logoAlt }: { logoAlt: string }) {
         <Link href="/" className="flex flex-col items-start group cursor-pointer hover:opacity-90 transition-opacity z-50 relative shrink-0">
           <div className="flex items-center gap-2 lg:gap-3">
             <Image
-              src="/images/logo.png"
+              src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/logo.png"
               width={56}
               height={56}
               alt={logoAlt}

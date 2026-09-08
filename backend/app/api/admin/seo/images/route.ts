@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { storage } from "@/lib/storage";
+import { resolveImageSrc } from "@/lib/utils";
 import { requireAdmin } from "@/lib/adminAuth";
 import { seoImageAltSchema, type SeoImageAlt } from "@shared/schema";
 import { MANAGED_IMAGE_ASSETS, getManagedImageAsset } from "@/lib/seo/images";
@@ -87,7 +88,7 @@ export async function GET(request: NextRequest) {
             id: event.id,
             title: event.title,
             slug: event.slug,
-            src: event.image?.trim() || "/images/mini-basket-team.jpg",
+            src: resolveImageSrc(event.image?.trim()) || "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
             usesFallbackImage: !event.image?.trim(),
             altText: event.imageAlt?.trim() || null,
             fallbackAlt: event.title,

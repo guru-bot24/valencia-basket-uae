@@ -435,7 +435,7 @@ function PageEditor({ page }: { page: SeoPageRow }) {
             <Input
               className="rounded-none mt-1"
               value={ogImage}
-              placeholder="/images/share-card.jpg"
+              placeholder="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/share-card.jpg"
               onChange={(e) => setOgImage(e.target.value)}
               data-testid="input-seo-og-image"
             />

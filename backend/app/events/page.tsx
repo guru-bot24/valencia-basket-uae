@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { storage } from "@/lib/storage";
-import { isPastEvent } from "@/lib/utils";
+import { isPastEvent, resolveImageSrc } from "@/lib/utils";
 import type { Event } from "@shared/schema";
 import { buildPageMetadata } from "@/lib/seo/resolve";
 import { getEventStructuredData, getStructuredData } from "@/lib/seo/structuredDataResolve";
@@ -22,7 +22,7 @@ function EventCard({ event, past = false }: { event: Event; past?: boolean }) {
       <div className={`flex flex-col md:flex-row bg-white border border-gray-100 shadow-sm overflow-hidden group hover:shadow-xl transition-shadow duration-300 cursor-pointer ${past ? "opacity-80" : ""}`}>
           <div className="md:w-1/3 aspect-video md:aspect-auto relative overflow-hidden">
               <Image 
-                  src={event.image || "/images/mini-basket-team.jpg"} 
+                  src={resolveImageSrc(event.image) || "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"}
                   alt={event.imageAlt?.trim() || event.title} 
                   fill
                   className={`object-cover transition-transform duration-700 group-hover:scale-110 ${past ? "grayscale" : ""}`}

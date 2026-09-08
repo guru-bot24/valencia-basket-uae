@@ -24,7 +24,7 @@ export default async function Programs() {
       desc: "The very first step into basketball. Playful, movement-rich sessions that build coordination, confidence, and a love for the ball.",
       schedule: "Mon/Wed 4:00 PM",
       features: ["Motor skill development", "Coordination & balance games", "First contact with the ball", "Fun-based drills"],
-      image: "/images/mini-basket-team.jpg",
+      image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
       imageKey: "programs.future-ballers",
       detailHref: "/programs/future-ballers",
     },
@@ -36,7 +36,7 @@ export default async function Programs() {
       desc: "The perfect introduction to structured basketball. We focus on coordination, basic ball handling, and falling in love with the game in a low-pressure environment.",
       schedule: "Mon/Wed 5:00 PM",
       features: ["Ball handling foundations", "Basic rules of the game", "Teamwork introduction", "Fun-based drills"],
-      image: "/images/youth-team-small.jpg",
+      image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg",
       imageKey: "programs.mini-basket",
       detailHref: "/programs/mini-basket",
     },
@@ -48,7 +48,7 @@ export default async function Programs() {
       desc: "Building the complete player. Technical mastery—shooting form, dribbling mechanics, defensive footwork—progressing into complex tactical concepts, physical conditioning, and competition preparation.",
       schedule: "Sun/Tue/Thu 5:00 PM",
       features: ["Shooting & ball handling mastery", "Advanced tactics", "Physical conditioning", "Competitive leagues"],
-      image: "/images/youth-program.jpeg",
+      image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg",
       imageKey: "programs.youth-academy",
       detailHref: "/programs/youth-academy",
     },
@@ -60,7 +60,7 @@ export default async function Programs() {
       desc: "For athletes with professional aspirations. Intensive training, personalized development plans, and exposure to international pathways.",
       schedule: "Daily Training",
       features: ["Individual Performance Plans", "Strength & Conditioning", "International Tournaments", "Scouting Exposure"],
-      image: "/images/team-award.jpg",
+      image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/team-award.jpg",
       imageKey: "programs.elite",
       detailHref: "",
     }
@@ -183,7 +183,7 @@ export default async function Programs() {
               <div className="absolute -inset-4 border-2 border-primary/30 z-0 translate-x-4 translate-y-4" />
               <div className="relative z-10 w-full aspect-[4/3]">
                 <Image 
-                  src="/images/1v1-a.jpg" 
+                  src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg" 
                   alt={alt("programs.private-training")} 
                   fill
                   className="object-cover shadow-2xl"
