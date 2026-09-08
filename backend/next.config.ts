@@ -14,6 +14,18 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/images/:path*",
+          destination: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/:path*",
+        },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
   async redirects() {
     return [
       // www → non-www (primary canonical domain)
