@@ -23,11 +23,17 @@ export const getStructuredDataOverrides = cache(async () => {
   catch (error) { console.error("[seo] failed to load structured data overrides:", error); return new Map(); }
 });
 
-/** Only declared editable keys are copied; JSON from the database is never trusted as schema shape. */
-export function resolveStructuredEntry(entry: ManagedStructuredDataEntry, override?: { enabled: boolean | null; schemaType?: string; overrides: Record<string, unknown> | null }) {
-  const allowed = new Set(entry.fields.map((field) => field.key));
-  const safe = Object.fromEntries(Object.entries(override?.overrides ?? {}).filter(([key, value]) => allowed.has(key) && typeof value === "string" && value.trim()));
-  return { enabled: override?.enabled ?? entry.enabledByDefault, json: { ...(entry.json as Record<string, unknown>), ...(override?.schemaType ? { "@type": override.schemaType } : {}), ...safe } };
+/**
+ * Editable entries store a full JSON-LD replacement, not a sparse field diff.
+ * The API route validates shape (@context/@type present, name/url unchanged
+ * from the verified default) before a save is accepted, so anything already
+ * in the database here is trusted as complete, valid schema.
+ */
+export function resolveStructuredEntry(entry: ManagedStructuredDataEntry, override?: { enabled: boolean | null; overrides: Record<string, unknown> | null }) {
+  const json = override?.overrides && typeof override.overrides === "object"
+    ? (override.overrides as Record<string, unknown>)
+    : (entry.json as Record<string, unknown>);
+  return { enabled: override?.enabled ?? entry.enabledByDefault, json };
 }
 export async function getStructuredData(path: string, label?: string) {
   const overrides = await getStructuredDataOverrides();

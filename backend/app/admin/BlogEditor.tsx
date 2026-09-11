@@ -44,6 +44,7 @@ type BlogForm = {
   ogImage: string;
   focusKeywords: string[];
   noIndex: boolean;
+  schemaEnabled: boolean;
   categoryNames: string[];
   tagNames: string[];
 };
@@ -54,6 +55,7 @@ const emptyForm: BlogForm = {
   visibility: "public", password: "", publishedAt: "", lockModifiedDate: false,
   isFeatured: false, metaTitle: "", metaDescription: "", ogTitle: "",
   ogDescription: "", ogImage: "", focusKeywords: [], noIndex: false,
+  schemaEnabled: true,
   categoryNames: [], tagNames: [],
 };
 
@@ -91,6 +93,7 @@ function fromPost(post: SafeBlogPost | null): BlogForm {
     ogImage: post.ogImage ?? "",
     focusKeywords: (post.focusKeyword ?? "").split(",").map((value) => value.trim()).filter(Boolean),
     noIndex: post.noIndex,
+    schemaEnabled: post.schemaEnabled,
     categoryNames: post.categories.map((category) => category.name),
     tagNames: post.tags.map((tag) => tag.name),
   };
@@ -448,7 +451,10 @@ export function BlogEditor({ post, adminName, onClose, onSaved, onDelete }: {
                   <div><Label>Open Graph description</Label><Textarea value={form.ogDescription} onChange={(event) => updateField("ogDescription", event.target.value)} /></div>
                   <div><Label>Open Graph image</Label><Input value={form.ogImage} onChange={(event) => updateField("ogImage", event.target.value)} placeholder="https://..." /></div>
                 </>}
-                {seoTab === "advanced" && <label className="flex items-center gap-2 text-sm"><Checkbox checked={form.noIndex} onCheckedChange={(value) => updateField("noIndex", value === true)} /> Hide from search engines</label>}
+                {seoTab === "advanced" && <>
+                  <label className="flex items-center gap-2 text-sm"><Checkbox checked={form.noIndex} onCheckedChange={(value) => updateField("noIndex", value === true)} /> Hide from search engines</label>
+                  <label className="flex items-center gap-2 text-sm"><Checkbox checked={form.schemaEnabled} onCheckedChange={(value) => updateField("schemaEnabled", value === true)} /> Include structured data (BlogPosting schema)</label>
+                </>}
               </div>}
               <div><Label>Focus Keywords</Label><div className="mt-2 flex flex-wrap gap-2">{form.focusKeywords.map((keyword) => <span key={keyword} className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs"><Star className="h-3 w-3 text-primary" />{keyword}<button onClick={() => updateField("focusKeywords", form.focusKeywords.filter((value) => value !== keyword))}><X className="h-3 w-3" /></button></span>)}</div><Input className="mt-2" placeholder="Type keyword and press Enter" onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); const value = event.currentTarget.value.trim(); if (value) { updateField("focusKeywords", [...new Set([...form.focusKeywords, value])]); event.currentTarget.value = ""; } } }} /></div>
             </div>

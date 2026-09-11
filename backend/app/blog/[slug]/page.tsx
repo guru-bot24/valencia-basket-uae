@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { CalendarDays } from "lucide-react";
 import { BreadcrumbJsonLd, StructuredData } from "@/components/seo/StructuredData";
+import { blogPostStructuredData } from "@/lib/seo/structuredData";
 import { storage } from "@/lib/storage";
 import { blogPlainText, sanitizeBlogContent } from "@/lib/blog";
 import { blogAccessCookieName, isLiveBlogPost, verifyBlogAccessToken } from "@/lib/blogAccess";
@@ -59,22 +60,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const safeContent = sanitizeBlogContent(post.content);
   const hasRichContent = /<[a-z][\s\S]*>/i.test(safeContent);
 
-  const articleJson = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.title,
-    description: post.excerpt || blogPlainText(post.content).slice(0, 160),
-    author: { "@type": "Person", name: post.authorName },
-    datePublished: post.publishedAt?.toISOString(),
-    dateModified: post.updatedAt.toISOString(),
-    image: post.featuredImageSrc || undefined,
-    mainEntityOfPage: `https://valenciabasket.ae/blog/${post.slug}`,
-  };
+  const articleJson = post.schemaEnabled
+    ? blogPostStructuredData({
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt || blogPlainText(post.content).slice(0, 160),
+        authorName: post.authorName,
+        featuredImageSrc: post.featuredImageSrc,
+        publishedAt: post.publishedAt,
+        updatedAt: post.updatedAt,
+      })
+    : null;
 
   return (
     <>
       <BreadcrumbJsonLd path={`/blog/${post.slug}`} label={post.title} />
-      <StructuredData data={[articleJson]} />
+      {articleJson && <StructuredData data={[articleJson]} />}
       <article>
         <header className="bg-black py-20 text-white md:py-28">
           <div className="container mx-auto max-w-4xl px-4 md:px-6">

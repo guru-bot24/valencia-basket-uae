@@ -125,10 +125,11 @@ interface SchemaRow {
   json: unknown;
   lastModified?: string | null;
   enabled?: boolean;
-  override?: Record<string, string> | null;
+  override?: Record<string, unknown> | null;
   fields?: Array<{ key: string; label: string; type: "text" | "url" | "email" | "date"; required?: boolean }>;
   lockedFields?: string[];
-  schemaTypes?: string[];
+  /** Editable entries accept a full raw-JSON override; others are read-only (toggle only). */
+  editable?: boolean;
 }
 
 // ─────────────────────────── helpers ───────────────────────────
@@ -1308,35 +1309,51 @@ function SchemaTab() {
     return <div className="text-center py-12 text-gray-500">Loading structured data...</div>;
   }
 
+  const pageGroups = new Map<string, SchemaRow[]>();
+  for (const entry of entries) {
+    const group = pageGroups.get(entry.path) ?? [];
+    group.push(entry);
+    pageGroups.set(entry.path, group);
+  }
+  const paths = [...pageGroups.keys()].sort((a, b) => a.localeCompare(b));
+
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-500">Edit only the supported fields below. Empty fields inherit the verified code default; live page content remains locked.</p>
+      <p className="text-sm text-gray-500">Grouped by page. Editable entries accept a full JSON-LD replacement, reviewed before saving; live-content-derived entries (events, coaches, FAQs, contact) can only be toggled on or off.</p>
       <Accordion type="multiple" className="border border-gray-200">
-        {entries.map((entry) => (
-          <AccordionItem
-            key={entry.key}
-            value={entry.key}
-            className="border-b border-gray-200 last:border-b-0"
-              data-testid={`schema-${entry.key.replace(/[^a-z0-9]+/gi, "-")}`}
-          >
-            <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-gray-50">
-              <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1 text-left">
-                <span className="font-black uppercase tracking-tight">{entry.label}</span>
-                <span className="text-xs text-gray-500">{entry.path}</span>
-                <span className="text-xs font-bold uppercase text-[#FF6C0E]">{entry.type}</span>
-                <span className="text-[11px] text-gray-400">
-                  Last modified:{" "}
-                  {entry.lastModified
-                    ? new Date(entry.lastModified).toLocaleDateString()
-                    : "Not available"}
-                </span>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent className="px-4 pb-4">
-              <SchemaEditor key={`${entry.key}:${entry.lastModified ?? "default"}`} entry={entry} />
-            </AccordionContent>
-          </AccordionItem>
-        ))}
+        {paths.map((path) => {
+          const group = pageGroups.get(path)!;
+          return (
+            <AccordionItem
+              key={path}
+              value={path}
+              className="border-b border-gray-200 last:border-b-0"
+              data-testid={`schema-page-${path.replace(/[^a-z0-9]+/gi, "-") || "home"}`}
+            >
+              <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-gray-50">
+                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1 text-left">
+                  <span className="font-black uppercase tracking-tight">{path === "/" ? "Home" : path}</span>
+                  <span className="text-xs text-gray-500">{group.length} schema{group.length === 1 ? "" : "s"}</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-4 space-y-6">
+                {group.map((entry, index) => (
+                  <div key={entry.key} className={index > 0 ? "border-t border-gray-100 pt-6" : ""}>
+                    <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                      <span className="font-bold">{entry.label}</span>
+                      <span className="text-xs font-bold uppercase text-[#FF6C0E]">{entry.type}</span>
+                      <span className="text-[11px] text-gray-400">
+                        Last modified:{" "}
+                        {entry.lastModified ? new Date(entry.lastModified).toLocaleDateString() : "Not available"}
+                      </span>
+                    </div>
+                    <SchemaEditor key={`${entry.key}:${entry.lastModified ?? "default"}`} entry={entry} />
+                  </div>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+          );
+        })}
       </Accordion>
     </div>
   );
@@ -1346,37 +1363,109 @@ function SchemaEditor({ entry }: { entry: SchemaRow }) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [enabled, setEnabled] = useState(entry.enabled ?? true);
-  const [values, setValues] = useState<Record<string, string>>(entry.override ?? {});
-  const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const currentJson = (entry.override ?? entry.json) as Record<string, unknown>;
+  const [text, setText] = useState(() => JSON.stringify(currentJson, null, 2));
+  const [parseError, setParseError] = useState<string | null>(null);
+  const [pendingOverrides, setPendingOverrides] = useState<Record<string, unknown> | undefined>(undefined);
+
   const save = useMutation({
-    mutationFn: async () => {
-       const res = await fetch("/api/admin/seo/schema", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ key: entry.key, schemaType: entry.type, enabled, overrides: values }) });
+    mutationFn: async (payload: { enabled: boolean; overrides: Record<string, unknown> | null }) => {
+      const res = await fetch("/api/admin/seo/schema", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ key: entry.key, enabled: payload.enabled, overrides: payload.overrides }) });
       const body = await res.json();
-      if (!res.ok) { setErrors(body.fields ?? {}); throw new Error(body.error ?? "Unable to save"); }
+      if (!res.ok) throw new Error(body.error ?? "Unable to save");
     },
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["seo-schema"] }); toast({ title: "Structured data saved" }); },
-    onError: (error) => toast({ title: error.message, variant: "destructive" }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["seo-schema"] }); toast({ title: "Structured data saved" }); setPendingOverrides(undefined); },
+    onError: (error: Error) => toast({ title: error.message, variant: "destructive" }),
   });
-  const meaningfulValues = Object.fromEntries(
-    Object.entries(values).filter(([, value]) => value.trim())
+
+  if (!entry.editable) {
+    return (
+      <div className="space-y-3">
+        <p className="text-xs text-gray-500">{entry.note}</p>
+        <label className="flex items-center gap-2 text-sm font-medium">
+          <Checkbox
+            checked={enabled}
+            onCheckedChange={(value) => {
+              const next = value === true;
+              setEnabled(next);
+              save.mutate({ enabled: next, overrides: null });
+            }}
+          />{" "}
+          Publish this schema {enabled ? "" : "(disabled)"}
+        </label>
+        <div className="mb-2 flex justify-end"><CopyValueButton value={JSON.stringify(entry.json, null, 2)} label="Copy JSON" /></div>
+        <pre className="max-h-80 overflow-x-auto whitespace-pre-wrap break-all bg-gray-50 p-4 text-xs">{JSON.stringify(entry.json, null, 2)}</pre>
+      </div>
+    );
+  }
+
+  const handleSaveClick = () => {
+    try {
+      const parsed = JSON.parse(text);
+      if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+        setParseError("Must be a single JSON object");
+        return;
+      }
+      setParseError(null);
+      setPendingOverrides(parsed);
+    } catch (error) {
+      setParseError((error as Error).message);
+    }
+  };
+
+  const handleReset = () => {
+    const defaultText = JSON.stringify(entry.json, null, 2);
+    setText(defaultText);
+    setParseError(null);
+    setPendingOverrides(undefined);
+    save.mutate({ enabled, overrides: null });
+  };
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs text-gray-500">{entry.note}</p>
+      <label className="flex items-center gap-2 text-sm font-medium">
+        <Checkbox checked={enabled} onCheckedChange={(value) => setEnabled(value === true)} /> Publish this schema {enabled ? "" : "(disabled)"}
+      </label>
+      {!!entry.lockedFields?.length && (
+        <p className="text-xs text-gray-500">
+          Note: even in raw JSON, <code>name</code>/<code>url</code> stay locked to the page&apos;s actual content ({entry.lockedFields.join(", ")}) — a save with a changed value there will be rejected.
+        </p>
+      )}
+      <textarea
+        className="w-full h-64 font-mono text-xs border p-2"
+        value={text}
+        onChange={(event) => { setText(event.target.value); setParseError(null); }}
+        spellCheck={false}
+        data-testid={`schema-json-${entry.key.replace(/[^a-z0-9]+/gi, "-")}`}
+      />
+      {parseError && <p className="text-xs text-red-600">Invalid JSON: {parseError}</p>}
+      <div className="flex flex-wrap gap-2">
+        <Button type="button" onClick={handleSaveClick} disabled={save.isPending}>Save</Button>
+        <Button type="button" variant="ghost" onClick={handleReset} disabled={save.isPending}>Reset to default</Button>
+        <CopyValueButton value={text} label="Copy JSON" />
+      </div>
+      {pendingOverrides !== undefined && (
+        <div className="border border-orange-300 bg-orange-50 p-4 space-y-3">
+          <p className="text-sm font-bold">Confirm this change before it publishes</p>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase text-gray-500">Current (live)</p>
+              <pre className="max-h-60 overflow-auto whitespace-pre-wrap break-all border bg-white p-2 text-xs">{JSON.stringify(currentJson, null, 2)}</pre>
+            </div>
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase text-gray-500">New</p>
+              <pre className="max-h-60 overflow-auto whitespace-pre-wrap break-all border bg-white p-2 text-xs">{JSON.stringify(pendingOverrides, null, 2)}</pre>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button type="button" onClick={() => save.mutate({ enabled, overrides: pendingOverrides })} disabled={save.isPending}>Confirm Save</Button>
+            <Button type="button" variant="ghost" onClick={() => setPendingOverrides(undefined)}>Cancel</Button>
+          </div>
+        </div>
+      )}
+    </div>
   );
-  const json =
-    typeof entry.json === "object" && entry.json
-      ? { ...(entry.json as Record<string, unknown>), ...meaningfulValues }
-      : entry.json;
-   return <div className="space-y-3">
-    <p className="text-xs text-gray-500">{entry.note}</p>
-     {(entry.schemaTypes?.length ?? 0) > 1 && <div><Label htmlFor={`schema-type-${entry.key}`}>Schema type</Label><select id={`schema-type-${entry.key}`} className="mt-1 h-9 w-full border px-2 text-sm" value={entry.type} onChange={(event) => {
-       const schemaType = event.target.value;
-       fetch("/api/admin/seo/schema", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ key: entry.key, schemaType, enabled, overrides: values }) }).then((res) => { if (!res.ok) throw new Error("Unable to save schema type"); queryClient.invalidateQueries({ queryKey: ["seo-schema"] }); toast({ title: "Schema type saved" }); }).catch((error: Error) => toast({ title: error.message, variant: "destructive" }));
-     }}>{entry.schemaTypes?.map((type) => <option key={type} value={type}>{type}</option>)}</select><p className="mt-1 text-xs text-gray-500">Choose the structured-data type for this editable entry.</p></div>}
-    <label className="flex items-center gap-2 text-sm font-medium"><Checkbox checked={enabled} onCheckedChange={(value) => setEnabled(value === true)} /> Publish this schema {enabled ? "" : "(disabled)"}</label>
-    {(entry.fields ?? []).map((field) => <div key={field.key}><Label htmlFor={`schema-${entry.key}-${field.key}`}>{field.label}{field.required ? " *" : ""}</Label><div className="flex gap-2"><Input id={`schema-${entry.key}-${field.key}`} type={field.type === "url" ? "url" : field.type === "email" ? "email" : field.type === "date" ? "date" : "text"} value={values[field.key] ?? ""} placeholder={`Inherited: ${(entry.json as Record<string, unknown>)[field.key] ?? ""}`} onChange={(e) => setValues({ ...values, [field.key]: e.target.value })} /><Button type="button" variant="ghost" onClick={() => { const next = { ...values }; delete next[field.key]; setValues(next); }}>Reset</Button></div>{errors[field.key]?.map((error) => <p key={error} className="text-xs text-red-600">{error}</p>)}</div>)}
-    {!!entry.lockedFields?.length && <p className="text-xs text-gray-500">Locked, follows verified page content: {entry.lockedFields.join(", ")}.</p>}
-    <Button type="button" onClick={() => save.mutate()} disabled={save.isPending}>Save</Button>
-    <div className="mb-2 flex justify-end"><CopyValueButton value={JSON.stringify(json, null, 2)} label="Copy JSON" /></div>
-    <pre className="max-h-80 overflow-x-auto whitespace-pre-wrap break-all bg-gray-50 p-4 text-xs">{JSON.stringify(json, null, 2)}</pre>
-  </div>;
 }
 
 // ─────────────────────────── shell ───────────────────────────

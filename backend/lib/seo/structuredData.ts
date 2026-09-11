@@ -266,6 +266,42 @@ export const breadcrumbStructuredDataRegistry: ManagedStructuredDataEntry[] = br
   fields: [], lockedFields: ["all route and label values"],
 }));
 
+/**
+ * One shared BlogPosting template applied to every published blog post.
+ * Fully derived from the post's own fields — no per-post admin editing,
+ * by design. Toggle per post via blog_posts.schema_enabled.
+ */
+export function blogPostStructuredData(post: {
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  authorName: string;
+  featuredImageSrc: string | null;
+  publishedAt: Date | string | null;
+  updatedAt: Date | string | null;
+}) {
+  const url = `${SITE}/blog/${post.slug}`;
+  const iso = (value: Date | string | null) =>
+    value ? new Date(value).toISOString() : undefined;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt ?? undefined,
+    image: post.featuredImageSrc ?? undefined,
+    author: { "@type": "Person", name: post.authorName },
+    publisher: {
+      "@type": "Organization",
+      name: "Valencia Basket Academy UAE",
+      logo: { "@type": "ImageObject", url: `${SITE}/images/logo.png` },
+    },
+    datePublished: iso(post.publishedAt),
+    dateModified: iso(post.updatedAt) ?? iso(post.publishedAt),
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    url,
+  };
+}
+
 export function breadcrumbs(path: string, label: string) {
   const crumbs = path.split("/").filter(Boolean);
   return { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Home", item: SITE }, ...crumbs.map((part, index) => ({ "@type": "ListItem", position: index + 2, name: index === crumbs.length - 1 ? label : part.replace(/-/g, " "), item: `${SITE}/${crumbs.slice(0, index + 1).join("/")}` }))] };

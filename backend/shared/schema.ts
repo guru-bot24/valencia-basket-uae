@@ -340,6 +340,7 @@ export const blogPosts = pgTable(
     visibility: text("visibility").notNull().default("public"),
     passwordHash: text("password_hash"),
     lockModifiedDate: boolean("lock_modified_date").notNull().default(false),
+    schemaEnabled: boolean("schema_enabled").notNull().default(true),
     trashedAt: timestamp("trashed_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),

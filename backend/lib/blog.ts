@@ -105,6 +105,7 @@ export const blogPostInputSchema = z.object({
   visibility: z.enum(["public", "private", "password"]).default("public"),
   password: z.string().min(8).max(120).optional().nullable(),
   lockModifiedDate: z.boolean().default(false),
+  schemaEnabled: z.boolean().default(true),
   categoryNames: z.array(z.string().trim().min(1).max(80)).min(1, "Select at least one category").max(20),
   tagNames: z.array(z.string().trim().min(1).max(80)).max(30).default([]),
 }).superRefine((value, context) => {

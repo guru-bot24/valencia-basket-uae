@@ -1,0 +1,1 @@
+ALTER TABLE "blog_posts" ADD COLUMN "schema_enabled" boolean DEFAULT true NOT NULL;
