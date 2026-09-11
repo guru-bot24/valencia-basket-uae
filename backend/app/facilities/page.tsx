@@ -58,7 +58,7 @@ function PhotoPlaceholder({ label }: { label: string }) {
   return (
     <div
       className="relative aspect-video w-full overflow-hidden bg-black flex items-center justify-center"
-      aria-label={`${label} — photo coming soon`}
+      aria-label={`${label}, photo coming soon`}
     >
       {/* Brand pattern: diagonal orange lines */}
       <svg className="absolute inset-0 h-full w-full opacity-20" aria-hidden="true">
@@ -91,7 +91,7 @@ export default async function Facilities() {
       <div className="bg-black text-white py-20">
         <div className="container mx-auto px-4 md:px-6 text-center">
           <span className="inline-block rounded-full bg-primary text-white px-4 py-1.5 font-bold uppercase text-xs tracking-widest mb-6" data-testid="badge-main-venue">
-            Our Home Venue — Al Quoz, Dubai
+            Our Home Venue: Al Quoz, Dubai
           </span>
           <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6" data-testid="text-facilities-title">
             AllSports Arena
@@ -135,7 +135,7 @@ export default async function Facilities() {
             Under 25 Minutes From Most of Dubai
           </h2>
           <p className="text-gray-400 mb-10 max-w-2xl mx-auto">
-            Al Quoz sits at the crossroads of the city — an easy drive from wherever you are.
+            Al Quoz sits at the crossroads of the city, an easy drive from wherever you are.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {travelTimes.map(({ zone, minutes }) => (
@@ -170,7 +170,7 @@ export default async function Facilities() {
             </div>
             <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-6">Find Us in Al Quoz</h2>
             <p className="text-gray-600 text-lg leading-relaxed mb-4">
-              AllSports Arena is on Latifa Bint Hamdan Street, Al Quoz Industrial First — minutes from Sheikh Zayed Road
+              AllSports Arena is on Latifa Bint Hamdan Street, Al Quoz Industrial First, minutes from Sheikh Zayed Road
               and Al Khail Road, with easy access from both sides of the city.
             </p>
             <p className="text-gray-600 text-lg leading-relaxed mb-8">
@@ -195,7 +195,7 @@ export default async function Facilities() {
         <div className="container mx-auto px-4 md:px-6 max-w-3xl text-center">
           <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-6">One Home, One Standard</h2>
           <p className="text-lg md:text-xl leading-relaxed text-white/90">
-            From August 2026, every Valencia Basket Academy UAE session takes place under one roof — one consistent,
+            From August 2026, every Valencia Basket Academy UAE session takes place under one roof, one consistent,
             professional training base built around the same standards our players experience at L&apos;Alqueria del
             Basket in Valencia. Same courts, same coaches, same methodology, every week.
           </p>

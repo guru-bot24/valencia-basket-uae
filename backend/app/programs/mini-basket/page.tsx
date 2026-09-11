@@ -45,7 +45,7 @@ const focusAreas = [
   { icon: Zap,    title: "Ball Handling", desc: "Dribbling, catching, and passing drills that build the foundational mechanics every basketball player needs." },
   { icon: Target, title: "Shooting Intro", desc: "Form shooting close-range before extending the range as confidence and technique grow." },
   { icon: Users,  title: "Teamwork",       desc: "Small-sided games teach sharing the ball, communication, and the joy of playing together as a unit." },
-  { icon: Shield, title: "Game Rules",     desc: "Learning the basics — court awareness, scoring, and what it means to play within the rules." },
+  { icon: Shield, title: "Game Rules",     desc: "Learning the basics, including court awareness, scoring, and what it means to play within the rules." },
 ];
 
 export default async function MiniBasket() {
@@ -66,7 +66,7 @@ export default async function MiniBasket() {
             Mini <span className="text-primary">Basket</span> Program
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-            The perfect introduction to structured basketball. Real skills, real drills, and a real love for the game — built in a low-pressure, high-energy environment.
+            A structured basketball program for kids ages 7 to 10 in Dubai. Real skills, real drills, and a real love for the game, in a low-pressure, high-energy environment.
           </p>
           <div className="flex justify-center">
             <Link href="/#book-trial">
@@ -89,10 +89,10 @@ export default async function MiniBasket() {
                 Where Skills <span className="text-primary">Begin.</span>
               </h2>
               <p className="text-gray-600 leading-relaxed text-lg mb-6">
-                Mini Basket bridges the gap between pure play and structured training. Players aged 7–10 are ready to absorb real technique — and this program delivers it in a way that keeps them coming back for more.
+                Mini Basket bridges the gap between pure play and structured training. Players aged 7 to 10 are ready to absorb real technique, and this program delivers it in a way that keeps them coming back for more. Coaches use small-group formats so every child gets individual correction and feedback, not just group instruction.
               </p>
               <p className="text-gray-600 leading-relaxed text-lg mb-8">
-                Coaches introduce ball handling, passing, shooting, and the basics of basketball rules through engaging drills and short-sided games. The goal: leave every session better than you arrived.
+                Coaches introduce ball handling, passing, shooting, and the basics of basketball rules through engaging drills and short-sided games. Players progress through skills at their own pace, building from close-range form shooting to full 3v3 game situations as confidence grows. The goal: leave every session better than you arrived.
               </p>
               <div className="grid grid-cols-2 gap-4">                <div className="bg-gray-50 border-l-4 border-primary px-4 py-3">
                   <span className="block text-xs font-bold uppercase text-gray-400 mb-1">Session Length</span>
@@ -197,7 +197,7 @@ export default async function MiniBasket() {
               <div className="space-y-6">
                 {[
                   { step: "01", title: "Dynamic Warm-Up",   desc: "Ball-handling and movement drills that raise energy and set the tone for a focused, productive session." },
-                  { step: "02", title: "Skill Block",        desc: "Each session targets one technical skill — dribbling, passing, footwork, or shooting — with coached repetition." },
+                  { step: "02", title: "Skill Block",        desc: "Each session targets one technical skill, such as dribbling, passing, footwork, or shooting, with coached repetition." },
                   { step: "03", title: "Small-Sided Games",  desc: "3v3 and 4v4 formats where the session's skill is tested in real game situations with coach guidance." },
                   { step: "04", title: "Team Review",        desc: "Coaches highlight positive moments, reinforce the session's learning, and build team identity before closing." },
                 ].map(({ step, title, desc }) => (

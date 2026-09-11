@@ -140,7 +140,7 @@ export default function RegisterClient() {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <CalendarDays className="h-4 w-4 text-[#FF6C0E]" />
-                <span className="font-medium">{event.date} — {event.time}</span>
+                <span className="font-medium">{event.date}, {event.time}</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-[#FF6C0E]" />
@@ -197,7 +197,7 @@ export default function RegisterClient() {
           <div className="bg-gray-50 p-4 mb-8 border-l-4 border-[#FF6C0E]">
             <p className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-1">Registering For</p>
             <p className="font-bold text-lg" data-testid="text-registration-event-name">{event.title}</p>
-            <p className="text-sm text-gray-500">{event.date} — {event.location}</p>
+            <p className="text-sm text-gray-500">{event.date}, {event.location}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">

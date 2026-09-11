@@ -57,7 +57,7 @@ export default async function Home() {
               <ProgramCard 
                 title="Future Ballers (Kids)" 
                 age="4-6 Years" 
-                description="Playful first steps into basketball — coordination, confidence, and fun."
+                description="Playful first steps into basketball, building coordination, confidence, and fun."
                 image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"
                 imageAlt={alt("home.future-ballers")}
                 href="/programs/future-ballers"
@@ -109,7 +109,7 @@ export default async function Home() {
                 <SectionHeader 
                   title="The Valencia Methodology" 
                   subtitle="Why Us" 
-                  description="A proven system developed in Valencia, Spain — helping players reach the professional level through a mix of training methods that connect all elements of the game."
+                  description="A proven system developed in Valencia, Spain, helping players reach the professional level through a mix of training methods that connect all elements of the game."
                   dark
                 />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-10">
@@ -193,7 +193,7 @@ export default async function Home() {
               <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
                 <h3 className="text-3xl md:text-5xl font-black uppercase mb-4">AllSports Arena</h3>
                 <p className="max-w-md text-lg text-gray-200 mb-6">
-                  Our dedicated home in Al Quoz from August 2026 — FIBA-standard indoor courts, professional hoops, and a climate-controlled environment for optimal performance.
+                  Our dedicated home in Al Quoz from August 2026, with FIBA-standard indoor courts, professional hoops, and a climate-controlled environment for optimal performance.
                 </p>
                 <div className="flex gap-2">
                   <span className="px-3 py-1 bg-white/20 backdrop-blur-md text-xs font-bold uppercase tracking-wider">FIBA Approved</span>

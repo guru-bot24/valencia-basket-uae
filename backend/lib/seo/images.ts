@@ -44,7 +44,7 @@ export const MANAGED_IMAGES: ManagedImage[] = [
     key: "home.arena",
     page: "Home",
     src: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/allsports-arena-render.jpg",
-    defaultAlt: "AllSports Arena Al Quoz — rendering",
+    defaultAlt: "AllSports Arena Al Quoz rendering",
   },
   {
     key: "home.future-ballers",
@@ -122,7 +122,7 @@ export const MANAGED_IMAGES: ManagedImage[] = [
     key: "future-ballers.hero",
     page: "Future Ballers",
     src: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
-    defaultAlt: "Future Ballers — kids basketball Dubai",
+    defaultAlt: "Future Ballers kids basketball Dubai",
   },
   {
     key: "future-ballers.session",
@@ -134,7 +134,7 @@ export const MANAGED_IMAGES: ManagedImage[] = [
     key: "mini-basket.hero",
     page: "Mini Basket",
     src: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg",
-    defaultAlt: "Mini Basket — basketball for kids ages 7–10 Dubai",
+    defaultAlt: "Mini Basket, basketball for kids ages 7 to 10, Dubai",
   },
   {
     key: "mini-basket.session",
@@ -158,13 +158,13 @@ export const MANAGED_IMAGES: ManagedImage[] = [
     key: "facilities.arena-render",
     page: "Facilities",
     src: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/allsports-arena-render.jpg",
-    defaultAlt: "AllSports Arena — facility overview render",
+    defaultAlt: "AllSports Arena facility overview render",
   },
   {
     key: "facilities.arena-courts",
     page: "Facilities",
     src: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/All-sports-arena.jpg",
-    defaultAlt: "AllSports Arena — multi-court indoor facility",
+    defaultAlt: "AllSports Arena multi-court indoor facility",
   },
   {
     key: "coaches.maros-kovacik",

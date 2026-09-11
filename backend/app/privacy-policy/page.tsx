@@ -140,24 +140,24 @@ export default function PrivacyPolicy() {
               </p>
               <ul className="list-disc list-outside ml-5 space-y-2 text-gray-700">
                 <li>
-                  <span className="font-semibold">Consent</span> — e.g., when you submit the
+                  <span className="font-semibold">Consent</span>: e.g., when you submit the
                   trial-booking form, opt in to marketing communications, or consent to photos/videos
                   being used
                 </li>
                 <li>
-                  <span className="font-semibold">Performance of a contract</span> — e.g., registering
+                  <span className="font-semibold">Performance of a contract</span>: e.g., registering
                   your child for a program, processing payment, and delivering the service
                 </li>
                 <li>
-                  <span className="font-semibold">Legal obligation</span> — e.g., accounting, tax, and
+                  <span className="font-semibold">Legal obligation</span>: e.g., accounting, tax, and
                   regulatory record-keeping
                 </li>
                 <li>
-                  <span className="font-semibold">Legitimate interests</span> — e.g., improving our
+                  <span className="font-semibold">Legitimate interests</span>: e.g., improving our
                   website and services, preventing fraud, and general safeguarding at our facility
                 </li>
                 <li>
-                  <span className="font-semibold">Vital interests</span> — e.g., contacting an emergency
+                  <span className="font-semibold">Vital interests</span>: e.g., contacting an emergency
                   contact or seeking medical attention in the event of an injury at training
                 </li>
               </ul>
@@ -183,11 +183,11 @@ export default function PrivacyPolicy() {
                   information if needed
                 </li>
                 <li>
-                  To send marketing communications about programs, camps, and events — only with
+                  To send marketing communications about programs, camps, and events, only with
                   consent, and with an option to opt out at any time
                 </li>
                 <li>
-                  To post photos, videos, or testimonials for marketing purposes — only with prior consent
+                  To post photos, videos, or testimonials for marketing purposes, only with prior consent
                 </li>
                 <li>
                   To improve our website and services, using aggregated, de-identified analytics data
@@ -207,7 +207,7 @@ export default function PrivacyPolicy() {
               <p className="text-gray-700 mb-4">
                 Valencia Basket Academy UAE&apos;s programs are designed for children aged 4–18. Because our
                 participants are minors, we collect information about children only from, or with the
-                verified consent of, a parent or legal guardian — children do not submit information to
+                verified consent of, a parent or legal guardian. Children do not submit information to
                 us directly through the website.
               </p>
               <ul className="list-disc list-outside ml-5 space-y-3 text-gray-700 mb-4">
@@ -245,20 +245,20 @@ export default function PrivacyPolicy() {
               </h2>
               <p className="text-gray-700 mb-4">
                 Our website uses cookies and similar technologies (such as those deployed via Google Tag
-                Manager) to operate the site, understand how visitors use it, and — where applicable —
+                Manager) to operate the site, understand how visitors use it, and, where applicable,
                 to measure the performance of our marketing campaigns.
               </p>
               <ul className="list-disc list-outside ml-5 space-y-2 text-gray-700 mb-4">
                 <li>
-                  <span className="font-semibold">Strictly necessary cookies</span> — required for the
+                  <span className="font-semibold">Strictly necessary cookies</span>: required for the
                   website to function.
                 </li>
                 <li>
-                  <span className="font-semibold">Analytics cookies</span> — to understand site usage
+                  <span className="font-semibold">Analytics cookies</span>: to understand site usage
                   and visitor behaviour.
                 </li>
                 <li>
-                  <span className="font-semibold">Advertising/marketing cookies</span> — to measure and
+                  <span className="font-semibold">Advertising/marketing cookies</span>: to measure and
                   improve ad campaigns (e.g. Meta Pixel / TikTok Pixel / Google).
                 </li>
               </ul>
@@ -308,9 +308,9 @@ export default function PrivacyPolicy() {
                 8. International Data Transfers
               </h2>
               <p className="text-gray-700">
-                Where personal data is transferred outside the UAE — for example to a cloud hosting
+                Where personal data is transferred outside the UAE, for example to a cloud hosting
                 provider, payment processor, or the marketing/analytics platforms above, or to Valencia
-                Basket, Spain — we take reasonable steps to ensure it receives an adequate level of
+                Basket, Spain, we take reasonable steps to ensure it receives an adequate level of
                 protection, such as standard contractual clauses, an applicable adequacy decision, or
                 another legally recognised safeguard.
               </p>

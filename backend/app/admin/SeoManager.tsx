@@ -251,7 +251,7 @@ function SocialPreview({
             <img src={image} alt="" className="w-full h-full object-cover" />
           ) : (
             <span className="text-xs text-gray-400 px-4 text-center">
-              No OG image set — platforms fall back to the site default
+              No OG image set. Platforms fall back to the site default
             </span>
           )}
         </div>

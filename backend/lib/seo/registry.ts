@@ -161,7 +161,7 @@ export const PAGE_SEO_DEFAULTS: PageSeoDefaults[] = [
     group: "Main",
     title: "FAQs | Valencia Basket Academy UAE",
     description:
-      "Frequently asked questions about Valencia Basket Academy UAE — programs, registration, fees, schedule, location, and more.",
+      "Frequently asked questions about Valencia Basket Academy UAE, covering programs, registration, fees, schedule, location, and more.",
     canonical: "/faqs",
   },
   {
@@ -170,10 +170,10 @@ export const PAGE_SEO_DEFAULTS: PageSeoDefaults[] = [
     group: "Legal",
     title: "Privacy Policy | Valencia Basket Academy UAE",
     description:
-      "Privacy Policy for Valencia Basket Academy UAE — how we collect, use, and protect your personal data under the UAE Personal Data Protection Law and GDPR.",
+      "Privacy Policy for Valencia Basket Academy UAE, explaining how we collect, use, and protect your personal data under the UAE Personal Data Protection Law and GDPR.",
     canonical: "/privacy-policy",
     ogDescription:
-      "Privacy Policy for Valencia Basket Academy UAE — how we collect, use, and protect your personal data.",
+      "Privacy Policy for Valencia Basket Academy UAE, explaining how we collect, use, and protect your personal data.",
   },
   {
     path: "/terms",
@@ -181,14 +181,14 @@ export const PAGE_SEO_DEFAULTS: PageSeoDefaults[] = [
     group: "Legal",
     title: "Terms and Conditions | Valencia Basket Academy UAE",
     description:
-      "Terms and Conditions for Valencia Basket Academy UAE — registration, fees, refunds, code of conduct, and policies for all academy programs.",
+      "Terms and Conditions for Valencia Basket Academy UAE, covering registration, fees, refunds, code of conduct, and policies for all academy programs.",
     canonical: "/terms",
   },
   {
     path: "/thank-you",
     label: "Thank You",
     group: "Legal",
-    title: "Thank You — Valencia Basket Academy UAE",
+    title: "Thank You | Valencia Basket Academy UAE",
     description:
       "Thank you for getting in touch with Valencia Basket Academy UAE. Our team will be in contact with you shortly.",
     canonical: "/thank-you",

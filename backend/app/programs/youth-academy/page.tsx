@@ -48,7 +48,7 @@ const pillars = [
 ];
 
 const focusAreas = [
-  { icon: Target,     title: "Technical Mastery",    desc: "Shooting mechanics, dribbling under pressure, finishing at the rim — high-repetition skill work with immediate coach feedback." },
+  { icon: Target,     title: "Technical Mastery",    desc: "Shooting mechanics, dribbling under pressure, finishing at the rim, with high-repetition skill work and immediate coach feedback." },
   { icon: Shield,     title: "Defensive Excellence", desc: "Footwork, on-ball and help defense, transition defense, and reading offensive actions at game speed." },
   { icon: TrendingUp, title: "Tactical Development", desc: "Half-court offense, pick-and-roll concepts, defensive schemes, and fast break execution applied in real game situations." },
   { icon: Trophy,     title: "Competition",          desc: "Competitive leagues, internal tournaments, and structured 5v5 scrimmages to test development under real pressure." },
@@ -70,7 +70,7 @@ export default async function YouthAcademy() {
             Youth <span className="text-primary">Academy</span> Program
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-            Building the complete player. Technical mastery, tactical intelligence, physical conditioning, and the competitive mindset to perform under pressure.
+            A competitive basketball program for teens ages 11 to 18 in Dubai, built to develop technical mastery, tactical intelligence, and the mindset to perform under pressure.
           </p>
           <div className="flex justify-center">
             <Link href="/#book-trial">
@@ -107,10 +107,10 @@ export default async function YouthAcademy() {
                 Serious Development.<br /><span className="text-primary">Real Pathways.</span>
               </h2>
               <p className="text-gray-600 leading-relaxed text-lg mb-6">
-                Youth Academy is where basketball becomes a pursuit. Players aged 11–18 are ready for more: more intensity, more tactical depth, and more competitive challenge. This program delivers all three, rooted in the Valencia Basket methodology from Spain.
+                Youth Academy is where basketball becomes a genuine pursuit, not just a class. Players aged 11 to 18 in Dubai who are ready for more, more intensity, more tactical depth, and more competitive challenge, will find all three here, rooted in the Valencia Basket methodology from Spain. Coaches trained in this system bring a proven European approach to player development, one built on discipline, repetition, and game intelligence rather than shortcuts.
               </p>
               <p className="text-gray-600 leading-relaxed text-lg mb-8">
-                Sessions blend high-repetition technical work with tactical concepts and progress into competition preparation and league play. Top performers are considered for invitation to the Elite / Select program.
+                Sessions blend high-repetition technical work with tactical concepts, progressing into competition preparation and league play as players advance. This is a program designed for the long game: many players use it as a genuine pathway toward higher-level basketball, whether that means school and college teams, national-level trials, or simply becoming the best player they can be. Top performers are considered for invitation to the Elite/Select program, Valencia Basket UAE&apos;s most competitive tier.
               </p>
               {/* Lever 2: tighter stat tiles, less padding */}
               <div className="grid grid-cols-2 gap-3">                <div className="bg-gray-50 border-l-4 border-primary px-3 py-2">
@@ -204,9 +204,9 @@ export default async function YouthAcademy() {
               <div className="space-y-5">
                 {[
                   { step: "01", title: "Activation",      desc: "Dynamic warm-up: mobility, activation drills, and mental focus before training begins." },
-                  { step: "02", title: "Technical Block", desc: "High-repetition individual skill work — shooting form, ball-handling series, or footwork patterns with immediate coach feedback." },
+                  { step: "02", title: "Technical Block", desc: "High-repetition individual skill work, including shooting form, ball-handling series, or footwork patterns, with immediate coach feedback." },
                   { step: "03", title: "Tactical Work",   desc: "Small-group and team drills applying the session's concept in game-realistic scenarios." },
-                  { step: "04", title: "Competition",     desc: "5v5 scrimmage or structured game situations — applying everything under competitive pressure." },
+                  { step: "04", title: "Competition",     desc: "5v5 scrimmage or structured game situations, applying everything under competitive pressure." },
                   { step: "05", title: "Review",          desc: "Coach-led debrief on key moments, individual notes, and targets for the next session." },
                 ].map(({ step, title, desc }) => (
                   <div key={step} className="flex gap-5">
@@ -234,7 +234,7 @@ export default async function YouthAcademy() {
             Ready to Level Up?
           </h2>
           <p className="text-xl mb-8 max-w-xl mx-auto opacity-90">
-            Book a free trial session and let our coaches assess exactly where your game is — and where it can go.
+            Book a free trial session and let our coaches assess exactly where your game is, and where it can go.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/#book-trial">

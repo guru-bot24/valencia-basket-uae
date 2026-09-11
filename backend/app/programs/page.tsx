@@ -45,7 +45,7 @@ export default async function Programs() {
       title: "Youth Academy",
       age: "11-18 Years",
       focus: "Skill, Tactics & Competition",
-      desc: "Building the complete player. Technical mastery—shooting form, dribbling mechanics, defensive footwork—progressing into complex tactical concepts, physical conditioning, and competition preparation.",
+      desc: "Building the complete player. Technical mastery, including shooting form, dribbling mechanics, and defensive footwork, progressing into complex tactical concepts, physical conditioning, and competition preparation.",
       schedule: "Sun/Tue/Thu 5:00 PM",
       features: ["Shooting & ball handling mastery", "Advanced tactics", "Physical conditioning", "Competitive leagues"],
       image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg",

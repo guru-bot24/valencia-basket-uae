@@ -76,7 +76,7 @@ export default async function PrivateTraining() {
             </span>
             <h2 className="text-4xl font-black uppercase mb-4">Choose Your Format</h2>
             <p className="text-gray-500 max-w-xl mx-auto">
-              Every session is tailored to the player. Select the ratio that fits your goals and budget — all formats are available across our weekly slots.
+              Every session is tailored to the player. Select the ratio that fits your goals and budget, all formats are available across our weekly slots.
             </p>
           </div>
 
@@ -100,7 +100,7 @@ export default async function PrivateTraining() {
               {
                 ratio: "4:1",
                 label: "Group",
-                desc: "Train alongside peers with focused coaching — great for skill work in a team-style setting.",
+                desc: "Train alongside peers with focused coaching, great for skill work in a team-style setting.",
               },
             ].map(({ ratio, label, desc }) => (
               <div

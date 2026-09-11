@@ -73,7 +73,7 @@ export default async function EventDetail({ params }: PageProps) {
           <div className="space-y-8">
              <div className="bg-black text-white p-8 sticky top-24">
                 <h3 className="text-2xl font-black uppercase mb-2">{eventEnded ? "Event Completed" : "Secure Your Spot"}</h3>
-                <p className="text-gray-400 text-sm mb-6">{eventEnded ? "This event has ended. Registration is closed." : "Limited availability — register now."}</p>
+                <p className="text-gray-400 text-sm mb-6">{eventEnded ? "This event has ended. Registration is closed." : "Limited availability, register now."}</p>
                 <div className="space-y-4 mb-8">
                    <div className="flex justify-between border-b border-gray-800 pb-2">
                       <span className="text-sm uppercase tracking-wider text-gray-400">Date</span>

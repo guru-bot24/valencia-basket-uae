@@ -81,7 +81,7 @@ const categories: FAQCategory[] = [
       },
       {
         id: "beginners",
-        q: "My child has never played basketball before — can they still join?",
+        q: "My child has never played basketball before, can they still join?",
         a: "Yes. All three programs are built to take in complete beginners alongside more experienced players. Coaches adjust drills and pacing to each child's current ability, so no prior experience is needed to start.",
       },
       {
@@ -162,7 +162,7 @@ const categories: FAQCategory[] = [
     items: [
       {
         id: "missed-session",
-        q: "What if my child misses a session — is a make-up class available?",
+        q: "What if my child misses a session, is a make-up class available?",
         a: "There are no make-up sessions provided when a player misses a class.",
       },
       {

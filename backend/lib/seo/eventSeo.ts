@@ -39,9 +39,9 @@ export function eventPageDefaults(event: { slug: string; title: string; descript
 export function eventRegisterPageDefaults(event: { slug: string; title: string }): PageSeoDefaults {
   return {
     path: `/events/${event.slug}/register`,
-    label: `Register — ${event.title}`,
+    label: `Register: ${event.title}`,
     group: "Events",
-    title: `Register — ${event.title} | Valencia Basket UAE`,
+    title: `Register: ${event.title} | Valencia Basket UAE`,
     description: `Register for ${event.title} with Valencia Basket Academy UAE.`,
     canonical: `/events/${event.slug}/register`,
   };

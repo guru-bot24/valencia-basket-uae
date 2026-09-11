@@ -54,7 +54,7 @@ export function SpainConnection() {
               className="text-[17px] leading-relaxed mb-8"
               style={{ color: "rgba(255,255,255,0.62)" }}
             >
-              A direct connection to Spain&apos;s basketball methodology — our players train the same
+              A direct connection to Spain&apos;s basketball methodology. Our players train the same
               system, right here in Dubai.
             </p>
             <Link

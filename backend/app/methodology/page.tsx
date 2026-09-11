@@ -19,7 +19,7 @@ export default async function Methodology() {
     {
       number: "01",
       title: "0v0 Learning",
-      desc: "No defender — focused entirely on technique and execution. Players build confidence and mechanical precision without pressure.",
+      desc: "No defender, so players focus entirely on technique and execution. Players build confidence and mechanical precision without pressure.",
     },
     {
       number: "02",
@@ -37,7 +37,7 @@ export default async function Methodology() {
     {
       icon: Zap,
       title: "Play Fast",
-      desc: "High pace in running, passing, penetration, and 1v1 situations. Modern professional basketball — EuroLeague and NBA — is becoming faster and more free-flowing. Playing at high tempo is fundamental to our identity.",
+      desc: "High pace in running, passing, penetration, and 1v1 situations. Modern professional basketball, including the EuroLeague and NBA, is becoming faster and more free-flowing. Playing at high tempo is fundamental to our identity.",
     },
     {
       icon: Crosshair,
@@ -52,7 +52,7 @@ export default async function Methodology() {
     {
       icon: TrendingUp,
       title: "Offensive Rebounding",
-      desc: "Our final tactical rule — always looking to create extra opportunities to attack the basket. Full commitment on every shot attempt to generate second chances.",
+      desc: "Our final tactical rule is to always look for extra opportunities to attack the basket. Full commitment on every shot attempt to generate second chances.",
     },
   ];
 
@@ -65,7 +65,7 @@ export default async function Methodology() {
     {
       icon: Target,
       title: "Spacing Before Complexity",
-      desc: "In tactical learning, spacing always comes first — how to cut and move without the ball. Only later do we introduce screens, hand-offs, and more complex actions. There is no perfect age; there is a process that must be respected.",
+      desc: "In tactical learning, spacing always comes first, teaching players how to cut and move without the ball. Only later do we introduce screens, hand-offs, and more complex actions. There is no perfect age; there is a process that must be respected.",
     },
     {
       icon: Users,
@@ -88,7 +88,7 @@ export default async function Methodology() {
           <span className="text-primary font-bold uppercase tracking-widest text-sm mb-4 block">The Valencia Way</span>
           <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6">Our Methodology</h1>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            A proven system developed in Valencia, Spain — built on strong, non-negotiable human values that run through every stage of basketball learning and development.
+            A proven system developed in Valencia, Spain, built on strong, non-negotiable human values that run through every stage of basketball learning and development.
           </p>
         </div>
       </div>
@@ -103,7 +103,7 @@ export default async function Methodology() {
                 description="Our methodology is based on not rushing any part of a player&apos;s journey, whether technical or tactical. We fully respect individual learning rhythms, making sure that progress is real, solid, and long-lasting."
               />
               <p className="text-gray-600 leading-relaxed mt-6">
-                Our approach is a mix of different training methods, designed to create a global and complete learning experience that connects all elements of the game. We don&apos;t just teach offensive or defensive techniques — we help players understand how and when to use them in real game situations, and most importantly, why.
+                Our approach is a mix of different training methods, designed to create a global and complete learning experience that connects all elements of the game. We don&apos;t just teach offensive or defensive techniques; we help players understand how and when to use them in real game situations, and most importantly, why.
               </p>
             </div>
 

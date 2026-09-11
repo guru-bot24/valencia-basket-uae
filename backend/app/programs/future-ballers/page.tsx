@@ -44,8 +44,8 @@ const pillars = [
 const focusAreas = [
   { icon: Zap,   title: "Motor Skills",  desc: "Running, jumping, and throwing drills that develop fundamental physical coordination." },
   { icon: Heart, title: "Confidence",    desc: "Low-pressure, encouraging environment where every child succeeds and grows." },
-  { icon: Star,  title: "Ball Feel",     desc: "First contact with a basketball — dribbling, rolling, catching at a pace that's just right." },
-  { icon: Users, title: "Social Play",   desc: "Learning to share, take turns, and play alongside others — teamwork begins here." },
+  { icon: Star,  title: "Ball Feel",     desc: "First contact with a basketball, dribbling, rolling, catching at a pace that's just right." },
+  { icon: Users, title: "Social Play",   desc: "Learning to share, take turns, and play alongside others. Teamwork begins here." },
 ];
 
 export default async function FutureBallers() {
@@ -67,7 +67,7 @@ export default async function FutureBallers() {
             Future <span className="text-primary">Ballers</span> Program
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-            The very first step into basketball. Where tiny hands meet big dreams — through movement, laughter, and play.
+            The perfect first basketball program for kids, ages 4 to 6, in Dubai. Where tiny hands meet big dreams, through movement, laughter, and play.
           </p>
           <div className="flex justify-center">
             <Link href="/#book-trial">
@@ -103,10 +103,10 @@ export default async function FutureBallers() {
                 First Steps. <span className="text-primary">Big Fun.</span>
               </h2>
               <p className="text-gray-600 leading-relaxed text-lg mb-6">
-                Future Ballers is our entry-level program built entirely around the 4–6 age group. Sessions are playful, movement-rich, and structured around what young children actually enjoy — games, challenges, and celebrating small wins.
+                Future Ballers is our entry-level program built entirely around the 4 to 6 age group. Sessions are playful, movement-rich, and structured around what young children actually enjoy, games, challenges, and celebrating small wins. Coaches keep group sizes small so every child gets hands-on attention and plenty of encouragement, not just instructions from the sideline.
               </p>
               <p className="text-gray-600 leading-relaxed text-lg mb-8">
-                No prior experience needed. No pressure. Just a great first introduction to basketball and a sport they&apos;ll want to come back to every week.
+                No prior experience needed. No pressure. Just a great first introduction to basketball and a sport they&apos;ll want to come back to every week, with each session designed to build a little more confidence and coordination than the last.
               </p>
               {/* Lever 2: more padding, orange borders */}
               <div className="grid grid-cols-2 gap-4">                <div className="bg-gray-50 border-l-4 border-primary px-4 py-3">
@@ -171,7 +171,7 @@ export default async function FutureBallers() {
               What They Learn
             </span>
             <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">Focus Areas</h2>
-            <p className="text-gray-500 mt-4 max-w-xl mx-auto">Every session is built around what kids aged 4–6 actually enjoy — so they leave wanting to come back.</p>
+            <p className="text-gray-500 mt-4 max-w-xl mx-auto">Every session is built around what kids aged 4 to 6 actually enjoy, so they leave wanting to come back.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {focusAreas.map(({ icon: Icon, title, desc }) => (
@@ -199,10 +199,10 @@ export default async function FutureBallers() {
               </h2>
               <div className="space-y-6">
                 {[
-                  { step: "01", title: "Warm-Up Games",           desc: "Active movement games to get hearts pumping and muscles ready — every child arrives excited." },
+                  { step: "01", title: "Warm-Up Games",           desc: "Active movement games to get hearts pumping and muscles ready, every child arrives excited." },
                   { step: "02", title: "Skill Circuit",            desc: "Short, focused stations introducing one concept at a time: dribbling, passing, or shooting basics." },
                   { step: "03", title: "Coached Play",             desc: "Small-sided games where coaches apply the skill in a fun, guided context." },
-                  { step: "04", title: "Cool-Down & Celebration",  desc: "A calm close with a fun team ritual — every child leaves feeling proud and energised." },
+                  { step: "04", title: "Cool-Down & Celebration",  desc: "A calm close with a fun team ritual, every child leaves feeling proud and energised." },
                 ].map(({ step, title, desc }) => (
                   <div key={step} className="flex gap-5">
                     <span className="text-primary font-black text-2xl leading-none shrink-0 w-8">{step}</span>
@@ -229,7 +229,7 @@ export default async function FutureBallers() {
             Ready to See Them Smile?
           </h2>
           <p className="text-xl mb-10 max-w-xl mx-auto opacity-90">
-            Book a free trial session — no commitment, just a brilliant first experience of basketball.
+            Book a free trial session, no commitment, just a brilliant first experience of basketball.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/#book-trial">

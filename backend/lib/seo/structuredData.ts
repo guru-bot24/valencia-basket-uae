@@ -67,7 +67,7 @@ export const faqStructuredData = {
     },
     {
       "@type": "Question",
-      name: "My child has never played basketball before — can they still join?",
+      name: "My child has never played basketball before, can they still join?",
       acceptedAnswer: {
         "@type": "Answer",
         text: "Yes. All three programs are built to take in complete beginners alongside more experienced players. Coaches adjust drills and pacing to each child's current ability, so no prior experience is needed to start.",
@@ -155,7 +155,7 @@ export const faqStructuredData = {
     },
     {
       "@type": "Question",
-      name: "What if my child misses a session — is a make-up class available?",
+      name: "What if my child misses a session, is a make-up class available?",
       acceptedAnswer: {
         "@type": "Answer",
         text: "There are no make-up sessions provided when a player misses a class.",
