@@ -57,6 +57,13 @@
       "when": 1788248594989,
       "tag": "0008_seo_page_controls",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1789019307881,
+      "tag": "0009_lead_status",
+      "breakpoints": true
     }
   ]
 }

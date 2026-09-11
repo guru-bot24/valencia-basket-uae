@@ -40,7 +40,9 @@ import type {
   EventRegistration,
   Event,
   InsertEvent,
+  LeadStatus,
 } from "@shared/schema";
+import { LEAD_STATUS_VALUES } from "@shared/schema";
 
 interface AdminAuthUser {
   id: string;
@@ -652,6 +654,60 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
     onError: () => toast({ title: "Failed to delete event", variant: "destructive" }),
   });
 
+  const updateTrialBookingStatusMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: LeadStatus }) => {
+      const res = await fetch(`/api/admin/trial-bookings/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      if (!res.ok) throw new Error("Failed to update status");
+      return res.json();
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["trial-bookings"] }),
+    onError: () => toast({ title: "Failed to update status", variant: "destructive" }),
+  });
+
+  const deleteTrialBookingMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/admin/trial-bookings/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete trial booking");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["trial-bookings"] });
+      toast({ title: "Trial booking deleted" });
+    },
+    onError: () => toast({ title: "Failed to delete trial booking", variant: "destructive" }),
+  });
+
+  const updateEventRegistrationStatusMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: LeadStatus }) => {
+      const res = await fetch(`/api/admin/event-registrations/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      if (!res.ok) throw new Error("Failed to update status");
+      return res.json();
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["event-registrations"] }),
+    onError: () => toast({ title: "Failed to update status", variant: "destructive" }),
+  });
+
+  const deleteEventRegistrationMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/admin/event-registrations/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete event registration");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["event-registrations"] });
+      toast({ title: "Event registration deleted" });
+    },
+    onError: () => toast({ title: "Failed to delete event registration", variant: "destructive" }),
+  });
+
   const editEventFromSeo = (eventId: string) => {
     const event = adminEvents.find((candidate) => candidate.id === eventId);
     if (!event) {
@@ -760,6 +816,8 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
                       <TableHead className="font-bold">Level</TableHead>
                       <TableHead className="font-bold">Source</TableHead>
                       <TableHead className="font-bold">Date</TableHead>
+                      <TableHead className="font-bold">Status</TableHead>
+                      <TableHead className="font-bold">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -775,6 +833,38 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
                         <TableCell>{booking.howHeard || "—"}</TableCell>
                         <TableCell className="text-sm text-gray-500">
                           {new Date(booking.createdAt).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          <Select
+                            value={booking.status}
+                            onValueChange={(value) =>
+                              updateTrialBookingStatusMutation.mutate({ id: booking.id, status: value as LeadStatus })
+                            }
+                          >
+                            <SelectTrigger className="w-[200px]" data-testid={`select-status-trial-${booking.id}`}>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {LEAD_STATUS_VALUES.map((status) => (
+                                <SelectItem key={status} value={status}>{status}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            data-testid={`button-delete-trial-${booking.id}`}
+                            onClick={() => {
+                              if (confirm(`Delete this trial booking for "${booking.playerName}"? This cannot be undone.`)) {
+                                deleteTrialBookingMutation.mutate(booking.id);
+                              }
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -801,6 +891,8 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
                       <TableHead className="font-bold">Email</TableHead>
                       <TableHead className="font-bold">Phone</TableHead>
                       <TableHead className="font-bold">Date</TableHead>
+                      <TableHead className="font-bold">Status</TableHead>
+                      <TableHead className="font-bold">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -814,6 +906,38 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
                         <TableCell>{registration.phone}</TableCell>
                         <TableCell className="text-sm text-gray-500">
                           {new Date(registration.createdAt).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          <Select
+                            value={registration.status}
+                            onValueChange={(value) =>
+                              updateEventRegistrationStatusMutation.mutate({ id: registration.id, status: value as LeadStatus })
+                            }
+                          >
+                            <SelectTrigger className="w-[200px]" data-testid={`select-status-event-${registration.id}`}>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {LEAD_STATUS_VALUES.map((status) => (
+                                <SelectItem key={status} value={status}>{status}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            data-testid={`button-delete-event-registration-${registration.id}`}
+                            onClick={() => {
+                              if (confirm(`Delete this registration for "${registration.playerName}" (${registration.eventTitle})? This cannot be undone.`)) {
+                                deleteEventRegistrationMutation.mutate(registration.id);
+                              }
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}

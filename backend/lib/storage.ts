@@ -5,6 +5,7 @@ import {
   type InsertContactEnquiry,
   type EventRegistration,
   type InsertEventRegistration,
+  type LeadStatus,
   type Event,
   type InsertEvent,
   type AdminUser,
@@ -109,12 +110,16 @@ export async function syncBlogTaxonomy(
 export interface IStorage {
   createTrialBooking(booking: InsertTrialBooking): Promise<TrialBooking>;
   getAllTrialBookings(): Promise<TrialBooking[]>;
+  updateTrialBookingStatus(id: string, status: LeadStatus): Promise<TrialBooking | undefined>;
+  deleteTrialBooking(id: string): Promise<boolean>;
 
   createContactEnquiry(enquiry: InsertContactEnquiry): Promise<ContactEnquiry>;
   getAllContactEnquiries(): Promise<ContactEnquiry[]>;
-  
+
   createEventRegistration(registration: InsertEventRegistration): Promise<EventRegistration>;
   getAllEventRegistrations(): Promise<EventRegistration[]>;
+  updateEventRegistrationStatus(id: string, status: LeadStatus): Promise<EventRegistration | undefined>;
+  deleteEventRegistration(id: string): Promise<boolean>;
 
   getAllEvents(): Promise<Event[]>;
   getEventBySlug(slug: string): Promise<Event | undefined>;
@@ -188,6 +193,20 @@ export class DatabaseStorage implements IStorage {
     return db.select().from(trialBookings).orderBy(desc(trialBookings.createdAt));
   }
 
+  async updateTrialBookingStatus(id: string, status: LeadStatus): Promise<TrialBooking | undefined> {
+    const [result] = await db
+      .update(trialBookings)
+      .set({ status })
+      .where(eq(trialBookings.id, id))
+      .returning();
+    return result;
+  }
+
+  async deleteTrialBooking(id: string): Promise<boolean> {
+    const result = await db.delete(trialBookings).where(eq(trialBookings.id, id)).returning({ id: trialBookings.id });
+    return result.length > 0;
+  }
+
   async createContactEnquiry(enquiry: InsertContactEnquiry): Promise<ContactEnquiry> {
     const [result] = await db.insert(contactEnquiries).values(enquiry).returning();
     return result;
@@ -204,6 +223,23 @@ export class DatabaseStorage implements IStorage {
 
   async getAllEventRegistrations(): Promise<EventRegistration[]> {
     return db.select().from(eventRegistrations).orderBy(desc(eventRegistrations.createdAt));
+  }
+
+  async updateEventRegistrationStatus(id: string, status: LeadStatus): Promise<EventRegistration | undefined> {
+    const [result] = await db
+      .update(eventRegistrations)
+      .set({ status })
+      .where(eq(eventRegistrations.id, id))
+      .returning();
+    return result;
+  }
+
+  async deleteEventRegistration(id: string): Promise<boolean> {
+    const result = await db
+      .delete(eventRegistrations)
+      .where(eq(eventRegistrations.id, id))
+      .returning({ id: eventRegistrations.id });
+    return result.length > 0;
   }
 
   async getAllEvents(): Promise<Event[]> {

@@ -16,30 +16,54 @@ import {
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const trialBookings = pgTable("trial_bookings", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  parentName: text("parent_name").notNull(),
-  email: text("email").notNull(),
-  phone: text("phone").notNull(),
-  whatsapp: boolean("whatsapp").notNull().default(false),
-  playerName: text("player_name").notNull(),
-  playerAge: integer("player_age"),
-  ageGroup: text("age_group").notNull().default(""),
-  area: text("area").notNull().default(""),
-  programInterest: text("program_interest"),
-  howHeard: text("how_heard").notNull().default(""),
-  additionalInfo: text("additional_info"),
-  utmSource: text("utm_source").notNull().default("direct"),
-  utmMedium: text("utm_medium").notNull().default("direct"),
-  utmCampaign: text("utm_campaign").notNull().default("direct"),
-  landingPage: text("landing_page").notNull().default(""),
-  referrer: text("referrer").notNull().default(""),
-  sourcePage: text("source_page").notNull().default("home"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+export const LEAD_STATUS_VALUES = [
+  "New",
+  "Qualified",
+  "Not Qualified",
+  "Booked Free Appointment",
+  "Didn't show up",
+  "Converted Lead",
+] as const;
+
+export type LeadStatus = (typeof LEAD_STATUS_VALUES)[number];
+
+export const leadStatusSchema = z.enum(LEAD_STATUS_VALUES);
+
+export const trialBookings = pgTable(
+  "trial_bookings",
+  {
+    id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+    parentName: text("parent_name").notNull(),
+    email: text("email").notNull(),
+    phone: text("phone").notNull(),
+    whatsapp: boolean("whatsapp").notNull().default(false),
+    playerName: text("player_name").notNull(),
+    playerAge: integer("player_age"),
+    ageGroup: text("age_group").notNull().default(""),
+    area: text("area").notNull().default(""),
+    programInterest: text("program_interest"),
+    howHeard: text("how_heard").notNull().default(""),
+    additionalInfo: text("additional_info"),
+    utmSource: text("utm_source").notNull().default("direct"),
+    utmMedium: text("utm_medium").notNull().default("direct"),
+    utmCampaign: text("utm_campaign").notNull().default("direct"),
+    landingPage: text("landing_page").notNull().default(""),
+    referrer: text("referrer").notNull().default(""),
+    sourcePage: text("source_page").notNull().default("home"),
+    status: text("status").notNull().default("New"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    check(
+      "trial_bookings_status_check",
+      sql`${table.status} IN ('New', 'Qualified', 'Not Qualified', 'Booked Free Appointment', 'Didn''t show up', 'Converted Lead')`
+    ),
+  ]
+);
 
 export const insertTrialBookingSchema = createInsertSchema(trialBookings).omit({
   id: true,
+  status: true,
   createdAt: true,
 });
 
@@ -197,20 +221,31 @@ export const contactEnquiryFormSchema = z.object({
 export type ContactEnquiryFormInput = z.input<typeof contactEnquiryFormSchema>;
 export type ContactEnquiryFormData = z.output<typeof contactEnquiryFormSchema>;
 
-export const eventRegistrations = pgTable("event_registrations", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  eventId: text("event_id").notNull(),
-  eventTitle: text("event_title").notNull(),
-  parentName: text("parent_name").notNull(),
-  email: text("email").notNull(),
-  phone: text("phone").notNull(),
-  playerName: text("player_name").notNull(),
-  playerAge: integer("player_age").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+export const eventRegistrations = pgTable(
+  "event_registrations",
+  {
+    id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+    eventId: text("event_id").notNull(),
+    eventTitle: text("event_title").notNull(),
+    parentName: text("parent_name").notNull(),
+    email: text("email").notNull(),
+    phone: text("phone").notNull(),
+    playerName: text("player_name").notNull(),
+    playerAge: integer("player_age").notNull(),
+    status: text("status").notNull().default("New"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    check(
+      "event_registrations_status_check",
+      sql`${table.status} IN ('New', 'Qualified', 'Not Qualified', 'Booked Free Appointment', 'Didn''t show up', 'Converted Lead')`
+    ),
+  ]
+);
 
 export const insertEventRegistrationSchema = createInsertSchema(eventRegistrations).omit({
   id: true,
+  status: true,
   createdAt: true,
 });
 

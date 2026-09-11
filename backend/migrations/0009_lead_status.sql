@@ -1,0 +1,4 @@
+ALTER TABLE "event_registrations" ADD COLUMN "status" text DEFAULT 'New' NOT NULL;--> statement-breakpoint
+ALTER TABLE "trial_bookings" ADD COLUMN "status" text DEFAULT 'New' NOT NULL;--> statement-breakpoint
+ALTER TABLE "event_registrations" ADD CONSTRAINT "event_registrations_status_check" CHECK ("event_registrations"."status" IN ('New', 'Qualified', 'Not Qualified', 'Booked Free Appointment', 'Didn''t show up', 'Converted Lead'));--> statement-breakpoint
+ALTER TABLE "trial_bookings" ADD CONSTRAINT "trial_bookings_status_check" CHECK ("trial_bookings"."status" IN ('New', 'Qualified', 'Not Qualified', 'Booked Free Appointment', 'Didn''t show up', 'Converted Lead'));
