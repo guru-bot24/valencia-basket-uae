@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
-import { CalendarDays } from "lucide-react";
+import { ArrowLeft, CalendarDays } from "lucide-react";
 import { BreadcrumbJsonLd, StructuredData } from "@/components/seo/StructuredData";
 import { blogPostStructuredData } from "@/lib/seo/structuredData";
 import { storage } from "@/lib/storage";
@@ -79,6 +80,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <article>
         <header className="bg-black py-20 text-white md:py-28">
           <div className="container mx-auto max-w-4xl px-4 md:px-6">
+            <Link href="/blog" className="mb-6 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-gray-400 hover:text-primary">
+              <ArrowLeft className="h-4 w-4" /> Back to Blog
+            </Link>
             <div className="mb-5 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary">
               <CalendarDays className="h-4 w-4" />
               {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("en-AE", { year: "numeric", month: "long", day: "numeric" }) : ""}

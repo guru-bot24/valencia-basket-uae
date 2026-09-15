@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlignCenter, AlignLeft, AlignRight, ArrowLeft, Bold, ChevronDown, ChevronUp,
-  Code2, Expand, ImagePlus, Italic, Link2, List, ListOrdered, Maximize2,
+  Code2, Expand, ImagePlus, Instagram, Italic, Link2, List, ListOrdered, Maximize2,
   Minus, Palette, Quote, Redo2, RotateCcw, Search, Star, Trash2, Undo2, X,
   Monitor, Smartphone,
 } from "lucide-react";
@@ -175,6 +175,21 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
     if (url && /^(?:https:\/\/|\/)/i.test(url)) command("insertImage", url);
   };
 
+  const insertInstagram = () => {
+    const url = window.prompt("Paste the Instagram post, reel, or video URL");
+    if (!url) return;
+    const match = url.match(/instagram\.com\/(p|reel|tv)\/([A-Za-z0-9_-]+)/i);
+    if (!match) {
+      window.alert("Couldn't find an Instagram post link in that URL");
+      return;
+    }
+    const [, type, code] = match;
+    const html = `<iframe src="https://www.instagram.com/${type}/${code}/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>`;
+    editorRef.current?.focus();
+    document.execCommand("insertHTML", false, html);
+    if (editorRef.current) onChange(editorRef.current.innerHTML);
+  };
+
   const toolbarButton = (label: string, icon: React.ReactNode, action: () => void) => (
     <button type="button" title={label} aria-label={label} onMouseDown={(event) => { event.preventDefault(); action(); }} className="flex h-8 w-8 items-center justify-center border-r border-gray-200 text-gray-700 hover:bg-gray-100">
       {icon}
@@ -185,6 +200,7 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
     <div className={fullscreen ? "fixed inset-0 z-50 flex flex-col bg-white p-4" : "border border-gray-300 bg-white"}>
       <div className="sticky top-0 z-10 flex flex-wrap items-center border-b bg-gray-50">
         <button type="button" onClick={insertImage} className="flex h-8 items-center gap-1 border-r px-2 text-xs font-bold"><ImagePlus className="h-4 w-4" /> Add Media</button>
+        <button type="button" onClick={insertInstagram} className="flex h-8 items-center gap-1 border-r px-2 text-xs font-bold"><Instagram className="h-4 w-4" /> Embed Instagram</button>
         <select aria-label="Block format" className="h-8 border-r bg-white px-2 text-xs" defaultValue="p" onChange={(event) => command("formatBlock", event.target.value)}>
           <option value="p">Paragraph</option><option value="h1">Heading 1</option><option value="h2">Heading 2</option><option value="h3">Heading 3</option><option value="h4">Heading 4</option><option value="blockquote">Quote</option>
         </select>

@@ -2,14 +2,17 @@ import { z } from "zod";
 
 const allowedHtmlTags = new Set([
   "p", "br", "strong", "b", "em", "i", "u", "s", "h1", "h2", "h3", "h4",
-  "blockquote", "ul", "ol", "li", "a", "span", "font", "img", "hr", "div",
+  "blockquote", "ul", "ol", "li", "a", "span", "font", "img", "hr", "div", "iframe",
 ]);
+
+// Only Instagram's own no-JS embed endpoint is ever allowed as an iframe src.
+const instagramEmbedPattern = /^https:\/\/(?:www\.)?instagram\.com\/(?:p|reel|tv)\/[A-Za-z0-9_-]+\/embed(?:\/captioned)?\/?(?:\?[^\s"'<>]*)?$/i;
 
 export function sanitizeBlogHtml(input: string) {
   let html = input
     .replace(/<!--[\s\S]*?-->/g, "")
-    .replace(/<(script|style|iframe|object|embed|form|textarea|button|svg|math|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, "")
-    .replace(/<(script|style|iframe|object|embed|form|textarea|button|svg|math|template)\b[^>]*\/?>/gi, "");
+    .replace(/<(script|style|object|embed|form|textarea|button|svg|math|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, "")
+    .replace(/<(script|style|object|embed|form|textarea|button|svg|math|template)\b[^>]*\/?>/gi, "");
 
   return html.replace(/<([a-z0-9]+)([^>]*)>/gi, (full, rawTag: string, rawAttributes: string) => {
     const tag = rawTag.toLowerCase();
@@ -29,8 +32,18 @@ export function sanitizeBlogHtml(input: string) {
         continue;
       }
       if (name === "src") {
-        if (!/^(?:https:\/\/|\/|data:image\/(?:jpeg|png|webp|gif);base64,)/i.test(value)) continue;
+        if (tag === "iframe") {
+          if (!instagramEmbedPattern.test(value)) continue;
+        } else if (!/^(?:https:\/\/|\/|data:image\/(?:jpeg|png|webp|gif);base64,)/i.test(value)) continue;
         attributes.push(`src="${value.replace(/"/g, "&quot;")}"`);
+        continue;
+      }
+      if (tag === "iframe" && (name === "width" || name === "height")) {
+        if (/^[0-9]{1,4}%?$/.test(value)) attributes.push(`${name}="${value}"`);
+        continue;
+      }
+      if (tag === "iframe" && (name === "frameborder" || name === "scrolling" || name === "allowtransparency")) {
+        if (/^[a-z0-9]+$/i.test(value)) attributes.push(`${name}="${value}"`);
         continue;
       }
       if (name === "alt" || name === "title" || name === "target" || name === "rel") {
@@ -49,6 +62,7 @@ export function sanitizeBlogHtml(input: string) {
         if (safeStyles.length) attributes.push(`style="${safeStyles.join("; ").replace(/"/g, "&quot;")}"`);
       }
     }
+    if (tag === "iframe" && !attributes.some((attr) => attr.startsWith("src="))) return "";
     return `<${tag}${attributes.length ? ` ${attributes.join(" ")}` : ""}>`;
   }).replace(/<\/([a-z0-9]+)\s*>/gi, (full, rawTag: string) => {
     const tag = rawTag.toLowerCase();
