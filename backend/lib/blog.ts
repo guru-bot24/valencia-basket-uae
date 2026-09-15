@@ -88,7 +88,7 @@ export function blogPlainText(input: string) {
 const imageSource = z
   .string()
   .trim()
-  .max(2_850_000, "Featured images must be 2 MB or smaller")
+  .max(2_850_000, "Image is too large")
   .refine(
     (value) =>
       value === "" ||

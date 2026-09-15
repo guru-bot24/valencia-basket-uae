@@ -136,10 +136,21 @@ function LengthMeter({ value, recommended }: { value: string; recommended: numbe
   );
 }
 
+async function uploadImageFile(file: File): Promise<string> {
+  const body = new FormData();
+  body.set("file", file);
+  const response = await fetch("/api/admin/blog/upload-image", { method: "POST", body });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error ?? "Failed to upload image");
+  return result.url as string;
+}
+
 function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (value: string) => void; onBlur: () => void }) {
   const [codeMode, setCodeMode] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!codeMode && editorRef.current) editorRef.current.innerHTML = sanitizeBlogHtml(value);
@@ -170,9 +181,19 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
     if (url && /^(?:https?:\/\/|mailto:|\/|#)/i.test(url)) command("createLink", url);
   };
 
-  const insertImage = () => {
-    const url = window.prompt("Enter an HTTPS image URL or site image path");
-    if (url && /^(?:https:\/\/|\/)/i.test(url)) command("insertImage", url);
+  const insertImage = () => fileInputRef.current?.click();
+
+  const handleImageFileSelected = async (file?: File) => {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadImageFile(file);
+      command("insertImage", url);
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "Failed to upload image");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const insertInstagram = () => {
@@ -199,7 +220,8 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
   return (
     <div className={fullscreen ? "fixed inset-0 z-50 flex flex-col bg-white p-4" : "border border-gray-300 bg-white"}>
       <div className="sticky top-0 z-10 flex flex-wrap items-center border-b bg-gray-50">
-        <button type="button" onClick={insertImage} className="flex h-8 items-center gap-1 border-r px-2 text-xs font-bold"><ImagePlus className="h-4 w-4" /> Add Media</button>
+        <button type="button" onClick={insertImage} disabled={uploading} className="flex h-8 items-center gap-1 border-r px-2 text-xs font-bold disabled:opacity-50"><ImagePlus className="h-4 w-4" /> {uploading ? "Uploading…" : "Add Media"}</button>
+        <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="hidden" onChange={(event) => { handleImageFileSelected(event.target.files?.[0]); event.target.value = ""; }} />
         <button type="button" onClick={insertInstagram} className="flex h-8 items-center gap-1 border-r px-2 text-xs font-bold"><Instagram className="h-4 w-4" /> Embed Instagram</button>
         <select aria-label="Block format" className="h-8 border-r bg-white px-2 text-xs" defaultValue="p" onChange={(event) => command("formatBlock", event.target.value)}>
           <option value="p">Paragraph</option><option value="h1">Heading 1</option><option value="h2">Heading 2</option><option value="h3">Heading 3</option><option value="h4">Heading 4</option><option value="blockquote">Quote</option>
@@ -367,18 +389,28 @@ export function BlogEditor({ post, adminName, onClose, onSaved, onDelete }: {
     if (post && dirtyRef.current && form.status === "draft" && hasRequired && !saveMutation.isPending) saveMutation.mutate({ intent: "autosave" });
   };
 
-  const uploadFeaturedImage = (file?: File) => {
+  const [uploadingFeaturedImage, setUploadingFeaturedImage] = useState(false);
+
+  const uploadFeaturedImage = async (file?: File) => {
     if (!file) return;
-    if (!file.type.match(/^image\/(?:png|jpeg|webp|gif)$/) || file.size > 2 * 1024 * 1024) {
-      toast({ title: "Use a PNG, JPEG, WebP, or GIF image no larger than 2 MB", variant: "destructive" });
+    if (!file.type.match(/^image\/(?:png|jpeg|webp|gif)$/) || file.size > 5 * 1024 * 1024) {
+      toast({ title: "Use a PNG, JPEG, WebP, or GIF image no larger than 5 MB", variant: "destructive" });
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      updateField("featuredImageSrc", String(reader.result));
+    setUploadingFeaturedImage(true);
+    try {
+      const body = new FormData();
+      body.set("file", file);
+      const response = await fetch("/api/admin/blog/upload-image", { method: "POST", body });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "Failed to upload image");
+      updateField("featuredImageSrc", result.url as string);
       if (!form.featuredImageAlt) updateField("featuredImageAlt", file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "));
-    };
-    reader.readAsDataURL(file);
+    } catch (error) {
+      toast({ title: error instanceof Error ? error.message : "Failed to upload image", variant: "destructive" });
+    } finally {
+      setUploadingFeaturedImage(false);
+    }
   };
 
   const addTag = () => {
@@ -439,9 +471,9 @@ export function BlogEditor({ post, adminName, onClose, onSaved, onDelete }: {
 
           <Panel title="Featured Image">
             {!form.featuredImageSrc ? (
-              <label className="flex cursor-pointer flex-col items-center justify-center border-2 border-dashed p-8 text-sm font-bold text-primary"><ImagePlus className="mb-2 h-7 w-7" /> Set featured image<input type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="sr-only" onChange={(event) => uploadFeaturedImage(event.target.files?.[0])} /></label>
+              <label className="flex cursor-pointer flex-col items-center justify-center border-2 border-dashed p-8 text-sm font-bold text-primary"><ImagePlus className="mb-2 h-7 w-7" /> {uploadingFeaturedImage ? "Uploading…" : "Set featured image"}<input type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="sr-only" disabled={uploadingFeaturedImage} onChange={(event) => uploadFeaturedImage(event.target.files?.[0])} /></label>
             ) : (
-              <div className="space-y-3"><label className="block cursor-pointer"><img src={form.featuredImageSrc} alt={form.featuredImageAlt || "Featured image preview"} className="max-h-52 w-full object-cover" /><span className="mt-1 block text-xs text-gray-500">Click the image to edit or update</span><input type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="sr-only" onChange={(event) => uploadFeaturedImage(event.target.files?.[0])} /></label><Input value={form.featuredImageAlt} onChange={(event) => updateField("featuredImageAlt", event.target.value)} placeholder="Required image alt text" /><button className="text-sm text-red-600 underline" onClick={() => { updateField("featuredImageSrc", ""); updateField("featuredImageAlt", ""); }}>Remove featured image</button></div>
+              <div className="space-y-3"><label className="block cursor-pointer"><img src={form.featuredImageSrc} alt={form.featuredImageAlt || "Featured image preview"} className="max-h-52 w-full object-cover" /><span className="mt-1 block text-xs text-gray-500">{uploadingFeaturedImage ? "Uploading…" : "Click the image to edit or update"}</span><input type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="sr-only" disabled={uploadingFeaturedImage} onChange={(event) => uploadFeaturedImage(event.target.files?.[0])} /></label><Input value={form.featuredImageAlt} onChange={(event) => updateField("featuredImageAlt", event.target.value)} placeholder="Required image alt text" /><button className="text-sm text-red-600 underline" onClick={() => { updateField("featuredImageSrc", ""); updateField("featuredImageAlt", ""); }}>Remove featured image</button></div>
             )}
           </Panel>
 
