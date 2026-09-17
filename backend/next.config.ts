@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   },
   allowedDevOrigins: ["*.replit.dev", "*.replit.app", "*.janeway.replit.dev", "127.0.0.1"],
   images: {
+    contentDispositionType: "inline",
     remotePatterns: [
       {
         protocol: "https",
