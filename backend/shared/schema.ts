@@ -113,12 +113,23 @@ export const HOW_HEARD_OPTIONS = [
 
 const NAME_REGEX = /^[A-Za-z\u00C0-\u024F]+(?:[ '\-][A-Za-z\u00C0-\u024F]+)*$/;
 
+// Normalize dash/apostrophe look-alikes (smart quotes, en/em dashes) that
+// iOS/macOS text fields and pasted text commonly substitute for a plain
+// "-" or "'", so a real name like "Anne\u2013Marie" or "O'Connor" isn't rejected.
+const normalizeNameInput = (value: unknown) =>
+  typeof value === "string"
+    ? value.replace(/[\u2010-\u2015\u2212]/g, "-").replace(/[\u2018\u2019\u02BC\u00B4`]/g, "'")
+    : value;
+
 export const nameField = (label: string) =>
-  z
-    .string()
-    .trim()
-    .min(2, `${label} must be at least 2 characters`)
-    .regex(NAME_REGEX, `${label} can only contain letters, spaces, hyphens and apostrophes`);
+  z.preprocess(
+    normalizeNameInput,
+    z
+      .string()
+      .trim()
+      .min(2, `${label} must be at least 2 characters`)
+      .regex(NAME_REGEX, `${label} can only contain letters, spaces, hyphens and apostrophes`)
+  );
 
 /** Full international phone, e.g. +971501234567 (spaces/dashes/brackets already stripped). */
 export const phoneField = z
