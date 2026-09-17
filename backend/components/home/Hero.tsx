@@ -37,8 +37,8 @@ export function Hero({ imageAlt = "Valencia Basket UAE Action" }: { imageAlt?: s
           </h1>
           
           <p className="max-w-xl mx-auto text-lg md:text-xl text-gray-200 mb-10 font-light leading-relaxed">
-            Join the elite player development pathway inspired by L&apos;Alqueria del Basket. 
-            Excellence, culture, and high performance for Dubai&apos;s youth.
+            Join Valencia Basketball Academy in Dubai and follow an elite player development pathway inspired by L&apos;Alqueria del Basket.
+            Excellence, culture, and high performance for youth and kids.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
