@@ -5,7 +5,6 @@ import type { Metadata } from "next";
 import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { getStructuredData } from "@/lib/seo/structuredDataResolve";
 import { StructuredData } from "@/components/seo/StructuredData";
-import { getCoachStructuredEntries } from "@/lib/seo/coaches";
 
 export const revalidate = 60;
 
@@ -163,10 +162,7 @@ function CoachCard({
 
 export default async function Coaches() {
   const alt = await getAltResolver();
-  const schema = [
-    ...(await getStructuredData("/coaches", "Coaches")),
-    ...(await getCoachStructuredEntries()).map((entry) => entry.json),
-  ];
+  const schema = await getStructuredData("/coaches", "Coaches");
   return (
     <>
       <StructuredData data={schema} />

@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FAQContent } from "./FAQContent";
 import { buildPageMetadata } from "@/lib/seo/resolve";
-import { faqStructuredData } from "@/lib/seo/structuredData";
 import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
-import { isStructuredEntryEnabled } from "@/lib/seo/structuredDataResolve";
 
 export const revalidate = 60;
 
@@ -14,15 +12,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 
 export default async function FAQsPage() {
-  const faqSchemaEnabled = await isStructuredEntryEnabled("/faqs");
   return (
     <>
       <BreadcrumbJsonLd path="/faqs" label="FAQs" />
-      {/* JSON-LD structured data */}
-      {faqSchemaEnabled && <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
-      />}
 
       {/* Header */}
       <div className="bg-black text-white py-16 md:py-20">

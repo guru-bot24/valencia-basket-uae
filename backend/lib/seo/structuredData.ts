@@ -252,7 +252,7 @@ export const structuredDataRegistry: ManagedStructuredDataEntry[] = [
   { key: "facilities", path: "/facilities", label: "Facilities", type: "SportsActivityLocation", note: "Academy's venue page.", json: { ...page("/facilities", "AllSports Arena", "SportsActivityLocation"), hasMap: CONTACT_MAPS_URL }, enabledByDefault: true, fields: [{ key: "hasMap", label: "Map URL", type: "url" }], lockedFields: ["name", "url"] },
   { key: "admissions", path: "/admissions", label: "Admissions", type: "WebPage", note: "Admissions page.", json: page("/admissions", "Admissions"), enabledByDefault: true, fields: [], lockedFields: ["name", "url"] },
 ];
-const breadcrumbPages = [
+export const breadcrumbPages = [
   ["/programs", "Programs"], ["/programs/future-ballers", "Future Ballers"],
   ["/programs/mini-basket", "Mini Basket"], ["/programs/youth-academy", "Youth Academy"],
   ["/programs/private-training", "Private Training"], ["/methodology", "Methodology"],

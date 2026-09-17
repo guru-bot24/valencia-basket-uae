@@ -4,9 +4,7 @@ import { WhatsAppIcon } from "@/components/shared/WhatsAppIcon";
 import { TikTokIcon } from "@/components/shared/TikTokIcon";
 import { BookTrialForm } from "@/components/home/BookTrialForm";
 import { buildPageMetadata } from "@/lib/seo/resolve";
-import { contactStructuredData } from "@/lib/seo/structuredData";
 import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
-import { isStructuredEntryEnabled } from "@/lib/seo/structuredDataResolve";
 
 export const revalidate = 60;
 
@@ -48,14 +46,9 @@ const infoRows = [
 ];
 
 export default async function Contact() {
-  const contactSchemaEnabled = await isStructuredEntryEnabled("/contact");
   return (
     <>
       <BreadcrumbJsonLd path="/contact" label="Contact" />
-      {contactSchemaEnabled && <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactStructuredData) }}
-      />}
 
       {/* ============ HERO ============ */}
       <div className="bg-black text-white py-20">

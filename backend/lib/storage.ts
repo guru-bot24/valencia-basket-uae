@@ -152,7 +152,7 @@ export interface IStorage {
   upsertSeoPage(override: SeoPageOverride): Promise<SeoPage>;
   deleteSeoPage(path: string): Promise<void>;
   getAllSeoSchemaOverrides(): Promise<SeoSchemaOverride[]>;
-  upsertSeoSchemaOverride(path: string, schemaType: string, enabled: boolean, overrides: Record<string, unknown> | null): Promise<SeoSchemaOverride>;
+  upsertSeoSchemaOverride(path: string, schemaType: string, enabled: boolean, overrides: Record<string, unknown>[] | null): Promise<SeoSchemaOverride>;
   deleteSeoSchemaOverride(path: string): Promise<void>;
 
   getAllSeoImageAltFiles(): Promise<SeoImageAlt[]>;
@@ -458,7 +458,7 @@ export class DatabaseStorage implements IStorage {
   async getAllSeoSchemaOverrides(): Promise<SeoSchemaOverride[]> {
     return db.select().from(seoSchemaOverrides).orderBy(asc(seoSchemaOverrides.path));
   }
-  async upsertSeoSchemaOverride(path: string, schemaType: string, enabled: boolean, overrides: Record<string, unknown> | null): Promise<SeoSchemaOverride> {
+  async upsertSeoSchemaOverride(path: string, schemaType: string, enabled: boolean, overrides: Record<string, unknown>[] | null): Promise<SeoSchemaOverride> {
     const values = { path, schemaType, enabled, overrides, updatedAt: new Date() };
     const [result] = await db.insert(seoSchemaOverrides).values(values)
       .onConflictDoUpdate({ target: seoSchemaOverrides.path, set: values }).returning();

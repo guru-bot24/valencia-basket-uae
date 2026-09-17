@@ -7,7 +7,7 @@ import { storage } from "@/lib/storage";
 import { isPastEvent, resolveImageSrc } from "@/lib/utils";
 import type { Event } from "@shared/schema";
 import { buildPageMetadata } from "@/lib/seo/resolve";
-import { getEventStructuredData, getStructuredData } from "@/lib/seo/structuredDataResolve";
+import { getStructuredData } from "@/lib/seo/structuredDataResolve";
 import { StructuredData } from "@/components/seo/StructuredData";
 
 export const revalidate = 60;
@@ -66,7 +66,7 @@ function EventCard({ event, past = false }: { event: Event; past?: boolean }) {
 
 export default async function Events() {
   const events = await storage.getAllEvents();
-  const schema = [...await getStructuredData("/events", "Events"), ...(await Promise.all(events.map((event) => getEventStructuredData(event)))).flat()];
+  const schema = await getStructuredData("/events", "Events");
 
   const upcoming = events.filter((e) => !isPastEvent(e.endDate));
   const past = events

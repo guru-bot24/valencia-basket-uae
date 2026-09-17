@@ -6,7 +6,7 @@ import {
 } from "@/lib/seo/structuredData";
 import {
   getEventStructuredData,
-  resolveStructuredEntry,
+  getStructuredData,
 } from "@/lib/seo/structuredDataResolve";
 import { storage } from "@/lib/storage";
 
@@ -32,61 +32,36 @@ test("registry identities are unique and editable fields never include locks", (
   }
 });
 
-test("structured-data overrides inherit blanks and ignore locked properties", () => {
-  const entry = structuredDataRegistry.find((candidate) => candidate.type === "Course");
-  assert.ok(entry);
-
-  const defaults = entry.json as Record<string, unknown>;
-  const resolved = resolveStructuredEntry(entry, {
-    enabled: true,
-    schemaType: "Article",
-    overrides: {
-      description: "Approved program description",
-      name: "Attempted locked override",
-      url: "https://example.com/not-allowed",
-      ignoredBlank: "",
-    },
+test("event schema uses live start/end dates and offline attendance mode", () => {
+  const [event] = getEventStructuredData({
+    id: "event-1",
+    slug: "summer-camp",
+    title: "Summer Camp",
+    date: "2026-07-01",
+    endDate: "2026-07-05",
+    description: "Live event description",
+    location: "AllSports Arena",
   });
-  assert.equal((resolved.json as Record<string, unknown>)["@type"], "Article");
 
-  assert.equal(resolved.enabled, true);
-  assert.equal((resolved.json as Record<string, unknown>).description, "Approved program description");
-  assert.equal((resolved.json as Record<string, unknown>).name, defaults.name);
-  assert.equal((resolved.json as Record<string, unknown>).url, defaults.url);
-
-  const inherited = resolveStructuredEntry(entry, {
-    enabled: false,
-    overrides: { description: "" },
-  });
-  assert.equal(inherited.enabled, false);
-  assert.equal((inherited.json as Record<string, unknown>).description, defaults.description);
+  assert.equal(event.startDate, "2026-07-01");
+  assert.equal(event.endDate, "2026-07-05");
+  assert.equal(event.eventAttendanceMode, "https://schema.org/OfflineEventAttendanceMode");
+  assert.deepEqual(event.location, { "@type": "Place", name: "AllSports Arena" });
 });
 
-test("event schema uses live start/end dates and offline attendance mode", async () => {
-  const original = storage.getAllSeoSchemaOverrides;
-  storage.getAllSeoSchemaOverrides = async () => [];
+test("a saved page override fully replaces the computed default", async () => {
+  const originalGetAll = storage.getAllSeoSchemaOverrides;
+  const originalGetEvents = storage.getAllEvents;
+  const customOverride = [{ "@context": "https://schema.org", "@type": "WebPage", name: "Custom" }];
+  storage.getAllSeoSchemaOverrides = async () => [
+    { id: "1", path: "/facilities", schemaType: "WebPage", overrides: customOverride, enabled: true, updatedAt: new Date() },
+  ];
+  storage.getAllEvents = async () => [];
   try {
-    const [event] = await getEventStructuredData({
-      id: "event-1",
-      slug: "summer-camp",
-      title: "Summer Camp",
-      date: "2026-07-01",
-      endDate: "2026-07-05",
-      description: "Live event description",
-      location: "AllSports Arena",
-    });
-
-    assert.equal(event.startDate, "2026-07-01");
-    assert.equal(event.endDate, "2026-07-05");
-    assert.equal(
-      event.eventAttendanceMode,
-      "https://schema.org/OfflineEventAttendanceMode"
-    );
-    assert.deepEqual(event.location, {
-      "@type": "Place",
-      name: "AllSports Arena",
-    });
+    const result = await getStructuredData("/facilities", "Facilities");
+    assert.deepEqual(result, customOverride);
   } finally {
-    storage.getAllSeoSchemaOverrides = original;
+    storage.getAllSeoSchemaOverrides = originalGetAll;
+    storage.getAllEvents = originalGetEvents;
   }
 });

@@ -8,7 +8,7 @@ import { CalendarDays, MapPin, Clock } from "lucide-react";
 import { isPastEvent } from "@/lib/utils";
 import { buildDynamicMetadata } from "@/lib/seo/resolve";
 import { eventPageDefaults } from "@/lib/seo/eventSeo";
-import { getEventStructuredData, getStructuredData } from "@/lib/seo/structuredDataResolve";
+import { getStructuredData } from "@/lib/seo/structuredDataResolve";
 import { StructuredData } from "@/components/seo/StructuredData";
 
 export const revalidate = 60;
@@ -36,7 +36,7 @@ export default async function EventDetail({ params }: PageProps) {
   }
 
   const eventEnded = isPastEvent(event.endDate);
-  const schema = [...await getEventStructuredData(event), ...await getStructuredData(`/events/${event.slug}`, event.title)];
+  const schema = await getStructuredData(`/events/${event.slug}`, event.title);
 
   return (
     <>

@@ -483,13 +483,13 @@ export const seoPages = pgTable("seo_pages", {
 
 export type SeoPage = typeof seoPages.$inferSelect;
 
-/** Optional, per-schema customisations. Null means inherit the code registry. */
+/** Optional, per-page customisations. Null means inherit the computed default. */
 export const seoSchemaOverrides = pgTable("seo_schema_overrides", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   path: text("path").notNull().unique(),
   schemaType: text("schema_type").notNull(),
-  /** Sparse editable values only; null inherits the registry defaults. */
-  overrides: jsonb("overrides").$type<Record<string, unknown> | null>(),
+  /** Full JSON-LD array replacement for the whole page; null inherits the computed default. */
+  overrides: jsonb("overrides").$type<Record<string, unknown>[] | null>(),
   enabled: boolean("enabled").notNull().default(true),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

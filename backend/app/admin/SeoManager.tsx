@@ -117,19 +117,13 @@ interface RedirectRow {
 }
 
 interface SchemaRow {
-  key: string;
   path: string;
   label: string;
-  type: string;
-  note: string;
-  json: unknown;
-  lastModified?: string | null;
-  enabled?: boolean;
-  override?: Record<string, unknown> | null;
-  fields?: Array<{ key: string; label: string; type: "text" | "url" | "email" | "date"; required?: boolean }>;
-  lockedFields?: string[];
-  /** Editable entries accept a full raw-JSON override; others are read-only (toggle only). */
-  editable?: boolean;
+  /** The full default-or-overridden JSON-LD array currently live for this page. */
+  json: Record<string, unknown>[];
+  isOverridden: boolean;
+  enabled: boolean;
+  lastModified: string | null;
 }
 
 // ─────────────────────────── helpers ───────────────────────────
@@ -1296,7 +1290,7 @@ function RedirectsTab() {
 // ─────────────────────────── structured data tab ───────────────────────────
 
 function SchemaTab() {
-  const { data: entries = [], isLoading } = useQuery<SchemaRow[]>({
+  const { data: rows = [], isLoading } = useQuery<SchemaRow[]>({
     queryKey: ["seo-schema"],
     queryFn: async () => {
       const res = await fetch("/api/admin/seo/schema");
@@ -1309,68 +1303,45 @@ function SchemaTab() {
     return <div className="text-center py-12 text-gray-500">Loading structured data...</div>;
   }
 
-  const pageGroups = new Map<string, SchemaRow[]>();
-  for (const entry of entries) {
-    const group = pageGroups.get(entry.path) ?? [];
-    group.push(entry);
-    pageGroups.set(entry.path, group);
-  }
-  const paths = [...pageGroups.keys()].sort((a, b) => a.localeCompare(b));
-
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-500">Grouped by page. Editable entries accept a full JSON-LD replacement, reviewed before saving; live-content-derived entries (events, coaches, FAQs, contact) can only be toggled on or off.</p>
+      <p className="text-sm text-gray-500">One box per page holds all of its structured data as raw JSON-LD. Edits are reviewed before they publish.</p>
       <Accordion type="multiple" className="border border-gray-200">
-        {paths.map((path) => {
-          const group = pageGroups.get(path)!;
-          return (
-            <AccordionItem
-              key={path}
-              value={path}
-              className="border-b border-gray-200 last:border-b-0"
-              data-testid={`schema-page-${path.replace(/[^a-z0-9]+/gi, "-") || "home"}`}
-            >
-              <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-gray-50">
-                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1 text-left">
-                  <span className="font-black uppercase tracking-tight">{path === "/" ? "Home" : path}</span>
-                  <span className="text-xs text-gray-500">{group.length} schema{group.length === 1 ? "" : "s"}</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-4 pb-4 space-y-6">
-                {group.map((entry, index) => (
-                  <div key={entry.key} className={index > 0 ? "border-t border-gray-100 pt-6" : ""}>
-                    <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-                      <span className="font-bold">{entry.label}</span>
-                      <span className="text-xs font-bold uppercase text-[#FF6C0E]">{entry.type}</span>
-                      <span className="text-[11px] text-gray-400">
-                        Last modified:{" "}
-                        {entry.lastModified ? new Date(entry.lastModified).toLocaleDateString() : "Not available"}
-                      </span>
-                    </div>
-                    <SchemaEditor key={`${entry.key}:${entry.lastModified ?? "default"}`} entry={entry} />
-                  </div>
-                ))}
-              </AccordionContent>
-            </AccordionItem>
-          );
-        })}
+        {rows.map((row) => (
+          <AccordionItem
+            key={row.path}
+            value={row.path}
+            className="border-b border-gray-200 last:border-b-0"
+            data-testid={`schema-page-${row.path.replace(/[^a-z0-9]+/gi, "-") || "home"}`}
+          >
+            <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-gray-50">
+              <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1 text-left">
+                <span className="font-black uppercase tracking-tight">{row.label}</span>
+                <span className="text-xs text-gray-500">{row.json.length} object{row.json.length === 1 ? "" : "s"}</span>
+                {row.isOverridden && <span className="text-xs font-bold uppercase text-[#FF6C0E]">Customized</span>}
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 pb-4">
+              <SchemaEditor key={`${row.path}:${row.lastModified ?? "default"}`} row={row} />
+            </AccordionContent>
+          </AccordionItem>
+        ))}
       </Accordion>
     </div>
   );
 }
 
-function SchemaEditor({ entry }: { entry: SchemaRow }) {
+function SchemaEditor({ row }: { row: SchemaRow }) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const [enabled, setEnabled] = useState(entry.enabled ?? true);
-  const currentJson = (entry.override ?? entry.json) as Record<string, unknown>;
-  const [text, setText] = useState(() => JSON.stringify(currentJson, null, 2));
+  const [enabled, setEnabled] = useState(row.enabled);
+  const [text, setText] = useState(() => JSON.stringify(row.json, null, 2));
   const [parseError, setParseError] = useState<string | null>(null);
-  const [pendingOverrides, setPendingOverrides] = useState<Record<string, unknown> | undefined>(undefined);
+  const [pendingOverrides, setPendingOverrides] = useState<Record<string, unknown>[] | undefined>(undefined);
 
   const save = useMutation({
-    mutationFn: async (payload: { enabled: boolean; overrides: Record<string, unknown> | null }) => {
-      const res = await fetch("/api/admin/seo/schema", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ key: entry.key, enabled: payload.enabled, overrides: payload.overrides }) });
+    mutationFn: async (payload: { enabled: boolean; overrides: Record<string, unknown>[] | null }) => {
+      const res = await fetch("/api/admin/seo/schema", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ path: row.path, enabled: payload.enabled, overrides: payload.overrides }) });
       const body = await res.json();
       if (!res.ok) throw new Error(body.error ?? "Unable to save");
     },
@@ -1378,32 +1349,11 @@ function SchemaEditor({ entry }: { entry: SchemaRow }) {
     onError: (error: Error) => toast({ title: error.message, variant: "destructive" }),
   });
 
-  if (!entry.editable) {
-    return (
-      <div className="space-y-3">
-        <p className="text-xs text-gray-500">{entry.note}</p>
-        <label className="flex items-center gap-2 text-sm font-medium">
-          <Checkbox
-            checked={enabled}
-            onCheckedChange={(value) => {
-              const next = value === true;
-              setEnabled(next);
-              save.mutate({ enabled: next, overrides: null });
-            }}
-          />{" "}
-          Publish this schema {enabled ? "" : "(disabled)"}
-        </label>
-        <div className="mb-2 flex justify-end"><CopyValueButton value={JSON.stringify(entry.json, null, 2)} label="Copy JSON" /></div>
-        <pre className="max-h-80 overflow-x-auto whitespace-pre-wrap break-all bg-gray-50 p-4 text-xs">{JSON.stringify(entry.json, null, 2)}</pre>
-      </div>
-    );
-  }
-
   const handleSaveClick = () => {
     try {
       const parsed = JSON.parse(text);
-      if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-        setParseError("Must be a single JSON object");
+      if (!Array.isArray(parsed)) {
+        setParseError("Must be a JSON array of schema objects, e.g. [{ \"@context\": ... }]");
         return;
       }
       setParseError(null);
@@ -1414,8 +1364,6 @@ function SchemaEditor({ entry }: { entry: SchemaRow }) {
   };
 
   const handleReset = () => {
-    const defaultText = JSON.stringify(entry.json, null, 2);
-    setText(defaultText);
     setParseError(null);
     setPendingOverrides(undefined);
     save.mutate({ enabled, overrides: null });
@@ -1423,21 +1371,15 @@ function SchemaEditor({ entry }: { entry: SchemaRow }) {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-gray-500">{entry.note}</p>
       <label className="flex items-center gap-2 text-sm font-medium">
-        <Checkbox checked={enabled} onCheckedChange={(value) => setEnabled(value === true)} /> Publish this schema {enabled ? "" : "(disabled)"}
+        <Checkbox checked={enabled} onCheckedChange={(value) => setEnabled(value === true)} /> Publish this page&apos;s schema {enabled ? "" : "(disabled)"}
       </label>
-      {!!entry.lockedFields?.length && (
-        <p className="text-xs text-gray-500">
-          Note: even in raw JSON, <code>name</code>/<code>url</code> stay locked to the page&apos;s actual content ({entry.lockedFields.join(", ")}) — a save with a changed value there will be rejected.
-        </p>
-      )}
       <textarea
-        className="w-full h-64 font-mono text-xs border p-2"
+        className="w-full h-80 font-mono text-xs border p-2"
         value={text}
         onChange={(event) => { setText(event.target.value); setParseError(null); }}
         spellCheck={false}
-        data-testid={`schema-json-${entry.key.replace(/[^a-z0-9]+/gi, "-")}`}
+        data-testid={`schema-json-${row.path.replace(/[^a-z0-9]+/gi, "-") || "home"}`}
       />
       {parseError && <p className="text-xs text-red-600">Invalid JSON: {parseError}</p>}
       <div className="flex flex-wrap gap-2">
@@ -1451,7 +1393,7 @@ function SchemaEditor({ entry }: { entry: SchemaRow }) {
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             <div>
               <p className="mb-1 text-xs font-bold uppercase text-gray-500">Current (live)</p>
-              <pre className="max-h-60 overflow-auto whitespace-pre-wrap break-all border bg-white p-2 text-xs">{JSON.stringify(currentJson, null, 2)}</pre>
+              <pre className="max-h-60 overflow-auto whitespace-pre-wrap break-all border bg-white p-2 text-xs">{JSON.stringify(row.json, null, 2)}</pre>
             </div>
             <div>
               <p className="mb-1 text-xs font-bold uppercase text-gray-500">New</p>
