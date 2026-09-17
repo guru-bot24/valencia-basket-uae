@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Table,
@@ -42,12 +42,137 @@ import type {
   InsertEvent,
   LeadStatus,
 } from "@shared/schema";
-import { LEAD_STATUS_VALUES } from "@shared/schema";
+import { LEAD_STATUS_VALUES, HOW_HEARD_OPTIONS } from "@shared/schema";
 
 interface AdminAuthUser {
   id: string;
   username: string;
   role: string;
+}
+
+type DatePreset = "all" | "today" | "7d" | "30d" | "month" | "custom";
+
+const DATE_PRESET_LABELS: Record<DatePreset, string> = {
+  all: "All time",
+  today: "Today",
+  "7d": "Last 7 days",
+  "30d": "Last 30 days",
+  month: "This month",
+  custom: "Custom",
+};
+
+function isWithinDatePreset(value: string | Date, preset: DatePreset, customFrom: string, customTo: string): boolean {
+  if (preset === "all") return true;
+  const date = new Date(value);
+  if (preset === "custom") {
+    if (customFrom && date < new Date(customFrom)) return false;
+    if (customTo) {
+      const to = new Date(customTo);
+      to.setHours(23, 59, 59, 999);
+      if (date > to) return false;
+    }
+    return true;
+  }
+  const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  if (preset === "today") return date >= startOfToday;
+  if (preset === "7d") {
+    const from = new Date(startOfToday);
+    from.setDate(from.getDate() - 6);
+    return date >= from;
+  }
+  if (preset === "30d") {
+    const from = new Date(startOfToday);
+    from.setDate(from.getDate() - 29);
+    return date >= from;
+  }
+  if (preset === "month") return date >= new Date(now.getFullYear(), now.getMonth(), 1);
+  return true;
+}
+
+function LeadFilterBar({
+  search, onSearchChange,
+  status, onStatusChange,
+  datePreset, onDatePresetChange,
+  customFrom, onCustomFromChange,
+  customTo, onCustomToChange,
+  extraLabel, extraValue, extraOptions, onExtraChange,
+  resultCount,
+}: {
+  search: string;
+  onSearchChange: (value: string) => void;
+  status: string;
+  onStatusChange: (value: string) => void;
+  datePreset: DatePreset;
+  onDatePresetChange: (value: DatePreset) => void;
+  customFrom: string;
+  onCustomFromChange: (value: string) => void;
+  customTo: string;
+  onCustomToChange: (value: string) => void;
+  extraLabel: string;
+  extraValue: string;
+  extraOptions: readonly string[];
+  onExtraChange: (value: string) => void;
+  resultCount: number;
+}) {
+  return (
+    <div className="mb-4 flex flex-wrap items-end gap-3 border border-gray-200 bg-gray-50 p-4">
+      <div className="min-w-[200px] flex-1">
+        <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Search</label>
+        <Input placeholder="Name, email, or phone" value={search} onChange={(e) => onSearchChange(e.target.value)} className="h-9" />
+      </div>
+      <div>
+        <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Status</label>
+        <Select value={status} onValueChange={onStatusChange}>
+          <SelectTrigger className="h-9 w-[180px]"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All statuses</SelectItem>
+            {LEAD_STATUS_VALUES.map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}
+          </SelectContent>
+        </Select>
+      </div>
+      {extraOptions.length > 0 && (
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-gray-500">{extraLabel}</label>
+          <Select value={extraValue} onValueChange={onExtraChange}>
+            <SelectTrigger className="h-9 w-[180px]"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {extraOptions.map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+      <div>
+        <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Date range</label>
+        <div className="flex flex-wrap gap-1">
+          {(Object.keys(DATE_PRESET_LABELS) as DatePreset[]).map((preset) => (
+            <button
+              key={preset}
+              type="button"
+              onClick={() => onDatePresetChange(preset)}
+              className={`h-9 px-2 text-xs font-bold ${datePreset === preset ? "bg-black text-white" : "border bg-white text-gray-700"}`}
+            >
+              {DATE_PRESET_LABELS[preset]}
+            </button>
+          ))}
+        </div>
+      </div>
+      {datePreset === "custom" && (
+        <div className="flex items-end gap-2">
+          <div>
+            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">From</label>
+            <Input type="date" value={customFrom} onChange={(e) => onCustomFromChange(e.target.value)} className="h-9" />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">To</label>
+            <Input type="date" value={customTo} onChange={(e) => onCustomToChange(e.target.value)} className="h-9" />
+          </div>
+        </div>
+      )}
+      <div className="ml-auto self-end pb-2 text-xs text-gray-500">{resultCount} result{resultCount === 1 ? "" : "s"}</div>
+    </div>
+  );
 }
 
 function LoginScreen({ onLogin }: { onLogin: (user: AdminAuthUser) => void }) {
@@ -641,6 +766,53 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
     },
   });
 
+  const [trialSearch, setTrialSearch] = useState("");
+  const [trialStatusFilter, setTrialStatusFilter] = useState("all");
+  const [trialSourceFilter, setTrialSourceFilter] = useState("all");
+  const [trialDatePreset, setTrialDatePreset] = useState<DatePreset>("all");
+  const [trialCustomFrom, setTrialCustomFrom] = useState("");
+  const [trialCustomTo, setTrialCustomTo] = useState("");
+
+  const filteredTrialBookings = useMemo(() => {
+    const query = trialSearch.trim().toLowerCase();
+    return trialBookings.filter((booking) => {
+      if (trialStatusFilter !== "all" && booking.status !== trialStatusFilter) return false;
+      if (trialSourceFilter !== "all" && booking.howHeard !== trialSourceFilter) return false;
+      if (!isWithinDatePreset(booking.createdAt, trialDatePreset, trialCustomFrom, trialCustomTo)) return false;
+      if (query) {
+        const haystack = `${booking.parentName} ${booking.playerName} ${booking.email} ${booking.phone}`.toLowerCase();
+        if (!haystack.includes(query)) return false;
+      }
+      return true;
+    });
+  }, [trialBookings, trialSearch, trialStatusFilter, trialSourceFilter, trialDatePreset, trialCustomFrom, trialCustomTo]);
+
+  const [eventSearch, setEventSearch] = useState("");
+  const [eventStatusFilter, setEventStatusFilter] = useState("all");
+  const [eventTitleFilter, setEventTitleFilter] = useState("all");
+  const [eventDatePreset, setEventDatePreset] = useState<DatePreset>("all");
+  const [eventCustomFrom, setEventCustomFrom] = useState("");
+  const [eventCustomTo, setEventCustomTo] = useState("");
+
+  const eventTitleOptions = useMemo(
+    () => [...new Set(eventRegistrations.map((registration) => registration.eventTitle))].sort(),
+    [eventRegistrations]
+  );
+
+  const filteredEventRegistrations = useMemo(() => {
+    const query = eventSearch.trim().toLowerCase();
+    return eventRegistrations.filter((registration) => {
+      if (eventStatusFilter !== "all" && registration.status !== eventStatusFilter) return false;
+      if (eventTitleFilter !== "all" && registration.eventTitle !== eventTitleFilter) return false;
+      if (!isWithinDatePreset(registration.createdAt, eventDatePreset, eventCustomFrom, eventCustomTo)) return false;
+      if (query) {
+        const haystack = `${registration.parentName} ${registration.playerName} ${registration.email} ${registration.phone}`.toLowerCase();
+        if (!haystack.includes(query)) return false;
+      }
+      return true;
+    });
+  }, [eventRegistrations, eventSearch, eventStatusFilter, eventTitleFilter, eventDatePreset, eventCustomFrom, eventCustomTo]);
+
   const deleteEventMutation = useMutation({
     mutationFn: async (slug: string) => {
       const res = await fetch(`/api/events/${slug}`, { method: "DELETE" });
@@ -803,6 +975,27 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
             ) : trialBookings.length === 0 ? (
               <div className="text-center py-12 text-gray-500" data-testid="text-no-trials">No trial bookings yet</div>
             ) : (
+              <>
+                <LeadFilterBar
+                  search={trialSearch}
+                  onSearchChange={setTrialSearch}
+                  status={trialStatusFilter}
+                  onStatusChange={setTrialStatusFilter}
+                  datePreset={trialDatePreset}
+                  onDatePresetChange={setTrialDatePreset}
+                  customFrom={trialCustomFrom}
+                  onCustomFromChange={setTrialCustomFrom}
+                  customTo={trialCustomTo}
+                  onCustomToChange={setTrialCustomTo}
+                  extraLabel="Source"
+                  extraValue={trialSourceFilter}
+                  extraOptions={HOW_HEARD_OPTIONS}
+                  onExtraChange={setTrialSourceFilter}
+                  resultCount={filteredTrialBookings.length}
+                />
+                {filteredTrialBookings.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500">No trial bookings match these filters</div>
+                ) : (
               <div className="border border-gray-200 rounded-sm overflow-hidden">
                 <Table>
                   <TableHeader className="bg-gray-100">
@@ -821,7 +1014,7 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {trialBookings.map((booking) => (
+                    {filteredTrialBookings.map((booking) => (
                       <TableRow key={booking.id} className="hover:bg-gray-50">
                         <TableCell className="font-medium">{booking.playerName}</TableCell>
                         <TableCell>{booking.ageGroup || booking.playerAge || "—"}</TableCell>
@@ -871,6 +1064,8 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
                   </TableBody>
                 </Table>
               </div>
+                )}
+              </>
             )}
           </TabsContent>
 
@@ -880,6 +1075,27 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
             ) : eventRegistrations.length === 0 ? (
               <div className="text-center py-12 text-gray-500" data-testid="text-no-registrations">No event registrations yet</div>
             ) : (
+              <>
+                <LeadFilterBar
+                  search={eventSearch}
+                  onSearchChange={setEventSearch}
+                  status={eventStatusFilter}
+                  onStatusChange={setEventStatusFilter}
+                  datePreset={eventDatePreset}
+                  onDatePresetChange={setEventDatePreset}
+                  customFrom={eventCustomFrom}
+                  onCustomFromChange={setEventCustomFrom}
+                  customTo={eventCustomTo}
+                  onCustomToChange={setEventCustomTo}
+                  extraLabel="Event"
+                  extraValue={eventTitleFilter}
+                  extraOptions={eventTitleOptions}
+                  onExtraChange={setEventTitleFilter}
+                  resultCount={filteredEventRegistrations.length}
+                />
+                {filteredEventRegistrations.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500">No event registrations match these filters</div>
+                ) : (
               <div className="border border-gray-200 rounded-sm overflow-hidden">
                 <Table>
                   <TableHeader className="bg-gray-100">
@@ -896,7 +1112,7 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {eventRegistrations.map((registration) => (
+                    {filteredEventRegistrations.map((registration) => (
                       <TableRow key={registration.id} className="hover:bg-gray-50">
                         <TableCell className="font-medium">{registration.eventTitle}</TableCell>
                         <TableCell>{registration.playerName}</TableCell>
@@ -944,6 +1160,8 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
                   </TableBody>
                 </Table>
               </div>
+                )}
+              </>
             )}
           </TabsContent>
 
