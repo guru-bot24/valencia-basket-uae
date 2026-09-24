@@ -20,6 +20,14 @@ const director = {
   imageKey: "coaches.maros-kovacik",
 };
 
+const assistantDirector = {
+  name: "Martin Pospisil",
+  role: "Assistant Technical Director & Coach",
+  bio: "Martin Pospisil joins Valencia Basket Academy UAE as Assistant Technical Director and Coach. Head coach of the Slovak women's national team and a longtime assistant to Maros Kovacik with the Polish and Slovak national teams, he brings elite European coaching experience with a focus on player development.",
+  image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-martin-pospisil.webp",
+  imageKey: "coaches.martin-pospisil",
+};
+
 const managementTeam = [
   {
     name: "Coach Saiid",
@@ -179,7 +187,10 @@ export default async function Coaches() {
       {/* Director */}
       <div className="container mx-auto px-4 md:px-6 pt-20 pb-12">
         <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-8">Leadership</h2>
-        <DirectorCard person={director} imageAlt={alt(director.imageKey)} />
+        <div className="space-y-6">
+          <DirectorCard person={director} imageAlt={alt(director.imageKey)} />
+          <DirectorCard person={assistantDirector} imageAlt={alt(assistantDirector.imageKey)} />
+        </div>
       </div>
 
       {/* Management & Operations */}

@@ -173,6 +173,12 @@ export const MANAGED_IMAGES: ManagedImage[] = [
     defaultAlt: "Coach Maros Kovacik",
   },
   {
+    key: "coaches.martin-pospisil",
+    page: "Coaches",
+    src: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-martin-pospisil.webp",
+    defaultAlt: "Coach Martin Pospisil",
+  },
+  {
     key: "coaches.saiid",
     page: "Coaches",
     src: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach_new/saiid.jpeg",

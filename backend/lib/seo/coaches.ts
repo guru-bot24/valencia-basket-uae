@@ -3,6 +3,7 @@ import { getStructuredDataOverrides } from "./structuredDataResolve";
 /** Names and roles mirror the live coach cards; they are deliberately locked. */
 export const LIVE_COACHES = [
   ["maros-kovacik", "Coach Maros Kovacik", "Director & Head Coach"],
+  ["martin-pospisil", "Martin Pospisil", "Assistant Technical Director & Coach"],
   ["saiid", "Coach Saiid", "General Manager"],
   ["rabih", "Rabih", "Operations Manager"],
   ["majil", "Coach Majil", "Coach"],
