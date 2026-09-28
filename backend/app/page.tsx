@@ -29,10 +29,15 @@ export default async function Home() {
   const heroImage = await getContent("home.hero.image");
   const programsDescription = await getContent("home.programs.description");
   const futureBallersBlurb = await getContent("home.program.future-ballers.description");
+  const futureBallersImage = await getContent("home.program.future-ballers.image");
   const miniBasketBlurb = await getContent("home.program.mini-basket.description");
+  const miniBasketImage = await getContent("home.program.mini-basket.image");
   const youthAcademyBlurb = await getContent("home.program.youth-academy.description");
+  const youthAcademyImage = await getContent("home.program.youth-academy.image");
   const eliteBlurb = await getContent("home.program.elite.description");
+  const eliteImage = await getContent("home.program.elite.image");
   const privateTrainingBlurb = await getContent("home.program.private-training.description");
+  const privateTrainingImage = await getContent("home.program.private-training.image");
   const methodologyBlurb = await getContent("home.methodology.blurb");
   const ctaMidHeadline = await getContent("home.cta-mid.headline");
   const facilitiesPreviewTitle = await getContent("home.facilities-preview.title");
@@ -82,7 +87,7 @@ export default async function Home() {
                 title="Future Ballers (Kids)" 
                 age="4-6 Years" 
                 description={futureBallersBlurb}
-                image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"
+                image={futureBallersImage}
                 imageAlt={alt("home.future-ballers")}
                 href="/programs/future-ballers"
               />
@@ -90,7 +95,7 @@ export default async function Home() {
                 title="Mini Basket" 
                 age="7-10 Years" 
                 description={miniBasketBlurb}
-                image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg"
+                image={miniBasketImage}
                 imageAlt={alt("home.mini-basket")}
                 href="/programs/mini-basket"
               />
@@ -98,7 +103,7 @@ export default async function Home() {
                 title="Youth Academy" 
                 age="11-18 Years" 
                 description={youthAcademyBlurb}
-                image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg"
+                image={youthAcademyImage}
                 imageAlt={alt("home.youth-academy")}
                 href="/programs/youth-academy"
               />
@@ -106,7 +111,7 @@ export default async function Home() {
                 title="Elite / Select" 
                 age="Invitation Only" 
                 description={eliteBlurb}
-                image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/team-award.jpg" 
+                image={eliteImage}
                 imageAlt={alt("home.elite")}
                 href="/programs#elite"
               />
@@ -114,7 +119,7 @@ export default async function Home() {
                 title="Private Training" 
                 age="1-on-1" 
                 description={privateTrainingBlurb}
-                image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg"
+                image={privateTrainingImage}
                 imageAlt={alt("home.private-training")}
                 href="/programs/private-training"
               />

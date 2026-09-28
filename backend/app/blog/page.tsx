@@ -5,6 +5,7 @@ import { buildPageMetadata } from "@/lib/seo/resolve";
 import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
 import { storage, type BlogPostWithTaxonomy } from "@/lib/storage";
 import { blogPlainText } from "@/lib/blog";
+import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -29,6 +30,7 @@ export default async function BlogPage() {
     console.error("[blog] failed to load public posts:", error);
     return [];
   });
+  const heroSubtext = await getContent("blog.hero.subtext");
 
   return (
     <>
@@ -46,8 +48,7 @@ export default async function BlogPage() {
               The Valencia Basket UAE Blog
             </h1>
             <p className="text-xl md:text-2xl text-gray-400 max-w-2xl leading-relaxed">
-              Practical basketball insight, academy stories, and guidance for
-              players and families in Dubai.
+              {heroSubtext}
             </p>
           </div>
         </div>

@@ -18,10 +18,15 @@ export default async function Programs() {
   const alt = await getAltResolver();
   const introText = await getContent("programs.intro");
   const futureBallersDesc = await getContent("programs.future-ballers.description");
+  const futureBallersImage = await getContent("programs.future-ballers.image");
   const miniBasketDesc = await getContent("programs.mini-basket.description");
+  const miniBasketImage = await getContent("programs.mini-basket.image");
   const youthAcademyDesc = await getContent("programs.youth-academy.description");
+  const youthAcademyImage = await getContent("programs.youth-academy.image");
   const eliteDesc = await getContent("programs.elite.description");
+  const eliteImage = await getContent("programs.elite.image");
   const privateTrainingDesc = await getContent("programs.private-training.description");
+  const privateTrainingImage = await getContent("programs.private-training.image");
   const notSureDesc = await getContent("programs.not-sure.description");
   const programs = [
     {
@@ -32,7 +37,7 @@ export default async function Programs() {
       desc: futureBallersDesc,
       schedule: "Mon/Wed 4:00 PM",
       features: ["Motor skill development", "Coordination & balance games", "First contact with the ball", "Fun-based drills"],
-      image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
+      image: futureBallersImage,
       imageKey: "programs.future-ballers",
       detailHref: "/programs/future-ballers",
     },
@@ -44,7 +49,7 @@ export default async function Programs() {
       desc: miniBasketDesc,
       schedule: "Mon/Wed 5:00 PM",
       features: ["Ball handling foundations", "Basic rules of the game", "Teamwork introduction", "Fun-based drills"],
-      image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg",
+      image: miniBasketImage,
       imageKey: "programs.mini-basket",
       detailHref: "/programs/mini-basket",
     },
@@ -56,7 +61,7 @@ export default async function Programs() {
       desc: youthAcademyDesc,
       schedule: "Sun/Tue/Thu 5:00 PM",
       features: ["Shooting & ball handling mastery", "Advanced tactics", "Physical conditioning", "Competitive leagues"],
-      image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg",
+      image: youthAcademyImage,
       imageKey: "programs.youth-academy",
       detailHref: "/programs/youth-academy",
     },
@@ -68,7 +73,7 @@ export default async function Programs() {
       desc: eliteDesc,
       schedule: "Daily Training",
       features: ["Individual Performance Plans", "Strength & Conditioning", "International Tournaments", "Scouting Exposure"],
-      image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/team-award.jpg",
+      image: eliteImage,
       imageKey: "programs.elite",
       detailHref: "",
     }
@@ -189,7 +194,7 @@ export default async function Programs() {
               <div className="absolute -inset-4 border-2 border-primary/30 z-0 translate-x-4 translate-y-4" />
               <div className="relative z-10 w-full aspect-[4/3]">
                 <Image 
-                  src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg" 
+                  src={privateTrainingImage} 
                   alt={alt("programs.private-training")} 
                   fill
                   className="object-cover shadow-2xl"

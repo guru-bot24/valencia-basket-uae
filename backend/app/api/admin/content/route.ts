@@ -9,13 +9,15 @@ export const dynamic = "force-dynamic";
 
 const PAGE_PATHS: Record<string, string> = {
   Home: "/",
+  Blog: "/blog",
   Programs: "/programs",
-  Facilities: "/facilities",
+  Location: "/facilities",
+  Staff: "/coaches",
   Methodology: "/methodology",
-  Contact: "/contact",
+  "Contact Us": "/contact",
   FAQs: "/faqs",
   Admissions: "/admissions",
-  Events: "/events",
+  "Events & Camps": "/events",
   "Future Ballers": "/programs/future-ballers",
   "Mini Basket": "/programs/mini-basket",
   "Youth Academy": "/programs/youth-academy",

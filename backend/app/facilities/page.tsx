@@ -92,6 +92,10 @@ export default async function Facilities() {
     "facilities.arena-render": alt("facilities.arena-render"),
     "facilities.arena-courts": alt("facilities.arena-courts"),
   };
+  const arenaSrcs = {
+    "facilities.arena-render": await getContent("facilities.image.arena-render"),
+    "facilities.arena-courts": await getContent("facilities.image.arena-courts"),
+  };
   return (
     <>
       <StructuredData data={schema} />
@@ -113,7 +117,7 @@ export default async function Facilities() {
       {/* ============ ARENA SHOWCASE CAROUSEL ============ */}
       {/* To add more images: open components/facilities/ArenaCarousel.tsx and add entries to the SLIDES array */}
       <div className="container mx-auto px-4 md:px-6 pt-8 md:pt-12">
-        <ArenaCarousel altOverrides={arenaAlts} />
+        <ArenaCarousel altOverrides={arenaAlts} srcOverrides={arenaSrcs} />
       </div>
 
       {/* ============ WHAT'S INSIDE ============ */}

@@ -26,8 +26,10 @@ const INTERVAL_MS = 4500; // milliseconds between auto-advances
 
 export default function ArenaCarousel({
   altOverrides = {},
+  srcOverrides = {},
 }: {
   altOverrides?: Record<string, string>;
+  srcOverrides?: Record<string, string>;
 }) {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -66,13 +68,13 @@ export default function ArenaCarousel({
       {/* ── Slides (crossfade) ── */}
       {SLIDES.map((slide, i) => (
         <div
-          key={slide.src}
+          key={slide.key}
           className="absolute inset-0 transition-opacity duration-700"
           style={{ opacity: i === current ? 1 : 0 }}
           aria-hidden={i !== current}
         >
           <Image
-            src={slide.src}
+            src={srcOverrides[slide.key] ?? slide.src}
             alt={altOverrides[slide.key] ?? slide.alt}
             fill
             priority={i === 0}

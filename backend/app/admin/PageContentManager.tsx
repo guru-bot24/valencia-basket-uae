@@ -151,7 +151,7 @@ export function PageContentManager() {
   return (
     <div className="space-y-6">
       <p className="text-sm text-gray-500">Edit key text and images on the live site without touching code. Fields left untouched keep the site default.</p>
-      <Accordion type="multiple" className="border border-gray-200" defaultValue={[...groups.keys()]}>
+      <Accordion type="multiple" className="border border-gray-200">
         {[...groups.entries()].map(([page, fields]) => (
           <AccordionItem key={page} value={page} className="border-b border-gray-200 last:border-b-0">
             <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-gray-50">

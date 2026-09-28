@@ -48,12 +48,26 @@ export const CONTENT_FIELDS: ContentField[] = [
     default: "Playful first steps into basketball, building coordination, confidence, and fun.",
   },
   {
+    key: "home.program.future-ballers.image",
+    page: "Home",
+    label: "Future Ballers card image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
+  },
+  {
     key: "home.program.mini-basket.description",
     page: "Home",
     label: "Mini Basket card blurb",
     type: "textarea",
     maxLength: 140,
     default: "Fun, fundamentals, and coordination. The perfect start to structured basketball.",
+  },
+  {
+    key: "home.program.mini-basket.image",
+    page: "Home",
+    label: "Mini Basket card image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg",
   },
   {
     key: "home.program.youth-academy.description",
@@ -64,6 +78,13 @@ export const CONTENT_FIELDS: ContentField[] = [
     default: "Technical mastery, tactical understanding, and competition preparation.",
   },
   {
+    key: "home.program.youth-academy.image",
+    page: "Home",
+    label: "Youth Academy card image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg",
+  },
+  {
     key: "home.program.elite.description",
     page: "Home",
     label: "Elite / Select card blurb",
@@ -72,12 +93,26 @@ export const CONTENT_FIELDS: ContentField[] = [
     default: "High-performance training for top-tier talent aiming for professional pathways.",
   },
   {
+    key: "home.program.elite.image",
+    page: "Home",
+    label: "Elite / Select card image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/team-award.jpg",
+  },
+  {
     key: "home.program.private-training.description",
     page: "Home",
     label: "Private Training card blurb",
     type: "textarea",
     maxLength: 140,
     default: "Personalized attention to correct mechanics and accelerate growth.",
+  },
+  {
+    key: "home.program.private-training.image",
+    page: "Home",
+    label: "Private Training card image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg",
   },
   {
     key: "home.methodology.blurb",
@@ -221,6 +256,13 @@ export const CONTENT_FIELDS: ContentField[] = [
       "The very first step into basketball. Playful, movement-rich sessions that build coordination, confidence, and a love for the ball.",
   },
   {
+    key: "programs.future-ballers.image",
+    page: "Programs",
+    label: "Future Ballers image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
+  },
+  {
     key: "programs.mini-basket.description",
     page: "Programs",
     label: "Mini Basket full description",
@@ -228,6 +270,13 @@ export const CONTENT_FIELDS: ContentField[] = [
     maxLength: 400,
     default:
       "The perfect introduction to structured basketball. We focus on coordination, basic ball handling, and falling in love with the game in a low-pressure environment.",
+  },
+  {
+    key: "programs.mini-basket.image",
+    page: "Programs",
+    label: "Mini Basket image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg",
   },
   {
     key: "programs.youth-academy.description",
@@ -239,12 +288,26 @@ export const CONTENT_FIELDS: ContentField[] = [
       "Building the complete player. Technical mastery, including shooting form, dribbling mechanics, and defensive footwork, progressing into complex tactical concepts, physical conditioning, and competition preparation.",
   },
   {
+    key: "programs.youth-academy.image",
+    page: "Programs",
+    label: "Youth Academy image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg",
+  },
+  {
     key: "programs.elite.description",
     page: "Programs",
     label: "Elite / Select full description",
     type: "textarea",
     maxLength: 400,
     default: "For athletes with professional aspirations. Intensive training, personalized development plans, and exposure to international pathways.",
+  },
+  {
+    key: "programs.elite.image",
+    page: "Programs",
+    label: "Elite / Select image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/team-award.jpg",
   },
   {
     key: "programs.private-training.description",
@@ -254,6 +317,13 @@ export const CONTENT_FIELDS: ContentField[] = [
     maxLength: 400,
     default:
       "Accelerate your development with focused, personalized instruction from our expert staff. Private training builds the individual tools needed to execute at the highest level through high-volume repetition and immediate feedback.",
+  },
+  {
+    key: "programs.private-training.image",
+    page: "Programs",
+    label: "Private Training section image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg",
   },
   {
     key: "programs.not-sure.description",
@@ -267,7 +337,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   // ---- Facilities ----
   {
     key: "facilities.intro",
-    page: "Facilities",
+    page: "Location",
     label: "Intro subtext",
     type: "textarea",
     maxLength: 220,
@@ -275,7 +345,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   },
   {
     key: "facilities.whats-inside.description",
-    page: "Facilities",
+    page: "Location",
     label: "\"What's Inside\" subtext",
     type: "textarea",
     maxLength: 200,
@@ -283,7 +353,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   },
   {
     key: "facilities.travel-band.description",
-    page: "Facilities",
+    page: "Location",
     label: "Travel-time section subtext",
     type: "textarea",
     maxLength: 200,
@@ -291,7 +361,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   },
   {
     key: "facilities.getting-here.description1",
-    page: "Facilities",
+    page: "Location",
     label: "\"Getting Here\" paragraph 1",
     type: "textarea",
     maxLength: 300,
@@ -300,7 +370,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   },
   {
     key: "facilities.getting-here.description2",
-    page: "Facilities",
+    page: "Location",
     label: "\"Getting Here\" paragraph 2",
     type: "textarea",
     maxLength: 200,
@@ -308,7 +378,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   },
   {
     key: "facilities.why-venue.description",
-    page: "Facilities",
+    page: "Location",
     label: "\"One Home, One Standard\" description",
     type: "textarea",
     maxLength: 400,
@@ -317,11 +387,25 @@ export const CONTENT_FIELDS: ContentField[] = [
   },
   {
     key: "facilities.closing-cta.description",
-    page: "Facilities",
+    page: "Location",
     label: "Closing CTA subtext",
     type: "textarea",
     maxLength: 220,
     default: "Book a free trial session and experience the new home of Valencia Basket Academy UAE.",
+  },
+  {
+    key: "facilities.image.arena-render",
+    page: "Location",
+    label: "Arena carousel — image 1",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/allsports-arena-render.jpg",
+  },
+  {
+    key: "facilities.image.arena-courts",
+    page: "Location",
+    label: "Arena carousel — image 2",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/All-sports-arena.jpg",
   },
 
   // ---- Methodology ----
@@ -387,7 +471,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   // ---- Contact ----
   {
     key: "contact.hero.subtext",
-    page: "Contact",
+    page: "Contact Us",
     label: "Hero subtext",
     type: "textarea",
     maxLength: 200,
@@ -417,7 +501,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   // ---- Events ----
   {
     key: "events.intro",
-    page: "Events",
+    page: "Events & Camps",
     label: "Intro subtext",
     type: "textarea",
     maxLength: 220,
@@ -577,6 +661,26 @@ export const CONTENT_FIELDS: ContentField[] = [
     maxLength: 400,
     default:
       "While team practice teaches concepts and systems, private training builds the individual tools needed to execute them. Our 1-on-1 and small group sessions are designed to isolate weaknesses and turn them into strengths through high-volume repetition and immediate feedback.",
+  },
+
+  // ---- Blog (listing page only — individual posts are managed in the Blog tab) ----
+  {
+    key: "blog.hero.subtext",
+    page: "Blog",
+    label: "Hero subtext",
+    type: "textarea",
+    maxLength: 220,
+    default: "Practical basketball insight, academy stories, and guidance for players and families in Dubai.",
+  },
+
+  // ---- Staff (Coaches page) ----
+  {
+    key: "staff.hero.subtext",
+    page: "Staff",
+    label: "Hero subtext",
+    type: "textarea",
+    maxLength: 220,
+    default: "FIBA-certified and Spanish-licensed coaches with experience at the highest levels of European basketball, dedicated to your child's growth.",
   },
 ];
 

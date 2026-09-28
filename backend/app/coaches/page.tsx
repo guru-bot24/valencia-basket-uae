@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { getStructuredData } from "@/lib/seo/structuredDataResolve";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -171,6 +172,7 @@ function CoachCard({
 export default async function Coaches() {
   const alt = await getAltResolver();
   const schema = await getStructuredData("/coaches", "Coaches");
+  const heroSubtext = await getContent("staff.hero.subtext");
   return (
     <>
       <StructuredData data={schema} />
@@ -179,7 +181,7 @@ export default async function Coaches() {
           <span className="text-primary font-bold uppercase tracking-widest text-sm mb-4 block">The People Behind the Program</span>
           <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6">Our Team</h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            FIBA-certified and Spanish-licensed coaches with experience at the highest levels of European basketball, dedicated to your child&apos;s growth.
+            {heroSubtext}
           </p>
         </div>
       </div>
