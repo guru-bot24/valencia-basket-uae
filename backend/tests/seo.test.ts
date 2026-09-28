@@ -148,7 +148,11 @@ test("admin SEO content is shown as editable values with copy and error actions"
   assert.match(seoManager, /select-seo-index/);
   assert.match(seoManager, /select-seo-follow/);
   assert.match(seoManager, /Focus keyword/);
-  assert.match(seoManager, /Schema type/);
+  assert.match(
+    seoManager,
+    /Confirm this change before it publishes/,
+    "raw JSON-LD schema edits must be reviewed before they publish"
+  );
   assert.match(
     adminPage,
     /event\?\.imageAlt \?\? event\?\.title \?\? ""/,
@@ -254,7 +258,7 @@ test("managed image assets unify duplicate placement files", () => {
   );
 
   const futureBallers = MANAGED_IMAGE_ASSETS.find(
-    (asset) => asset.src === "/images/mini-basket-team.jpg"
+    (asset) => asset.src === "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"
   );
   assert.ok(futureBallers, "expected the shared Future Ballers image asset");
   assert.deepEqual(
@@ -284,6 +288,7 @@ test("public-page image inventory uses managed alt values or decorative images",
     ],
     "app/coaches/page.tsx": [
       "coaches.maros-kovacik",
+      "coaches.martin-pospisil",
       "coaches.saiid",
       "coaches.rabih",
       "coaches.majil",
@@ -305,16 +310,25 @@ test("public-page image inventory uses managed alt values or decorative images",
   for (const [path, expectedKeys] of Object.entries(expectedImageKeys)) {
     const contents = source(path);
 
+    // A page's image can be a literal file (https://... or the legacy
+    // /images/...) or a variable resolved via the Page Content system
+    // (`await getContent("...")`, assigned above the JSX and referenced as
+    // `src={someImage}`) — both are "managed" as long as the alt text still
+    // comes from the managed-image registry, which is what this test guards.
     const staticTags =
       contents.match(/<(?:Image|img|Hero|ProgramCard)\b[\s\S]*?\/>/g) ?? [];
     const staticImageTags = staticTags.filter(
       (tag) =>
         /^<Hero\b/.test(tag) ||
-        /(?:src|image)=["']\/images\//.test(tag)
+        /(?:src|image)=(?:["'](?:https?:\/\/|\/images\/)|\{[A-Za-z_$][\w$]*\})/.test(tag)
     );
+    // The bare-identifier branch requires a trailing comma (a real object
+    // literal field) rather than a semicolon, so this doesn't also match a
+    // TypeScript interface declaration like `image: string;`.
     const dataImages =
-      contents.match(/\{(?:(?![{}])[\s\S])*?image:\s*["']\/images\/(?:(?![{}])[\s\S])*?\}/g) ??
-      [];
+      contents.match(
+        /\{(?:(?![{}])[\s\S])*?image:\s*(?:["'](?:https?:\/\/|\/images\/)[^"']*["']|[A-Za-z_$][\w$]*(?=\s*,))(?:(?![{}])[\s\S])*?\}/g
+      ) ?? [];
 
     const discoveredKeys: string[] = [];
 
@@ -335,6 +349,8 @@ test("public-page image inventory uses managed alt values or decorative images",
       const registered = getManagedImage(key);
       assert.ok(registered, `${path} uses unregistered managed image key "${key}"`);
 
+      // Only a literal string source can be checked statically; a variable
+      // (Page Content field) is resolved and verified at runtime instead.
       const src = tag.match(/(?:src|image)=["']([^"']+)["']/)?.[1];
       if (src) {
         assert.equal(
@@ -360,11 +376,13 @@ test("public-page image inventory uses managed alt values or decorative images",
 
       const registered = getManagedImage(key);
       assert.ok(registered, `${path} uses unregistered managed image key "${key}"`);
-      assert.equal(
-        registered.src,
-        src,
-        `${path} must use the registered source for "${key}"`
-      );
+      if (src) {
+        assert.equal(
+          registered.src,
+          src,
+          `${path} must use the registered source for "${key}"`
+        );
+      }
     }
 
     assert.deepEqual(
@@ -406,20 +424,20 @@ test("file-level image alt overrides apply to every placement and preserve fallb
   storage.getAllSeoImageAltFiles = async () =>
     [
       {
-        imageKey: "file:/images/mini-basket-team.jpg",
-        imageSrc: "/images/mini-basket-team.jpg",
+        imageKey: "file:https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
+        imageSrc: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
         altText: "Players practicing basketball together",
         isDecorative: false,
       },
       {
-        imageKey: "file:/images/hero-players-2.jpg",
-        imageSrc: "/images/hero-players-2.jpg",
+        imageKey: "file:https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/hero-players-2.jpg",
+        imageSrc: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/hero-players-2.jpg",
         altText: " \n\t ",
         isDecorative: false,
       },
       {
-        imageKey: "file:/images/logo.png",
-        imageSrc: "/images/logo.png",
+        imageKey: "file:https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/logo.png",
+        imageSrc: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/logo.png",
         altText: null,
         isDecorative: true,
       },
@@ -439,7 +457,7 @@ test("file-level image alt overrides apply to every placement and preserve fallb
 
 test("image alt review queue exposes conflicting legacy placement descriptions", () => {
   const asset = MANAGED_IMAGE_ASSETS.find(
-    (candidate) => candidate.src === "/images/mini-basket-team.jpg"
+    (candidate) => candidate.src === "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"
   );
   assert.ok(asset, "expected the shared Future Ballers image asset");
 
@@ -521,7 +539,7 @@ test("pending image description conflicts cannot be reset without review", () =>
 
 test("authenticated image API preserves conflicts until an administrator confirms the built-in fallback", async () => {
   const asset = MANAGED_IMAGE_ASSETS.find(
-    (candidate) => candidate.src === "/images/mini-basket-team.jpg"
+    (candidate) => candidate.src === "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"
   );
   assert.ok(asset, "expected the shared Future Ballers image asset");
 
