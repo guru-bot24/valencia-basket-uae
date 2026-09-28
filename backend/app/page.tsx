@@ -27,7 +27,27 @@ export default async function Home() {
   const schema = await getStructuredData("/");
   const heroSubtext = await getContent("home.hero.subtext");
   const heroImage = await getContent("home.hero.image");
+  const programsDescription = await getContent("home.programs.description");
+  const futureBallersBlurb = await getContent("home.program.future-ballers.description");
+  const miniBasketBlurb = await getContent("home.program.mini-basket.description");
+  const youthAcademyBlurb = await getContent("home.program.youth-academy.description");
+  const eliteBlurb = await getContent("home.program.elite.description");
+  const privateTrainingBlurb = await getContent("home.program.private-training.description");
   const methodologyBlurb = await getContent("home.methodology.blurb");
+  const ctaMidHeadline = await getContent("home.cta-mid.headline");
+  const facilitiesPreviewTitle = await getContent("home.facilities-preview.title");
+  const facilitiesPreviewDescription = await getContent("home.facilities-preview.description");
+  const testimonial1Text = await getContent("home.testimonial1.text");
+  const testimonial1Author = await getContent("home.testimonial1.author");
+  const testimonial1Role = await getContent("home.testimonial1.role");
+  const testimonial2Text = await getContent("home.testimonial2.text");
+  const testimonial2Author = await getContent("home.testimonial2.author");
+  const testimonial2Role = await getContent("home.testimonial2.role");
+  const testimonial3Text = await getContent("home.testimonial3.text");
+  const testimonial3Author = await getContent("home.testimonial3.author");
+  const testimonial3Role = await getContent("home.testimonial3.role");
+  const bookTrialHeadline = await getContent("home.book-trial.headline");
+  const bookTrialSubtext = await getContent("home.book-trial.subtext");
   const pillars = [
     { icon: Zap, title: "Play Fast", desc: "High tempo in running, passing, and 1v1. Modern basketball demands speed and free-flowing play." },
     { icon: Crosshair, title: "Master Spacing", desc: "Understanding where space is, why it exists, and how off-ball movement creates advantages." },
@@ -36,9 +56,9 @@ export default async function Home() {
   ];
 
   const testimonials = [
-    { text: "The discipline and structure at Valencia Basket UAE is unlike anything else in Dubai. My son has improved drastically.", author: "Sarah M.", role: "Parent of U12 Player" },
-    { text: "Professional coaching that actually cares about long-term development, not just winning weekend games.", author: "James D.", role: "Parent of U16 Player" },
-    { text: "Bringing the Spanish methodology here was a game changer. The attention to detail is world-class.", author: "Ahmed K.", role: "Elite Player" },
+    { text: testimonial1Text, author: testimonial1Author, role: testimonial1Role },
+    { text: testimonial2Text, author: testimonial2Author, role: testimonial2Role },
+    { text: testimonial3Text, author: testimonial3Author, role: testimonial3Role },
   ];
 
   return (
@@ -52,16 +72,16 @@ export default async function Home() {
       <Reveal>
         <section id="programs" className="py-20 md:py-32 bg-white">
           <div className="container mx-auto px-4 md:px-6">
-            <SectionHeader 
-              title="Player Pathway" 
-              subtitle="Our Programs" 
-              description="A comprehensive development structure for every stage of an athlete&apos;s journey."
+            <SectionHeader
+              title="Player Pathway"
+              subtitle="Our Programs"
+              description={programsDescription}
             />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <ProgramCard 
                 title="Future Ballers (Kids)" 
                 age="4-6 Years" 
-                description="Playful first steps into basketball, building coordination, confidence, and fun."
+                description={futureBallersBlurb}
                 image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"
                 imageAlt={alt("home.future-ballers")}
                 href="/programs/future-ballers"
@@ -69,7 +89,7 @@ export default async function Home() {
               <ProgramCard 
                 title="Mini Basket" 
                 age="7-10 Years" 
-                description="Fun, fundamentals, and coordination. The perfect start to structured basketball."
+                description={miniBasketBlurb}
                 image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg"
                 imageAlt={alt("home.mini-basket")}
                 href="/programs/mini-basket"
@@ -77,7 +97,7 @@ export default async function Home() {
               <ProgramCard 
                 title="Youth Academy" 
                 age="11-18 Years" 
-                description="Technical mastery, tactical understanding, and competition preparation."
+                description={youthAcademyBlurb}
                 image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg"
                 imageAlt={alt("home.youth-academy")}
                 href="/programs/youth-academy"
@@ -85,7 +105,7 @@ export default async function Home() {
               <ProgramCard 
                 title="Elite / Select" 
                 age="Invitation Only" 
-                description="High-performance training for top-tier talent aiming for professional pathways."
+                description={eliteBlurb}
                 image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/team-award.jpg" 
                 imageAlt={alt("home.elite")}
                 href="/programs#elite"
@@ -93,7 +113,7 @@ export default async function Home() {
               <ProgramCard 
                 title="Private Training" 
                 age="1-on-1" 
-                description="Personalized attention to correct mechanics and accelerate growth."
+                description={privateTrainingBlurb}
                 image="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg"
                 imageAlt={alt("home.private-training")}
                 href="/programs/private-training"
@@ -158,7 +178,7 @@ export default async function Home() {
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-primary mb-1">Ready to get started?</p>
               <h3 className="text-2xl md:text-3xl font-black uppercase text-white leading-tight">
-                Book a free trial session
+                {ctaMidHeadline}
               </h3>
             </div>
             <Link href="#book-trial" className="shrink-0">
@@ -195,9 +215,9 @@ export default async function Home() {
               />
               <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
               <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
-                <h3 className="text-3xl md:text-5xl font-black uppercase mb-4">AllSports Arena</h3>
+                <h3 className="text-3xl md:text-5xl font-black uppercase mb-4">{facilitiesPreviewTitle}</h3>
                 <p className="max-w-md text-lg text-gray-200 mb-6">
-                  Our dedicated home in Al Quoz from August 2026, with FIBA-standard indoor courts, professional hoops, and a climate-controlled environment for optimal performance.
+                  {facilitiesPreviewDescription}
                 </p>
                 <div className="flex gap-2">
                   <span className="px-3 py-1 bg-white/20 backdrop-blur-md text-xs font-bold uppercase tracking-wider">FIBA Approved</span>
@@ -245,10 +265,10 @@ export default async function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="text-white">
                 <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-6">
-                  Start Your Journey Today
+                  {bookTrialHeadline}
                 </h2>
                 <p className="text-xl md:text-2xl font-light opacity-90 mb-8 max-w-lg">
-                  Book a free assessment session. Let our coaches evaluate your potential and place you in the right program.
+                  {bookTrialSubtext}
                 </p>
                 <ul className="space-y-4 mb-10">
                   {[

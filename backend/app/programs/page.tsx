@@ -17,13 +17,19 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Programs() {
   const alt = await getAltResolver();
   const introText = await getContent("programs.intro");
+  const futureBallersDesc = await getContent("programs.future-ballers.description");
+  const miniBasketDesc = await getContent("programs.mini-basket.description");
+  const youthAcademyDesc = await getContent("programs.youth-academy.description");
+  const eliteDesc = await getContent("programs.elite.description");
+  const privateTrainingDesc = await getContent("programs.private-training.description");
+  const notSureDesc = await getContent("programs.not-sure.description");
   const programs = [
     {
       id: "future-ballers",
       title: "Future Ballers (Kids)",
       age: "4-6 Years",
       focus: "First Steps & Fun",
-      desc: "The very first step into basketball. Playful, movement-rich sessions that build coordination, confidence, and a love for the ball.",
+      desc: futureBallersDesc,
       schedule: "Mon/Wed 4:00 PM",
       features: ["Motor skill development", "Coordination & balance games", "First contact with the ball", "Fun-based drills"],
       image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
@@ -35,7 +41,7 @@ export default async function Programs() {
       title: "Mini Basket",
       age: "7-10 Years",
       focus: "Fundamentals & Fun",
-      desc: "The perfect introduction to structured basketball. We focus on coordination, basic ball handling, and falling in love with the game in a low-pressure environment.",
+      desc: miniBasketDesc,
       schedule: "Mon/Wed 5:00 PM",
       features: ["Ball handling foundations", "Basic rules of the game", "Teamwork introduction", "Fun-based drills"],
       image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg",
@@ -47,7 +53,7 @@ export default async function Programs() {
       title: "Youth Academy",
       age: "11-18 Years",
       focus: "Skill, Tactics & Competition",
-      desc: "Building the complete player. Technical mastery, including shooting form, dribbling mechanics, and defensive footwork, progressing into complex tactical concepts, physical conditioning, and competition preparation.",
+      desc: youthAcademyDesc,
       schedule: "Sun/Tue/Thu 5:00 PM",
       features: ["Shooting & ball handling mastery", "Advanced tactics", "Physical conditioning", "Competitive leagues"],
       image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg",
@@ -59,7 +65,7 @@ export default async function Programs() {
       title: "Elite / Select",
       age: "Invitation Only",
       focus: "High Performance",
-      desc: "For athletes with professional aspirations. Intensive training, personalized development plans, and exposure to international pathways.",
+      desc: eliteDesc,
       schedule: "Daily Training",
       features: ["Individual Performance Plans", "Strength & Conditioning", "International Tournaments", "Scouting Exposure"],
       image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/team-award.jpg",
@@ -151,9 +157,7 @@ export default async function Programs() {
               <h2 className="text-5xl font-black uppercase mb-4">Private Training</h2>
               <h3 className="text-xl font-bold text-primary mb-6">1-on-1 &amp; Small Group Sessions</h3>
               <p className="text-gray-600 mb-8 leading-relaxed text-lg">
-                Accelerate your development with focused, personalized instruction from our expert staff. 
-                Private training builds the individual tools needed to execute at the highest level through 
-                high-volume repetition and immediate feedback.
+                {privateTrainingDesc}
               </p>
               
               <div className="mb-8">
@@ -199,7 +203,7 @@ export default async function Programs() {
       <section className="bg-primary py-20 text-white text-center">
         <div className="container mx-auto px-4">
            <h2 className="text-4xl font-black uppercase mb-6">Not sure which level?</h2>
-           <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">Book a free assessment session and our coaches will evaluate your skills and recommend the perfect program.</p>
+           <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">{notSureDesc}</p>
            <Link href="/#book-trial">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary uppercase font-bold tracking-wider rounded-none px-10 h-14 text-lg">
                 Book Assessment

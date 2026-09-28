@@ -82,6 +82,12 @@ export default async function Facilities() {
   const alt = await getAltResolver();
   const schema = await getStructuredData("/facilities", "Facilities");
   const introText = await getContent("facilities.intro");
+  const whatsInsideDesc = await getContent("facilities.whats-inside.description");
+  const travelBandDesc = await getContent("facilities.travel-band.description");
+  const gettingHereDesc1 = await getContent("facilities.getting-here.description1");
+  const gettingHereDesc2 = await getContent("facilities.getting-here.description2");
+  const whyVenueDesc = await getContent("facilities.why-venue.description");
+  const closingCtaDesc = await getContent("facilities.closing-cta.description");
   const arenaAlts = {
     "facilities.arena-render": alt("facilities.arena-render"),
     "facilities.arena-courts": alt("facilities.arena-courts"),
@@ -114,7 +120,7 @@ export default async function Facilities() {
       <div className="container mx-auto px-4 md:px-6 py-20">
         <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-4 text-center">What&apos;s Inside</h2>
         <p className="text-gray-500 text-center max-w-2xl mx-auto mb-12">
-          A professional, purpose-built environment for every session.
+          {whatsInsideDesc}
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {features.map(({ Icon, label }) => (
@@ -137,7 +143,7 @@ export default async function Facilities() {
             Under 25 Minutes From Most of Dubai
           </h2>
           <p className="text-gray-400 mb-10 max-w-2xl mx-auto">
-            Al Quoz sits at the crossroads of the city, an easy drive from wherever you are.
+            {travelBandDesc}
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {travelTimes.map(({ zone, minutes }) => (
@@ -172,11 +178,10 @@ export default async function Facilities() {
             </div>
             <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-6">Find Us in Al Quoz</h2>
             <p className="text-gray-600 text-lg leading-relaxed mb-4">
-              AllSports Arena is on Latifa Bint Hamdan Street, Al Quoz Industrial First, minutes from Sheikh Zayed Road
-              and Al Khail Road, with easy access from both sides of the city.
+              {gettingHereDesc1}
             </p>
             <p className="text-gray-600 text-lg leading-relaxed mb-8">
-              Free parking is available on site, right by the entrance.
+              {gettingHereDesc2}
             </p>
             <a
               href={MAPS_URL}
@@ -197,9 +202,7 @@ export default async function Facilities() {
         <div className="container mx-auto px-4 md:px-6 max-w-3xl text-center">
           <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-6">One Home, One Standard</h2>
           <p className="text-lg md:text-xl leading-relaxed text-white/90">
-            From August 2026, every Valencia Basket Academy UAE session takes place under one roof, one consistent,
-            professional training base built around the same standards our players experience at L&apos;Alqueria del
-            Basket in Valencia. Same courts, same coaches, same methodology, every week.
+            {whyVenueDesc}
           </p>
         </div>
       </div>
@@ -228,7 +231,7 @@ export default async function Facilities() {
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6">Come See It Yourself</h2>
           <p className="text-xl text-gray-400 max-w-xl mx-auto mb-10">
-            Book a free trial session and experience the new home of Valencia Basket Academy UAE.
+            {closingCtaDesc}
           </p>
           <Link
             href="/#book-trial"
