@@ -59,7 +59,7 @@ export default async function YouthAcademy() {
   const alt = await getAltResolver();
   const schema = await getStructuredData("/programs/youth-academy", "Youth Academy");
   const heroSubtext = await getContent("youth-academy.hero.subtext");
-  const heroImage = await getContent("youth-academy.hero.image");
+  const heroImage = await getContent("program.youth-academy.image");
   const aboutParagraph1 = await getContent("youth-academy.about.paragraph1");
   const aboutParagraph2 = await getContent("youth-academy.about.paragraph2");
   const ctaSubtext = await getContent("youth-academy.cta.subtext");

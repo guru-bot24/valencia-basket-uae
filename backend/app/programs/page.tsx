@@ -18,15 +18,15 @@ export default async function Programs() {
   const alt = await getAltResolver();
   const introText = await getContent("programs.intro");
   const futureBallersDesc = await getContent("programs.future-ballers.description");
-  const futureBallersImage = await getContent("programs.future-ballers.image");
+  const futureBallersImage = await getContent("program.future-ballers.image");
   const miniBasketDesc = await getContent("programs.mini-basket.description");
-  const miniBasketImage = await getContent("programs.mini-basket.image");
+  const miniBasketImage = await getContent("program.mini-basket.image");
   const youthAcademyDesc = await getContent("programs.youth-academy.description");
-  const youthAcademyImage = await getContent("programs.youth-academy.image");
+  const youthAcademyImage = await getContent("program.youth-academy.image");
   const eliteDesc = await getContent("programs.elite.description");
-  const eliteImage = await getContent("programs.elite.image");
+  const eliteImage = await getContent("program.elite.image");
   const privateTrainingDesc = await getContent("programs.private-training.description");
-  const privateTrainingImage = await getContent("programs.private-training.image");
+  const privateTrainingImage = await getContent("program.private-training.image");
   const notSureDesc = await getContent("programs.not-sure.description");
   const programs = [
     {

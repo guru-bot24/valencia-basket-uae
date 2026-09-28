@@ -53,7 +53,7 @@ export default async function FutureBallers() {
   const alt = await getAltResolver();
   const schema = await getStructuredData("/programs/future-ballers", "Future Ballers");
   const heroSubtext = await getContent("future-ballers.hero.subtext");
-  const heroImage = await getContent("future-ballers.hero.image");
+  const heroImage = await getContent("program.future-ballers.image");
   const aboutParagraph1 = await getContent("future-ballers.about.paragraph1");
   const aboutParagraph2 = await getContent("future-ballers.about.paragraph2");
   const ctaSubtext = await getContent("future-ballers.cta.subtext");

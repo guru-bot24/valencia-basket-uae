@@ -16,8 +16,12 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PrivateTraining() {
   const alt = await getAltResolver();
   const heroSubtext = await getContent("private-training.hero.subtext");
-  const heroImage = await getContent("private-training.hero.image");
+  const heroImage = await getContent("program.private-training.image");
   const aboutParagraph = await getContent("private-training.about.paragraph");
+  const formatDescription = await getContent("private-training.format.description");
+  const availabilityDescription = await getContent("private-training.availability.description");
+  const weekdaysHours = await getContent("private-training.schedule.weekdays");
+  const saturdayHours = await getContent("private-training.schedule.saturday");
   const benefits = [
     "Personalized correction of shooting mechanics",
     "Detailed video analysis feedback",
@@ -79,7 +83,7 @@ export default async function PrivateTraining() {
             </span>
             <h2 className="text-4xl font-black uppercase mb-4">Choose Your Format</h2>
             <p className="text-gray-500 max-w-xl mx-auto">
-              Every session is tailored to the player. Select the ratio that fits your goals and budget, all formats are available across our weekly slots.
+              {formatDescription}
             </p>
           </div>
 
@@ -151,16 +155,16 @@ export default async function PrivateTraining() {
                    <Clock className="h-8 w-8 text-[#FF6C0E]" /> Weekly Availability
                  </h2>
                  <p className="text-gray-600 mb-6">
-                   Private training slots are limited and booked on a first-come, first-served basis. Regular weekly slots can be reserved for the term.
+                   {availabilityDescription}
                  </p>
                  <div className="space-y-4">
                     <div className="flex justify-between items-center border-b border-gray-200 pb-3">
                        <span className="font-bold text-gray-900">Weekdays (Sun - Thu)</span>
-                       <span className="text-gray-600">2:00 PM - 4:30 PM</span>
+                       <span className="text-gray-600">{weekdaysHours}</span>
                     </div>
                     <div className="flex justify-between items-center border-b border-gray-200 pb-3">
                        <span className="font-bold text-gray-900">Saturday</span>
-                       <span className="text-gray-600">8:00 AM - 12:00 PM</span>
+                       <span className="text-gray-600">{saturdayHours}</span>
                     </div>
                     <div className="flex justify-between items-center border-b border-gray-200 pb-3">
                        <span className="font-bold text-gray-900">Friday</span>

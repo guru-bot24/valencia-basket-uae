@@ -9,7 +9,25 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-export default function AdmissionsClient({ heroSubtext }: { heroSubtext: string }) {
+export default function AdmissionsClient({
+  heroSubtext,
+  step1,
+  step2,
+  step3,
+  step4,
+  term1,
+  term2,
+  term3,
+}: {
+  heroSubtext: string;
+  step1: string;
+  step2: string;
+  step3: string;
+  step4: string;
+  term1: string;
+  term2: string;
+  term3: string;
+}) {
   const faqs = [
     {
       q: "What is the assessment process?",
@@ -54,23 +72,23 @@ export default function AdmissionsClient({ heroSubtext }: { heroSubtext: string 
                     <div className="relative pl-8 md:pl-12">
                         <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full bg-primary border-4 border-white shadow-sm" />
                         <h3 className="text-xl font-bold uppercase mb-2">1. Book a Free Trial</h3>
-                        <p className="text-gray-600">Register online for an assessment session. Choose a convenient time and location.</p>
+                        <p className="text-gray-600">{step1}</p>
                         <Link href="/#book-trial"><Button className="uppercase font-bold tracking-wider rounded-none h-12 px-8 mt-2">Book Now</Button></Link>
                     </div>
                      <div className="relative pl-8 md:pl-12">
                         <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full bg-primary border-4 border-white shadow-sm" />
                         <h3 className="text-xl font-bold uppercase mb-2">2. Attend Assessment</h3>
-                        <p className="text-gray-600">Come to the court! Meet the coaches and enjoy a training session. We&apos;ll evaluate your level.</p>
+                        <p className="text-gray-600">{step2}</p>
                     </div>
                      <div className="relative pl-8 md:pl-12">
                         <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full bg-primary border-4 border-white shadow-sm" />
                         <h3 className="text-xl font-bold uppercase mb-2">3. Placement &amp; Registration</h3>
-                        <p className="text-gray-600">Receive your group placement and schedule options. Complete the registration forms and payment.</p>
+                        <p className="text-gray-600">{step3}</p>
                     </div>
                      <div className="relative pl-8 md:pl-12">
                         <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full bg-primary border-4 border-white shadow-sm" />
                         <h3 className="text-xl font-bold uppercase mb-2">4. Start Training</h3>
-                        <p className="text-gray-600">Receive your kit and start your development journey with Valencia Basket UAE.</p>
+                        <p className="text-gray-600">{step4}</p>
                     </div>
                 </div>
 
@@ -95,15 +113,15 @@ export default function AdmissionsClient({ heroSubtext }: { heroSubtext: string 
                 <div className="space-y-6 mb-8">
                     <div>
                         <span className="block text-xs font-bold uppercase text-gray-400">Term 1 (Autumn)</span>
-                        <p className="font-bold">Sep 1st - Dec 15th</p>
+                        <p className="font-bold">{term1}</p>
                     </div>
                     <div>
                         <span className="block text-xs font-bold uppercase text-gray-400">Term 2 (Winter)</span>
-                        <p className="font-bold">Jan 5th - Mar 28th</p>
+                        <p className="font-bold">{term2}</p>
                     </div>
                     <div>
                         <span className="block text-xs font-bold uppercase text-gray-400">Term 3 (Spring)</span>
-                        <p className="font-bold">Apr 14th - Jun 30th</p>
+                        <p className="font-bold">{term3}</p>
                     </div>
                 </div>
 

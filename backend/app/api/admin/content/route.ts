@@ -7,21 +7,31 @@ import { CONTENT_FIELDS, getContentField, getContentOverrides } from "@/lib/cont
 
 export const dynamic = "force-dynamic";
 
-const PAGE_PATHS: Record<string, string> = {
-  Home: "/",
-  Blog: "/blog",
-  Programs: "/programs",
-  Location: "/facilities",
-  Staff: "/coaches",
-  Methodology: "/methodology",
-  "Contact Us": "/contact",
-  FAQs: "/faqs",
-  Admissions: "/admissions",
-  "Events & Camps": "/events",
-  "Future Ballers": "/programs/future-ballers",
-  "Mini Basket": "/programs/mini-basket",
-  "Youth Academy": "/programs/youth-academy",
-  "Private Training": "/programs/private-training",
+const PAGE_PATHS: Record<string, string[]> = {
+  Home: ["/"],
+  Blog: ["/blog"],
+  Programs: ["/programs"],
+  Location: ["/facilities"],
+  Staff: ["/coaches"],
+  Methodology: ["/methodology"],
+  "Contact Us": ["/contact"],
+  FAQs: ["/faqs"],
+  Admissions: ["/admissions"],
+  "Events & Camps": ["/events"],
+  "Future Ballers": ["/programs/future-ballers"],
+  "Mini Basket": ["/programs/mini-basket"],
+  "Youth Academy": ["/programs/youth-academy"],
+  "Private Training": ["/programs/private-training"],
+  // Each field here shows on Home AND the Programs listing (and, for four of
+  // them, their own dedicated program page too) — revalidate everywhere.
+  "Program Images": [
+    "/",
+    "/programs",
+    "/programs/future-ballers",
+    "/programs/mini-basket",
+    "/programs/youth-academy",
+    "/programs/private-training",
+  ],
 };
 
 export async function GET(request: NextRequest) {
@@ -76,7 +86,6 @@ export async function PUT(request: NextRequest) {
     await storage.upsertPageContentOverride(field.key, value);
   }
 
-  const path = PAGE_PATHS[field.page];
-  if (path) revalidatePath(path);
+  for (const path of PAGE_PATHS[field.page] ?? []) revalidatePath(path);
   return NextResponse.json({ success: true });
 }

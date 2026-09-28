@@ -53,7 +53,7 @@ export default async function MiniBasket() {
   const alt = await getAltResolver();
   const schema = await getStructuredData("/programs/mini-basket", "Mini Basket");
   const heroSubtext = await getContent("mini-basket.hero.subtext");
-  const heroImage = await getContent("mini-basket.hero.image");
+  const heroImage = await getContent("program.mini-basket.image");
   const aboutParagraph1 = await getContent("mini-basket.about.paragraph1");
   const aboutParagraph2 = await getContent("mini-basket.about.paragraph2");
   const ctaSubtext = await getContent("mini-basket.cta.subtext");
