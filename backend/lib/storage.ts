@@ -15,6 +15,7 @@ import {
   type SeoImageAlt,
   type SeoRedirect,
   type SeoSchemaOverride,
+  type PageContentOverride,
   type BlogPost,
   type BlogCategory,
   type BlogTag,
@@ -29,6 +30,7 @@ import {
   seoImageAlts,
   seoRedirects,
   seoSchemaOverrides,
+  pageContentOverrides,
   blogPosts,
   blogCategories,
   blogTags,
@@ -154,6 +156,9 @@ export interface IStorage {
   getAllSeoSchemaOverrides(): Promise<SeoSchemaOverride[]>;
   upsertSeoSchemaOverride(path: string, schemaType: string, enabled: boolean, overrides: Record<string, unknown>[] | null): Promise<SeoSchemaOverride>;
   deleteSeoSchemaOverride(path: string): Promise<void>;
+  getAllPageContentOverrides(): Promise<PageContentOverride[]>;
+  upsertPageContentOverride(key: string, value: string): Promise<PageContentOverride>;
+  deletePageContentOverride(key: string): Promise<void>;
 
   getAllSeoImageAltFiles(): Promise<SeoImageAlt[]>;
   getAllSeoImageAlts(): Promise<SeoImageAlt[]>;
@@ -466,6 +471,18 @@ export class DatabaseStorage implements IStorage {
   }
   async deleteSeoSchemaOverride(path: string): Promise<void> {
     await db.delete(seoSchemaOverrides).where(eq(seoSchemaOverrides.path, path));
+  }
+  async getAllPageContentOverrides(): Promise<PageContentOverride[]> {
+    return db.select().from(pageContentOverrides);
+  }
+  async upsertPageContentOverride(key: string, value: string): Promise<PageContentOverride> {
+    const values = { key, value, updatedAt: new Date() };
+    const [result] = await db.insert(pageContentOverrides).values(values)
+      .onConflictDoUpdate({ target: pageContentOverrides.key, set: values }).returning();
+    return result;
+  }
+  async deletePageContentOverride(key: string): Promise<void> {
+    await db.delete(pageContentOverrides).where(eq(pageContentOverrides.key, key));
   }
 
   async getAllSeoImageAltFiles(): Promise<SeoImageAlt[]> {

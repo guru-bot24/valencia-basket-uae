@@ -6,6 +6,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
+import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -15,6 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Programs() {
   const alt = await getAltResolver();
+  const introText = await getContent("programs.intro");
   const programs = [
     {
       id: "future-ballers",
@@ -76,7 +78,7 @@ export default async function Programs() {
             <span className="block">For Kids &amp; Youth</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            From first dribbles to professional pathways. A structured journey for every stage of development.
+            {introText}
           </p>
         </div>
       </div>

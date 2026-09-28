@@ -4,14 +4,22 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 
-export function Hero({ imageAlt = "Valencia Basket UAE Action" }: { imageAlt?: string }) {
+export function Hero({
+  imageAlt = "Valencia Basket UAE Action",
+  subtext = "Join Valencia Basketball Academy in Dubai and follow an elite player development pathway inspired by L'Alqueria del Basket. Excellence, culture, and high performance for youth and kids.",
+  imageSrc = "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/hero-players-2.jpg",
+}: {
+  imageAlt?: string;
+  subtext?: string;
+  imageSrc?: string;
+}) {
   return (
     <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black" style={{ marginTop: "calc(var(--navbar-height, 72px) * -1)", paddingTop: "var(--navbar-height, 72px)" }}>
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black/30 z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 z-10" />
-        <Image 
-          src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/hero-players-2.jpg" 
+        <Image
+          src={imageSrc}
           alt={imageAlt}
           fill
           priority
@@ -37,8 +45,7 @@ export function Hero({ imageAlt = "Valencia Basket UAE Action" }: { imageAlt?: s
           </h1>
           
           <p className="max-w-xl mx-auto text-lg md:text-xl text-gray-200 mb-10 font-light leading-relaxed">
-            Join Valencia Basketball Academy in Dubai and follow an elite player development pathway inspired by L&apos;Alqueria del Basket.
-            Excellence, culture, and high performance for youth and kids.
+            {subtext}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">

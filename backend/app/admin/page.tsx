@@ -34,6 +34,7 @@ import {
 import { Users, Calendar, Plus, Pencil, Trash2, Trophy, LogOut, Shield, Lock, Search } from "lucide-react";
 import { CopyValueButton, SeoManager } from "./SeoManager";
 import { BlogManager } from "./BlogManager";
+import { PageContentManager } from "./PageContentManager";
 import { useToast } from "@/hooks/use-toast";
 import type {
   TrialBooking,
@@ -961,11 +962,12 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-6">
             <TabsTrigger value="trials" data-testid="tab-trigger-trials">Trial Bookings</TabsTrigger>
             <TabsTrigger value="events" data-testid="tab-trigger-registrations">Event Registrations</TabsTrigger>
             <TabsTrigger value="manage-events" data-testid="tab-trigger-events">Events</TabsTrigger>
             <TabsTrigger value="blog" data-testid="tab-trigger-blog">Blog</TabsTrigger>
+            <TabsTrigger value="content" data-testid="tab-trigger-content">Page Content</TabsTrigger>
             <TabsTrigger value="seo" data-testid="tab-trigger-seo"><Search className="h-4 w-4 mr-1" /> Website SEO</TabsTrigger>
           </TabsList>
 
@@ -1264,6 +1266,10 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
 
           <TabsContent value="blog" className="mt-6">
             <BlogManager adminName={authUser.username} />
+          </TabsContent>
+
+          <TabsContent value="content" className="mt-6">
+            <PageContentManager />
           </TabsContent>
 
           <TabsContent value="seo" className="mt-6">

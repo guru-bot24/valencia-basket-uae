@@ -18,6 +18,7 @@ import type { Metadata } from "next";
 import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { getStructuredData } from "@/lib/seo/structuredDataResolve";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -80,6 +81,7 @@ function PhotoPlaceholder({ label }: { label: string }) {
 export default async function Facilities() {
   const alt = await getAltResolver();
   const schema = await getStructuredData("/facilities", "Facilities");
+  const introText = await getContent("facilities.intro");
   const arenaAlts = {
     "facilities.arena-render": alt("facilities.arena-render"),
     "facilities.arena-courts": alt("facilities.arena-courts"),
@@ -97,7 +99,7 @@ export default async function Facilities() {
             AllSports Arena
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            One dedicated home from August 2026.
+            {introText}
           </p>
         </div>
       </div>

@@ -14,6 +14,7 @@ import { Reveal } from "@/components/shared/Reveal";
 import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { getStructuredData } from "@/lib/seo/structuredDataResolve";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -24,6 +25,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Home() {
   const alt = await getAltResolver();
   const schema = await getStructuredData("/");
+  const heroSubtext = await getContent("home.hero.subtext");
+  const heroImage = await getContent("home.hero.image");
+  const methodologyBlurb = await getContent("home.methodology.blurb");
   const pillars = [
     { icon: Zap, title: "Play Fast", desc: "High tempo in running, passing, and 1v1. Modern basketball demands speed and free-flowing play." },
     { icon: Crosshair, title: "Master Spacing", desc: "Understanding where space is, why it exists, and how off-ball movement creates advantages." },
@@ -40,7 +44,7 @@ export default async function Home() {
   return (
     <>
       <StructuredData data={schema} />
-      <Hero imageAlt={alt("home.hero")} />
+      <Hero imageAlt={alt("home.hero")} subtext={heroSubtext} imageSrc={heroImage} />
 
       <Reveal><TrustBar /></Reveal>
 
@@ -109,7 +113,7 @@ export default async function Home() {
                 <SectionHeader 
                   title="The Valencia Methodology" 
                   subtitle="Why Us" 
-                  description="A proven system developed in Valencia, Spain, helping players reach the professional level through a mix of training methods that connect all elements of the game."
+                  description={methodologyBlurb}
                   dark
                 />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-10">

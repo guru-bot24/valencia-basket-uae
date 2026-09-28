@@ -672,3 +672,13 @@ export const adminSessions = pgTable("admin_sessions", {
 });
 
 export type AdminSession = typeof adminSessions.$inferSelect;
+
+/** Admin-editable page content. Null/missing means inherit the code default. */
+export const pageContentOverrides = pgTable("page_content_overrides", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  key: text("key").notNull().unique(),
+  value: text("value").notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export type PageContentOverride = typeof pageContentOverrides.$inferSelect;
