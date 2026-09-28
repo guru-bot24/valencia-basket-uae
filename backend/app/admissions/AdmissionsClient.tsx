@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-export default function AdmissionsClient() {
+export default function AdmissionsClient({ heroSubtext }: { heroSubtext: string }) {
   const faqs = [
     {
       q: "What is the assessment process?",
@@ -39,7 +39,7 @@ export default function AdmissionsClient() {
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6">Admissions</h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Join the Valencia Basket family. Simple steps to start your journey.
+            {heroSubtext}
           </p>
         </div>
       </div>

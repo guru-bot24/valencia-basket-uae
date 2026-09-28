@@ -11,6 +11,7 @@ import { ArrowRight, Zap, Target, Users, Shield, Check } from "lucide-react";
 import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { getStructuredData } from "@/lib/seo/structuredDataResolve";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -51,6 +52,11 @@ const focusAreas = [
 export default async function MiniBasket() {
   const alt = await getAltResolver();
   const schema = await getStructuredData("/programs/mini-basket", "Mini Basket");
+  const heroSubtext = await getContent("mini-basket.hero.subtext");
+  const heroImage = await getContent("mini-basket.hero.image");
+  const aboutParagraph1 = await getContent("mini-basket.about.paragraph1");
+  const aboutParagraph2 = await getContent("mini-basket.about.paragraph2");
+  const ctaSubtext = await getContent("mini-basket.cta.subtext");
   return (
     <>
       <StructuredData data={schema} />
@@ -66,7 +72,7 @@ export default async function MiniBasket() {
             Mini <span className="text-primary">Basket</span> Program
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-            A structured basketball program for kids ages 7 to 10 in Dubai. Real skills, real drills, and a real love for the game, in a low-pressure, high-energy environment.
+            {heroSubtext}
           </p>
           <div className="flex justify-center">
             <Link href="/#book-trial">
@@ -89,10 +95,10 @@ export default async function MiniBasket() {
                 Where Skills <span className="text-primary">Begin.</span>
               </h2>
               <p className="text-gray-600 leading-relaxed text-lg mb-6">
-                Mini Basket bridges the gap between pure play and structured training. Players aged 7 to 10 are ready to absorb real technique, and this program delivers it in a way that keeps them coming back for more. Coaches use small-group formats so every child gets individual correction and feedback, not just group instruction.
+                {aboutParagraph1}
               </p>
               <p className="text-gray-600 leading-relaxed text-lg mb-8">
-                Coaches introduce ball handling, passing, shooting, and the basics of basketball rules through engaging drills and short-sided games. Players progress through skills at their own pace, building from close-range form shooting to full 3v3 game situations as confidence grows. The goal: leave every session better than you arrived.
+                {aboutParagraph2}
               </p>
               <div className="grid grid-cols-2 gap-4">                <div className="bg-gray-50 border-l-4 border-primary px-4 py-3">
                   <span className="block text-xs font-bold uppercase text-gray-400 mb-1">Session Length</span>
@@ -117,7 +123,7 @@ export default async function MiniBasket() {
               <div className="absolute -inset-4 border-2 border-primary/30 z-0 translate-x-4 translate-y-4" />
               <div className="relative z-10 aspect-[4/3] w-full overflow-hidden">
                 <Image
-                  src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg"
+                  src={heroImage}
                   alt={alt("mini-basket.hero")}
                   fill
                   className="object-cover shadow-2xl"
@@ -226,7 +232,7 @@ export default async function MiniBasket() {
             Start Their Journey
           </h2>
           <p className="text-xl mb-10 max-w-xl mx-auto opacity-90">
-            One free trial session. No strings attached. See exactly how we coach and why kids love it.
+            {ctaSubtext}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/#book-trial">

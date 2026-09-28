@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
 import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
+import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -15,6 +16,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Methodology() {
   const alt = await getAltResolver();
+  const heroSubtext = await getContent("methodology.hero.subtext");
+  const howWeTrainDescription = await getContent("methodology.how-we-train.description");
+  const howWeTrainParagraph = await getContent("methodology.how-we-train.paragraph");
+  const tacticalDescription = await getContent("methodology.tactical.description");
+  const longTermDescription = await getContent("methodology.long-term.description");
+  const ctaSubtext = await getContent("methodology.cta.subtext");
+  const methodologyImage = await getContent("methodology.image");
   const trainingMethods = [
     {
       number: "01",
@@ -88,7 +96,7 @@ export default async function Methodology() {
           <span className="text-primary font-bold uppercase tracking-widest text-sm mb-4 block">The Valencia Way</span>
           <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6">Our Methodology</h1>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            A proven system developed in Valencia, Spain, built on strong, non-negotiable human values that run through every stage of basketball learning and development.
+            {heroSubtext}
           </p>
         </div>
       </div>
@@ -100,10 +108,10 @@ export default async function Methodology() {
               <SectionHeader
                 title="Basketball Methodology"
                 subtitle="How We Train"
-                description="Our methodology is based on not rushing any part of a player&apos;s journey, whether technical or tactical. We fully respect individual learning rhythms, making sure that progress is real, solid, and long-lasting."
+                description={howWeTrainDescription}
               />
               <p className="text-gray-600 leading-relaxed mt-6">
-                Our approach is a mix of different training methods, designed to create a global and complete learning experience that connects all elements of the game. We don&apos;t just teach offensive or defensive techniques; we help players understand how and when to use them in real game situations, and most importantly, why.
+                {howWeTrainParagraph}
               </p>
             </div>
 
@@ -129,7 +137,7 @@ export default async function Methodology() {
           <SectionHeader
             title="Tactical Learning"
             subtitle="Our Philosophy"
-            description="Our tactical philosophy is built around key principles that reflect how modern professional basketball is played at the highest level."
+            description={tacticalDescription}
             centered
             dark
           />
@@ -154,7 +162,7 @@ export default async function Methodology() {
             <div className="order-2 lg:order-1">
               <div className="relative w-full aspect-[4/3]">
                 <Image
-                  src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/methodology.jpeg"
+                  src={methodologyImage}
                   alt={alt("methodology.spain")}
                   fill
                   className="object-cover transition-all duration-700 shadow-2xl"
@@ -169,7 +177,7 @@ export default async function Methodology() {
               <SectionHeader
                 title="Long-Term Development"
                 subtitle="No Shortcuts"
-                description="Our methodology avoids accelerating development in an artificial or rushed way. We believe in a process that must be respected at every stage."
+                description={longTermDescription}
               />
 
               <div className="space-y-8 mt-8">
@@ -194,7 +202,7 @@ export default async function Methodology() {
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-black uppercase text-white mb-4">Experience the Methodology</h2>
           <p className="text-white/80 max-w-xl mx-auto mb-8 text-lg">
-            Book a free trial session and see our proven development system in action.
+            {ctaSubtext}
           </p>
           <Link href="/#book-trial">
             <Button size="lg" className="uppercase font-bold tracking-wider rounded-none bg-black text-white hover:bg-white hover:text-primary border-0 h-14 px-10">

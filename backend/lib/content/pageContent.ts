@@ -323,6 +323,261 @@ export const CONTENT_FIELDS: ContentField[] = [
     maxLength: 220,
     default: "Book a free trial session and experience the new home of Valencia Basket Academy UAE.",
   },
+
+  // ---- Methodology ----
+  {
+    key: "methodology.hero.subtext",
+    page: "Methodology",
+    label: "Hero subtext",
+    type: "textarea",
+    maxLength: 260,
+    default:
+      "A proven system developed in Valencia, Spain, built on strong, non-negotiable human values that run through every stage of basketball learning and development.",
+  },
+  {
+    key: "methodology.how-we-train.description",
+    page: "Methodology",
+    label: "\"How We Train\" section subtext",
+    type: "textarea",
+    maxLength: 320,
+    default:
+      "Our methodology is based on not rushing any part of a player's journey, whether technical or tactical. We fully respect individual learning rhythms, making sure that progress is real, solid, and long-lasting.",
+  },
+  {
+    key: "methodology.how-we-train.paragraph",
+    page: "Methodology",
+    label: "\"How We Train\" body paragraph",
+    type: "textarea",
+    maxLength: 400,
+    default:
+      "Our approach is a mix of different training methods, designed to create a global and complete learning experience that connects all elements of the game. We don't just teach offensive or defensive techniques; we help players understand how and when to use them in real game situations, and most importantly, why.",
+  },
+  {
+    key: "methodology.tactical.description",
+    page: "Methodology",
+    label: "\"Tactical Learning\" section subtext",
+    type: "textarea",
+    maxLength: 260,
+    default: "Our tactical philosophy is built around key principles that reflect how modern professional basketball is played at the highest level.",
+  },
+  {
+    key: "methodology.long-term.description",
+    page: "Methodology",
+    label: "\"Long-Term Development\" section subtext",
+    type: "textarea",
+    maxLength: 260,
+    default: "Our methodology avoids accelerating development in an artificial or rushed way. We believe in a process that must be respected at every stage.",
+  },
+  {
+    key: "methodology.cta.subtext",
+    page: "Methodology",
+    label: "Closing CTA subtext",
+    type: "textarea",
+    maxLength: 200,
+    default: "Book a free trial session and see our proven development system in action.",
+  },
+  {
+    key: "methodology.image",
+    page: "Methodology",
+    label: "\"Long-Term Vision\" image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/methodology.jpeg",
+  },
+
+  // ---- Contact ----
+  {
+    key: "contact.hero.subtext",
+    page: "Contact",
+    label: "Hero subtext",
+    type: "textarea",
+    maxLength: 200,
+    default: "Questions about programs, trials, or partnerships? We're here to help.",
+  },
+
+  // ---- FAQs ----
+  {
+    key: "faqs.still-have-question.description",
+    page: "FAQs",
+    label: "\"Still have a question?\" subtext",
+    type: "textarea",
+    maxLength: 200,
+    default: "We're happy to help. Reach out directly and we'll get back to you.",
+  },
+
+  // ---- Admissions ----
+  {
+    key: "admissions.hero.subtext",
+    page: "Admissions",
+    label: "Hero subtext",
+    type: "textarea",
+    maxLength: 200,
+    default: "Join the Valencia Basket family. Simple steps to start your journey.",
+  },
+
+  // ---- Events ----
+  {
+    key: "events.intro",
+    page: "Events",
+    label: "Intro subtext",
+    type: "textarea",
+    maxLength: 220,
+    default: "Upcoming opportunities to compete, learn, and grow outside regular season training.",
+  },
+
+  // ---- Program: Future Ballers ----
+  {
+    key: "future-ballers.hero.subtext",
+    page: "Future Ballers",
+    label: "Hero subtext",
+    type: "textarea",
+    maxLength: 260,
+    default: "The perfect first basketball program for kids, ages 4 to 6, in Dubai. Where tiny hands meet big dreams, through movement, laughter, and play.",
+  },
+  {
+    key: "future-ballers.hero.image",
+    page: "Future Ballers",
+    label: "Hero / about image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
+  },
+  {
+    key: "future-ballers.about.paragraph1",
+    page: "Future Ballers",
+    label: "About — paragraph 1",
+    type: "textarea",
+    maxLength: 500,
+    default:
+      "Future Ballers is our entry-level program built entirely around the 4 to 6 age group. Sessions are playful, movement-rich, and structured around what young children actually enjoy, games, challenges, and celebrating small wins. Coaches keep group sizes small so every child gets hands-on attention and plenty of encouragement, not just instructions from the sideline.",
+  },
+  {
+    key: "future-ballers.about.paragraph2",
+    page: "Future Ballers",
+    label: "About — paragraph 2",
+    type: "textarea",
+    maxLength: 400,
+    default:
+      "No prior experience needed. No pressure. Just a great first introduction to basketball and a sport they'll want to come back to every week, with each session designed to build a little more confidence and coordination than the last.",
+  },
+  {
+    key: "future-ballers.cta.subtext",
+    page: "Future Ballers",
+    label: "Closing CTA subtext",
+    type: "textarea",
+    maxLength: 200,
+    default: "Book a free trial session, no commitment, just a brilliant first experience of basketball.",
+  },
+
+  // ---- Program: Mini Basket ----
+  {
+    key: "mini-basket.hero.subtext",
+    page: "Mini Basket",
+    label: "Hero subtext",
+    type: "textarea",
+    maxLength: 260,
+    default: "A structured basketball program for kids ages 7 to 10 in Dubai. Real skills, real drills, and a real love for the game, in a low-pressure, high-energy environment.",
+  },
+  {
+    key: "mini-basket.hero.image",
+    page: "Mini Basket",
+    label: "Hero / about image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg",
+  },
+  {
+    key: "mini-basket.about.paragraph1",
+    page: "Mini Basket",
+    label: "About — paragraph 1",
+    type: "textarea",
+    maxLength: 500,
+    default:
+      "Mini Basket bridges the gap between pure play and structured training. Players aged 7 to 10 are ready to absorb real technique, and this program delivers it in a way that keeps them coming back for more. Coaches use small-group formats so every child gets individual correction and feedback, not just group instruction.",
+  },
+  {
+    key: "mini-basket.about.paragraph2",
+    page: "Mini Basket",
+    label: "About — paragraph 2",
+    type: "textarea",
+    maxLength: 500,
+    default:
+      "Coaches introduce ball handling, passing, shooting, and the basics of basketball rules through engaging drills and short-sided games. Players progress through skills at their own pace, building from close-range form shooting to full 3v3 game situations as confidence grows. The goal: leave every session better than you arrived.",
+  },
+  {
+    key: "mini-basket.cta.subtext",
+    page: "Mini Basket",
+    label: "Closing CTA subtext",
+    type: "textarea",
+    maxLength: 200,
+    default: "One free trial session. No strings attached. See exactly how we coach and why kids love it.",
+  },
+
+  // ---- Program: Youth Academy ----
+  {
+    key: "youth-academy.hero.subtext",
+    page: "Youth Academy",
+    label: "Hero subtext",
+    type: "textarea",
+    maxLength: 260,
+    default: "A competitive basketball program for teens ages 11 to 18 in Dubai, built to develop technical mastery, tactical intelligence, and the mindset to perform under pressure.",
+  },
+  {
+    key: "youth-academy.hero.image",
+    page: "Youth Academy",
+    label: "Hero / about image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg",
+  },
+  {
+    key: "youth-academy.about.paragraph1",
+    page: "Youth Academy",
+    label: "About — paragraph 1",
+    type: "textarea",
+    maxLength: 700,
+    default:
+      "Youth Academy is where basketball becomes a genuine pursuit, not just a class. Players aged 11 to 18 in Dubai who are ready for more, more intensity, more tactical depth, and more competitive challenge, will find all three here, rooted in the Valencia Basket methodology from Spain. Coaches trained in this system bring a proven European approach to player development, one built on discipline, repetition, and game intelligence rather than shortcuts.",
+  },
+  {
+    key: "youth-academy.about.paragraph2",
+    page: "Youth Academy",
+    label: "About — paragraph 2",
+    type: "textarea",
+    maxLength: 700,
+    default:
+      "Sessions blend high-repetition technical work with tactical concepts, progressing into competition preparation and league play as players advance. This is a program designed for the long game: many players use it as a genuine pathway toward higher-level basketball, whether that means school and college teams, national-level trials, or simply becoming the best player they can be. Top performers are considered for invitation to the Elite/Select program, Valencia Basket UAE's most competitive tier.",
+  },
+  {
+    key: "youth-academy.cta.subtext",
+    page: "Youth Academy",
+    label: "Closing CTA subtext",
+    type: "textarea",
+    maxLength: 200,
+    default: "Book a free trial session and let our coaches assess exactly where your game is, and where it can go.",
+  },
+
+  // ---- Program: Private Training ----
+  {
+    key: "private-training.hero.subtext",
+    page: "Private Training",
+    label: "Hero subtext",
+    type: "textarea",
+    maxLength: 220,
+    default: "Accelerate your development with focused, personalized instruction from our expert staff.",
+  },
+  {
+    key: "private-training.hero.image",
+    page: "Private Training",
+    label: "About image",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg",
+  },
+  {
+    key: "private-training.about.paragraph",
+    page: "Private Training",
+    label: "About paragraph",
+    type: "textarea",
+    maxLength: 400,
+    default:
+      "While team practice teaches concepts and systems, private training builds the individual tools needed to execute them. Our 1-on-1 and small group sessions are designed to isolate weaknesses and turn them into strengths through high-volume repetition and immediate feedback.",
+  },
 ];
 
 const fieldMap = new Map(CONTENT_FIELDS.map((field) => [field.key, field]));

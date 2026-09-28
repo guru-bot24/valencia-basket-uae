@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FAQContent } from "./FAQContent";
 import { buildPageMetadata } from "@/lib/seo/resolve";
 import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
+import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -12,6 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 
 export default async function FAQsPage() {
+  const stillHaveQuestionDescription = await getContent("faqs.still-have-question.description");
   return (
     <>
       <BreadcrumbJsonLd path="/faqs" label="FAQs" />
@@ -40,7 +42,7 @@ export default async function FAQsPage() {
               Still have a question?
             </h3>
             <p className="text-gray-600 text-sm mb-4">
-              We&apos;re happy to help. Reach out directly and we&apos;ll get back to you.
+              {stillHaveQuestionDescription}
             </p>
             <div className="flex flex-wrap gap-4 text-sm">
               <a

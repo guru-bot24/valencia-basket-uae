@@ -11,6 +11,7 @@ import { ArrowRight, Star, Heart, Zap, Users, Check } from "lucide-react";
 import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { getStructuredData } from "@/lib/seo/structuredDataResolve";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -51,6 +52,11 @@ const focusAreas = [
 export default async function FutureBallers() {
   const alt = await getAltResolver();
   const schema = await getStructuredData("/programs/future-ballers", "Future Ballers");
+  const heroSubtext = await getContent("future-ballers.hero.subtext");
+  const heroImage = await getContent("future-ballers.hero.image");
+  const aboutParagraph1 = await getContent("future-ballers.about.paragraph1");
+  const aboutParagraph2 = await getContent("future-ballers.about.paragraph2");
+  const ctaSubtext = await getContent("future-ballers.cta.subtext");
   return (
     <>
       <StructuredData data={schema} />
@@ -67,7 +73,7 @@ export default async function FutureBallers() {
             Future <span className="text-primary">Ballers</span> Program
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-            The perfect first basketball program for kids, ages 4 to 6, in Dubai. Where tiny hands meet big dreams, through movement, laughter, and play.
+            {heroSubtext}
           </p>
           <div className="flex justify-center">
             <Link href="/#book-trial">
@@ -88,7 +94,7 @@ export default async function FutureBallers() {
               <div className="absolute -inset-4 border-2 border-primary/30 z-0 translate-x-4 translate-y-4" />
               <div className="relative z-10 aspect-[4/3] w-full overflow-hidden">
                 <Image
-                  src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"
+                  src={heroImage}
                   alt={alt("future-ballers.hero")}
                   fill
                   className="object-cover shadow-2xl"
@@ -103,10 +109,10 @@ export default async function FutureBallers() {
                 First Steps. <span className="text-primary">Big Fun.</span>
               </h2>
               <p className="text-gray-600 leading-relaxed text-lg mb-6">
-                Future Ballers is our entry-level program built entirely around the 4 to 6 age group. Sessions are playful, movement-rich, and structured around what young children actually enjoy, games, challenges, and celebrating small wins. Coaches keep group sizes small so every child gets hands-on attention and plenty of encouragement, not just instructions from the sideline.
+                {aboutParagraph1}
               </p>
               <p className="text-gray-600 leading-relaxed text-lg mb-8">
-                No prior experience needed. No pressure. Just a great first introduction to basketball and a sport they&apos;ll want to come back to every week, with each session designed to build a little more confidence and coordination than the last.
+                {aboutParagraph2}
               </p>
               {/* Lever 2: more padding, orange borders */}
               <div className="grid grid-cols-2 gap-4">                <div className="bg-gray-50 border-l-4 border-primary px-4 py-3">
@@ -229,7 +235,7 @@ export default async function FutureBallers() {
             Ready to See Them Smile?
           </h2>
           <p className="text-xl mb-10 max-w-xl mx-auto opacity-90">
-            Book a free trial session, no commitment, just a brilliant first experience of basketball.
+            {ctaSubtext}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/#book-trial">

@@ -11,6 +11,15 @@ const PAGE_PATHS: Record<string, string> = {
   Home: "/",
   Programs: "/programs",
   Facilities: "/facilities",
+  Methodology: "/methodology",
+  Contact: "/contact",
+  FAQs: "/faqs",
+  Admissions: "/admissions",
+  Events: "/events",
+  "Future Ballers": "/programs/future-ballers",
+  "Mini Basket": "/programs/mini-basket",
+  "Youth Academy": "/programs/youth-academy",
+  "Private Training": "/programs/private-training",
 };
 
 export async function GET(request: NextRequest) {

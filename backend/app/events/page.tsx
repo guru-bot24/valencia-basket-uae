@@ -9,6 +9,7 @@ import type { Event } from "@shared/schema";
 import { buildPageMetadata } from "@/lib/seo/resolve";
 import { getStructuredData } from "@/lib/seo/structuredDataResolve";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -67,6 +68,7 @@ function EventCard({ event, past = false }: { event: Event; past?: boolean }) {
 export default async function Events() {
   const events = await storage.getAllEvents();
   const schema = await getStructuredData("/events", "Events");
+  const introText = await getContent("events.intro");
 
   const upcoming = events.filter((e) => !isPastEvent(e.endDate));
   const past = events
@@ -80,7 +82,7 @@ export default async function Events() {
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6">Events &amp; Camps</h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Upcoming opportunities to compete, learn, and grow outside regular season training.
+            {introText}
           </p>
         </div>
       </div>

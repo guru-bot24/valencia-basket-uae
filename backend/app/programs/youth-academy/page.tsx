@@ -12,6 +12,7 @@ import { ArrowRight, Target, Shield, TrendingUp, Trophy, Check } from "lucide-re
 import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { getStructuredData } from "@/lib/seo/structuredDataResolve";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -57,6 +58,11 @@ const focusAreas = [
 export default async function YouthAcademy() {
   const alt = await getAltResolver();
   const schema = await getStructuredData("/programs/youth-academy", "Youth Academy");
+  const heroSubtext = await getContent("youth-academy.hero.subtext");
+  const heroImage = await getContent("youth-academy.hero.image");
+  const aboutParagraph1 = await getContent("youth-academy.about.paragraph1");
+  const aboutParagraph2 = await getContent("youth-academy.about.paragraph2");
+  const ctaSubtext = await getContent("youth-academy.cta.subtext");
   return (
     <>
       <StructuredData data={schema} />
@@ -70,7 +76,7 @@ export default async function YouthAcademy() {
             Youth <span className="text-primary">Academy</span> Program
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-            A competitive basketball program for teens ages 11 to 18 in Dubai, built to develop technical mastery, tactical intelligence, and the mindset to perform under pressure.
+            {heroSubtext}
           </p>
           <div className="flex justify-center">
             <Link href="/#book-trial">
@@ -92,7 +98,7 @@ export default async function YouthAcademy() {
               <div className="absolute -inset-4 border-2 border-primary/30 z-0 translate-x-4 translate-y-4" />
               <div className="relative z-10 aspect-[4/3] w-full overflow-hidden">
                 <Image
-                  src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg"
+                  src={heroImage}
                   alt={alt("youth-academy.hero")}
                   fill
                   className="object-cover shadow-2xl"
@@ -107,10 +113,10 @@ export default async function YouthAcademy() {
                 Serious Development.<br /><span className="text-primary">Real Pathways.</span>
               </h2>
               <p className="text-gray-600 leading-relaxed text-lg mb-6">
-                Youth Academy is where basketball becomes a genuine pursuit, not just a class. Players aged 11 to 18 in Dubai who are ready for more, more intensity, more tactical depth, and more competitive challenge, will find all three here, rooted in the Valencia Basket methodology from Spain. Coaches trained in this system bring a proven European approach to player development, one built on discipline, repetition, and game intelligence rather than shortcuts.
+                {aboutParagraph1}
               </p>
               <p className="text-gray-600 leading-relaxed text-lg mb-8">
-                Sessions blend high-repetition technical work with tactical concepts, progressing into competition preparation and league play as players advance. This is a program designed for the long game: many players use it as a genuine pathway toward higher-level basketball, whether that means school and college teams, national-level trials, or simply becoming the best player they can be. Top performers are considered for invitation to the Elite/Select program, Valencia Basket UAE&apos;s most competitive tier.
+                {aboutParagraph2}
               </p>
               {/* Lever 2: tighter stat tiles, less padding */}
               <div className="grid grid-cols-2 gap-3">                <div className="bg-gray-50 border-l-4 border-primary px-3 py-2">
@@ -234,7 +240,7 @@ export default async function YouthAcademy() {
             Ready to Level Up?
           </h2>
           <p className="text-xl mb-8 max-w-xl mx-auto opacity-90">
-            Book a free trial session and let our coaches assess exactly where your game is, and where it can go.
+            {ctaSubtext}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/#book-trial">

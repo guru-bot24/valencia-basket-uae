@@ -5,6 +5,7 @@ import { Check, Clock, User } from "lucide-react";
 import type { Metadata } from "next";
 import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
+import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -14,6 +15,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PrivateTraining() {
   const alt = await getAltResolver();
+  const heroSubtext = await getContent("private-training.hero.subtext");
+  const heroImage = await getContent("private-training.hero.image");
+  const aboutParagraph = await getContent("private-training.about.paragraph");
   const benefits = [
     "Personalized correction of shooting mechanics",
     "Detailed video analysis feedback",
@@ -30,7 +34,7 @@ export default async function PrivateTraining() {
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6">Private Training</h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Accelerate your development with focused, personalized instruction from our expert staff.
+            {heroSubtext}
           </p>
         </div>
       </div>
@@ -42,8 +46,7 @@ export default async function PrivateTraining() {
             <span className="text-[#FF6C0E] font-bold uppercase tracking-widest text-sm mb-2 block">Why Private Training?</span>
             <h2 className="text-4xl font-black uppercase mb-6">The Fast Track to Mastery</h2>
             <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-              While team practice teaches concepts and systems, private training builds the individual tools needed to execute them. 
-              Our 1-on-1 and small group sessions are designed to isolate weaknesses and turn them into strengths through high-volume repetition and immediate feedback.
+              {aboutParagraph}
             </p>
             <ul className="space-y-4">
               {benefits.map((benefit, i) => (
@@ -58,9 +61,9 @@ export default async function PrivateTraining() {
           </div>
           <div>
             <div className="relative w-full aspect-[4/3]">
-              <Image 
-                src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg" 
-                alt={alt("private-training.session")} 
+              <Image
+                src={heroImage}
+                alt={alt("private-training.session")}
                 fill
                 className="object-cover shadow-2xl rounded-sm"
               />
