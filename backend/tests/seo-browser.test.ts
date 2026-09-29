@@ -200,17 +200,13 @@ test("authenticated admins can copy SEO content and retry failed page loads", as
           contentType: "application/json",
           body: JSON.stringify([
             {
-              key: "/__schema/sitewide-organization",
-              path: "/",
-              label: "Organization",
-              type: "SportsOrganization",
-              note: "The academy identity published in structured data.",
-              json: structuredData,
-              lastModified: null,
+              path: "/__schema/sitewide-organization",
+              label: "Sitewide (Organization)",
+              json: [structuredData],
+              isOverridden: false,
+              readOnly: false,
               enabled: true,
-              override: null,
-              fields: [],
-              lockedFields: ["name"],
+              lastModified: null,
             },
           ]),
         });
@@ -297,10 +293,11 @@ test("authenticated admins can copy SEO content and retry failed page loads", as
     assert.equal(await page.evaluate(() => navigator.clipboard.readText()), imageAlt);
 
     await page.getByTestId("tab-trigger-seo-schema").click();
-    const schemaRow = page.getByTestId("schema--schema-sitewide-organization");
+    const schemaRow = page.getByTestId("schema-page--schema-sitewide-organization");
     await schemaRow.waitFor();
-    await schemaRow.getByRole("button").click();
-    const expectedJson = JSON.stringify(structuredData, null, 2);
+    await schemaRow.getByRole("button", { name: /Sitewide \(Organization\)/ }).click();
+    // One box per page: the editor holds the page's full JSON-LD array.
+    const expectedJson = JSON.stringify([structuredData], null, 2);
     await schemaRow.getByRole("button", { name: "Copy JSON" }).click();
     assert.equal(await page.evaluate(() => navigator.clipboard.readText()), expectedJson);
 
