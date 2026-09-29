@@ -31,7 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Users, Calendar, Plus, Pencil, Trash2, Trophy, LogOut, Shield, Lock, Search } from "lucide-react";
+import { Users, Calendar, Plus, Pencil, Trash2, Trophy, LogOut, Shield, Lock, Search, ClipboardCheck, PenLine, UserRound, FileText } from "lucide-react";
 import { CopyValueButton, SeoManager } from "./SeoManager";
 import { BlogManager } from "./BlogManager";
 import { PageContentManager } from "./PageContentManager";
@@ -45,6 +45,16 @@ import type {
   LeadStatus,
 } from "@shared/schema";
 import { LEAD_STATUS_VALUES, HOW_HEARD_OPTIONS } from "@shared/schema";
+
+const ADMIN_TABS = [
+  { value: "trials", testId: "tab-trigger-trials", short: "Trials", full: "Trial Bookings", Icon: Users },
+  { value: "events", testId: "tab-trigger-registrations", short: "Signups", full: "Event Registrations", Icon: ClipboardCheck },
+  { value: "manage-events", testId: "tab-trigger-events", short: "Events", full: "Events", Icon: Calendar },
+  { value: "blog", testId: "tab-trigger-blog", short: "Blog", full: "Blog", Icon: PenLine },
+  { value: "staff", testId: "tab-trigger-staff", short: "Staff", full: "Staff", Icon: UserRound },
+  { value: "content", testId: "tab-trigger-content", short: "Content", full: "Page Content", Icon: FileText },
+  { value: "seo", testId: "tab-trigger-seo", short: "SEO", full: "Website SEO", Icon: Search },
+] as const;
 
 interface AdminAuthUser {
   id: string;
@@ -963,14 +973,20 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-6">
-            <TabsTrigger value="trials" data-testid="tab-trigger-trials">Trial Bookings</TabsTrigger>
-            <TabsTrigger value="events" data-testid="tab-trigger-registrations">Event Registrations</TabsTrigger>
-            <TabsTrigger value="manage-events" data-testid="tab-trigger-events">Events</TabsTrigger>
-            <TabsTrigger value="blog" data-testid="tab-trigger-blog">Blog</TabsTrigger>
-            <TabsTrigger value="staff" data-testid="tab-trigger-staff">Staff</TabsTrigger>
-            <TabsTrigger value="content" data-testid="tab-trigger-content">Page Content</TabsTrigger>
-            <TabsTrigger value="seo" data-testid="tab-trigger-seo"><Search className="h-4 w-4 mr-1" /> Website SEO</TabsTrigger>
+          {/* One row on every screen: icon + short name below 1024px, icon + full name above. */}
+          <TabsList className="grid h-auto w-full grid-cols-7 gap-px p-[3px] lg:flex lg:h-9 lg:gap-0 lg:p-1">
+            {ADMIN_TABS.map(({ value, testId, short, full, Icon }) => (
+              <TabsTrigger
+                key={value}
+                value={value}
+                data-testid={testId}
+                className="min-h-[46px] min-w-0 flex-col gap-[3px] px-0 py-1.5 text-[10.5px] font-semibold lg:min-h-0 lg:flex-auto lg:flex-row lg:gap-1.5 lg:px-3 lg:py-1 lg:text-sm lg:font-medium"
+              >
+                <Icon className="h-[18px] w-[18px] shrink-0 lg:h-4 lg:w-4" aria-hidden="true" />
+                <span className="lg:hidden">{short}</span>
+                <span className="hidden lg:inline">{full}</span>
+              </TabsTrigger>
+            ))}
           </TabsList>
 
           <TabsContent value="trials" className="mt-6">
