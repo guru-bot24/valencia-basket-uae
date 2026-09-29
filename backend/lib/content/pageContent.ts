@@ -20,6 +20,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.hero.subtext",
     page: "Home",
+    section: "Hero",
     label: "Hero subtext",
     type: "textarea",
     maxLength: 220,
@@ -29,6 +30,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.hero.image",
     page: "Home",
+    section: "Hero",
     label: "Hero background image",
     type: "image",
     default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/hero-players-2.jpg",
@@ -36,6 +38,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.programs.description",
     page: "Home",
+    section: "Programs",
     label: "Programs section subtext",
     type: "textarea",
     maxLength: 200,
@@ -44,6 +47,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.methodology.blurb",
     page: "Home",
+    section: "Methodology",
     label: "Methodology section blurb",
     type: "textarea",
     maxLength: 320,
@@ -53,6 +57,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.cta-mid.headline",
     page: "Home",
+    section: "Mid-page call to action",
     label: "Mid-page CTA headline",
     type: "text",
     maxLength: 80,
@@ -61,6 +66,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.facilities-preview.title",
     page: "Home",
+    section: "Facilities preview",
     label: "Facilities preview title",
     type: "text",
     maxLength: 60,
@@ -69,6 +75,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.facilities-preview.description",
     page: "Home",
+    section: "Facilities preview",
     label: "Facilities preview description",
     type: "textarea",
     maxLength: 260,
@@ -78,6 +85,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.testimonial1.text",
     page: "Home",
+    section: "Testimonials",
     label: "Testimonial 1 — quote",
     type: "textarea",
     maxLength: 220,
@@ -86,6 +94,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.testimonial1.author",
     page: "Home",
+    section: "Testimonials",
     label: "Testimonial 1 — author",
     type: "text",
     maxLength: 60,
@@ -94,6 +103,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.testimonial1.role",
     page: "Home",
+    section: "Testimonials",
     label: "Testimonial 1 — role",
     type: "text",
     maxLength: 60,
@@ -102,6 +112,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.testimonial2.text",
     page: "Home",
+    section: "Testimonials",
     label: "Testimonial 2 — quote",
     type: "textarea",
     maxLength: 220,
@@ -110,6 +121,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.testimonial2.author",
     page: "Home",
+    section: "Testimonials",
     label: "Testimonial 2 — author",
     type: "text",
     maxLength: 60,
@@ -118,6 +130,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.testimonial2.role",
     page: "Home",
+    section: "Testimonials",
     label: "Testimonial 2 — role",
     type: "text",
     maxLength: 60,
@@ -126,6 +139,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.testimonial3.text",
     page: "Home",
+    section: "Testimonials",
     label: "Testimonial 3 — quote",
     type: "textarea",
     maxLength: 220,
@@ -134,6 +148,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.testimonial3.author",
     page: "Home",
+    section: "Testimonials",
     label: "Testimonial 3 — author",
     type: "text",
     maxLength: 60,
@@ -142,6 +157,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.testimonial3.role",
     page: "Home",
+    section: "Testimonials",
     label: "Testimonial 3 — role",
     type: "text",
     maxLength: 60,
@@ -150,6 +166,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.book-trial.headline",
     page: "Home",
+    section: "Book a trial",
     label: "Book-a-trial section headline",
     type: "text",
     maxLength: 60,
@@ -158,6 +175,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "home.book-trial.subtext",
     page: "Home",
+    section: "Book a trial",
     label: "Book-a-trial section subtext",
     type: "textarea",
     maxLength: 200,
@@ -311,7 +329,7 @@ export const CONTENT_FIELDS: ContentField[] = [
   {
     key: "programs.not-sure.description",
     page: "Programs",
-    section: "Programs page",
+    section: "Not sure which level?",
     label: "\"Not sure which level?\" description",
     type: "textarea",
     maxLength: 260,

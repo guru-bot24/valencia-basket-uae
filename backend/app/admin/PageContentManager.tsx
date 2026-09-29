@@ -5,12 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ContentRow {
@@ -128,7 +123,83 @@ function ContentFieldEditor({ row }: { row: ContentRow }) {
   );
 }
 
+/** Where each Page Content group shows on the site, and how the side menu groups it. */
+const PAGE_INFO: Record<string, { url: string; menu: "Main pages" | "Program pages" }> = {
+  Home: { url: "/", menu: "Main pages" },
+  Programs: { url: "/programs", menu: "Main pages" },
+  Location: { url: "/facilities", menu: "Main pages" },
+  Methodology: { url: "/methodology", menu: "Main pages" },
+  Admissions: { url: "/admissions", menu: "Main pages" },
+  "Future Ballers": { url: "/programs/future-ballers", menu: "Program pages" },
+  "Mini Basket": { url: "/programs/mini-basket", menu: "Program pages" },
+  "Youth Academy": { url: "/programs/youth-academy", menu: "Program pages" },
+  "Private Training": { url: "/programs/private-training", menu: "Program pages" },
+};
+const MENUS = ["Main pages", "Program pages"] as const;
+const sectionId = (page: string, section: string) => `content-${page}-${section}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+function PageFields({ page, fields }: { page: string; fields: ContentRow[] }) {
+  const sections = [...new Set(fields.map((row) => row.section).filter((section): section is string => !!section))];
+  const info = PAGE_INFO[page];
+  return (
+    <div data-testid={`content-page-${page}`}>
+      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2 border-b border-gray-200 pb-2">
+        <h2 className="text-lg font-black uppercase tracking-tight">{page}</h2>
+        <span className="text-xs text-gray-500">
+          {fields.length} field{fields.length === 1 ? "" : "s"}
+          {info && (
+            <>
+              {" · "}
+              <a href={info.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-semibold text-[#FF6C0E] hover:underline">
+                View page {info.url} <ExternalLink className="h-3 w-3" />
+              </a>
+            </>
+          )}
+        </span>
+      </div>
+
+      {sections.length > 1 && (
+        <div className="mb-5 flex flex-wrap items-center gap-1.5">
+          <span className="mr-1 text-xs text-gray-500">Jump to:</span>
+          {sections.map((section) => (
+            <button
+              key={section}
+              type="button"
+              className="rounded-full border border-gray-200 px-2.5 py-1 text-xs text-gray-600 hover:border-[#FF6C0E] hover:text-[#FF6C0E]"
+              onClick={() => document.getElementById(sectionId(page, section))?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            >
+              {section}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className="space-y-6">
+        {fields.map((row, index) => {
+          const startsSection = row.section && row.section !== fields[index - 1]?.section;
+          return (
+            <div key={row.key}>
+              {startsSection && (
+                <h3
+                  id={sectionId(page, row.section!)}
+                  className={`mb-4 scroll-mt-28 border-b-2 border-[#FF6C0E] pb-1 text-sm font-black uppercase tracking-wide ${index > 0 ? "mt-4" : ""}`}
+                >
+                  {row.section}
+                </h3>
+              )}
+              <div className={index > 0 && !startsSection ? "border-t border-gray-100 pt-6" : ""}>
+                <ContentFieldEditor row={row} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function PageContentManager() {
+  const [selected, setSelected] = useState<string | null>(null);
   const { data: rows = [], isLoading } = useQuery<ContentRow[]>({
     queryKey: ["admin-page-content"],
     queryFn: async () => {
@@ -148,34 +219,67 @@ export function PageContentManager() {
     group.push(row);
     groups.set(row.page, group);
   }
+  const pages = [...groups.keys()];
+  const current = selected && groups.has(selected) ? selected : pages[0];
+  const menuOf = (page: string) => PAGE_INFO[page]?.menu ?? "Main pages";
+  const choose = (page: string) => {
+    setSelected(page);
+    window.scrollTo({ top: document.getElementById("page-content-manager")?.offsetTop ?? 0, behavior: "smooth" });
+  };
+
+  if (!current) return <div className="py-12 text-center text-gray-500">No editable page content.</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4" id="page-content-manager" data-testid="page-content-manager">
       <p className="text-sm text-gray-500">Edit key text and images on the live site without touching code. Fields left untouched keep the site default.</p>
-      <Accordion type="multiple" className="border border-gray-200">
-        {[...groups.entries()].map(([page, fields]) => (
-          <AccordionItem key={page} value={page} className="border-b border-gray-200 last:border-b-0">
-            <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-gray-50">
-              <span className="font-black uppercase tracking-tight">{page}</span>
-            </AccordionTrigger>
-            <AccordionContent className="space-y-6 px-4 pb-4">
-              {fields.map((row, index) => {
-                const startsSection = row.section && row.section !== fields[index - 1]?.section;
-                return (
-                  <div key={row.key}>
-                    {startsSection && (
-                      <h3 className={`mb-4 border-b-2 border-[#FF6C0E] pb-1 text-sm font-black uppercase tracking-wide ${index > 0 ? "mt-4" : ""}`}>{row.section}</h3>
-                    )}
-                    <div className={index > 0 && !startsSection ? "border-t border-gray-100 pt-6" : ""}>
-                      <ContentFieldEditor row={row} />
-                    </div>
-                  </div>
-                );
-              })}
-            </AccordionContent>
-          </AccordionItem>
+
+      {/* Phones: pick the page from a dropdown. */}
+      <select
+        aria-label="Page to edit"
+        value={current}
+        onChange={(event) => choose(event.target.value)}
+        className="h-11 w-full border border-gray-300 bg-white px-3 text-sm font-semibold md:hidden"
+        data-testid="content-page-select"
+      >
+        {MENUS.map((menu) => (
+          <optgroup key={menu} label={menu}>
+            {pages.filter((page) => menuOf(page) === menu).map((page) => (
+              <option key={page} value={page}>{page} ({groups.get(page)!.length} fields)</option>
+            ))}
+          </optgroup>
         ))}
-      </Accordion>
+      </select>
+
+      <div className="grid items-start gap-6 md:grid-cols-[210px_minmax(0,1fr)]">
+        {/* Computers and tablets: side menu that stays in view while scrolling. */}
+        <nav aria-label="Pages" className="hidden border border-gray-200 bg-white md:sticky md:top-28 md:block" data-testid="content-side-menu">
+          {MENUS.map((menu) => {
+            const inMenu = pages.filter((page) => menuOf(page) === menu);
+            if (!inMenu.length) return null;
+            return (
+              <div key={menu}>
+                <div className="border-b border-gray-200 bg-gray-50 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">{menu}</div>
+                {inMenu.map((page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => choose(page)}
+                    aria-current={page === current ? "page" : undefined}
+                    className={`flex w-full items-center justify-between border-b border-gray-100 px-3 py-2.5 text-left text-sm ${
+                      page === current ? "bg-orange-50 font-bold shadow-[inset_3px_0_0_#FF6C0E]" : "hover:bg-orange-50/50"
+                    }`}
+                  >
+                    <span>{page}</span>
+                    <span className="text-xs text-gray-400">{groups.get(page)!.length}</span>
+                  </button>
+                ))}
+              </div>
+            );
+          })}
+        </nav>
+
+        <PageFields key={current} page={current} fields={groups.get(current)!} />
+      </div>
     </div>
   );
 }
