@@ -11,8 +11,8 @@ import {
   authorSchema,
 } from "./structuredData";
 import { getCoachStructuredEntries } from "./coaches";
-import { getStaffSocialLinks, socialSameAs } from "@/lib/content/staffSocial";
-import { BLOG_AUTHORS, authorPath, getAuthorByName, getAuthorBySlug, type BlogAuthor } from "@/lib/content/authors";
+import { AUTHOR_SLUGS, authorDisplayName, authorPath, matchAuthor, type StaffMember } from "@/lib/content/staff";
+import { getAuthorBySlug, getBlogAuthors } from "@/lib/content/staffStore";
 
 export const getStructuredDataOverrides = cache(async () => {
   try {
@@ -57,12 +57,13 @@ export function getEventStructuredData(event: {
  * saved manual override would freeze the list and silently stop new content
  * from appearing, so overrides are ignored (only the on/off toggle applies).
  */
-export const AUTO_SCHEMA_PATHS = new Set(["/blog", ...BLOG_AUTHORS.map(authorPath)]);
+export const AUTO_SCHEMA_PATHS = new Set(["/blog", ...AUTHOR_SLUGS.map(authorPath)]);
 
 async function blogListingSchema(): Promise<Record<string, unknown>> {
   const posts = (await storage.getPublishedBlogPosts()).filter(
     (post) => post.visibility === "public" && !post.noIndex && post.schemaEnabled,
   );
+  const authors = await getBlogAuthors();
   const iso = (value: Date | string | null) => (value ? new Date(value).toISOString() : undefined);
   // Legacy posts may hold base64 data URIs; never inline those into schema.
   const imageUrl = (src: string | null) =>
@@ -79,19 +80,17 @@ async function blogListingSchema(): Promise<Record<string, unknown>> {
       datePublished: iso(post.publishedAt),
       dateModified: iso(post.updatedAt) ?? iso(post.publishedAt),
       image: imageUrl(post.featuredImageSrc),
-      author: authorSchema(post.authorName),
+      author: authorSchema(post.authorName, matchAuthor(authors, post.authorName)),
     })),
   };
 }
 
 /** Profile page for a blog author: their Person entity plus their public articles. */
-async function authorPageSchema(author: BlogAuthor): Promise<Record<string, unknown>[]> {
-  const path = authorPath(author);
-  const url = `${SITE}${path}`;
-  const sameAs = socialSameAs(await getStaffSocialLinks(author.slug));
-  const person = { ...authorSchema(author.name), ...(sameAs ? { sameAs } : {}) };
+async function authorPageSchema(author: StaffMember): Promise<Record<string, unknown>[]> {
+  const url = `${SITE}${authorPath(author.slug)}`;
+  const person = authorSchema(authorDisplayName(author), author);
   const posts = (await storage.getPublishedBlogPosts()).filter(
-    (post) => post.visibility === "public" && !post.noIndex && post.schemaEnabled && getAuthorByName(post.authorName)?.slug === author.slug,
+    (post) => post.visibility === "public" && !post.noIndex && post.schemaEnabled && matchAuthor([author], post.authorName),
   );
   return [
     {
@@ -99,14 +98,14 @@ async function authorPageSchema(author: BlogAuthor): Promise<Record<string, unkn
       "@type": "ProfilePage",
       "@id": url,
       url,
-      name: `${author.name} — ${author.role}`,
+      name: `${authorDisplayName(author)} — ${author.role}`,
       mainEntity: person,
       hasPart: posts.map((post) => ({
         "@type": "BlogPosting",
         headline: post.title,
         url: `${SITE}/blog/${post.slug}`,
         datePublished: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
-        author: { "@id": person["@id"] },
+        author: { "@id": `${url}#person` },
       })),
     },
     {
@@ -115,7 +114,7 @@ async function authorPageSchema(author: BlogAuthor): Promise<Record<string, unkn
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: SITE },
         { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}/blog` },
-        { "@type": "ListItem", position: 3, name: author.name, item: url },
+        { "@type": "ListItem", position: 3, name: authorDisplayName(author), item: url },
       ],
     },
   ];
@@ -166,7 +165,7 @@ async function computeDefaultPageSchema(path: string, label?: string): Promise<R
   }
   const authorSlugMatch = /^\/blog\/author\/([^/]+)$/.exec(path);
   if (authorSlugMatch) {
-    const author = getAuthorBySlug(authorSlugMatch[1]);
+    const author = await getAuthorBySlug(authorSlugMatch[1]);
     return author ? authorPageSchema(author) : [];
   }
   if (path === "/events") {

@@ -3,8 +3,7 @@ import test from "node:test";
 import type { ReactElement } from "react";
 import { normalizeSocialUrl } from "@/lib/content/socialLinks";
 import { SocialIcons } from "@/components/SocialIcons";
-import { STAFF } from "@/lib/content/staff";
-import { LIVE_COACHES } from "@/lib/seo/coaches";
+import { AUTHOR_SLUGS, DEFAULT_STAFF, STAFF_SECTIONS, slugify, staffInputSchema } from "@/lib/content/staff";
 
 test("social links accept each platform's own URLs and normalize them to https", () => {
   assert.deepEqual(normalizeSocialUrl("instagram", "instagram.com/coach"), { url: "https://instagram.com/coach" });
@@ -33,9 +32,30 @@ test("only platforms with a saved link render an icon, and none renders nothing"
   assert.equal(SocialIcons({ links: {}, personName: "Coach Ahmed" }), null);
 });
 
-test("staff list and the coach schema list stay in sync", () => {
-  assert.deepEqual(
-    STAFF.map((member) => [member.slug, member.name, member.role]),
-    LIVE_COACHES.map(([slug, name, role]) => [slug, name, role]),
-  );
+test("default staff: unique slugs, known sections, and both blog authors present", () => {
+  const slugs = DEFAULT_STAFF.map((member) => member.slug);
+  assert.equal(slugs.length, new Set(slugs).size);
+  for (const member of DEFAULT_STAFF) assert.ok(STAFF_SECTIONS.includes(member.section));
+  assert.deepEqual(DEFAULT_STAFF.filter((member) => member.isAuthor).map((member) => member.slug), [...AUTHOR_SLUGS]);
+});
+
+test("staff input requires name and title, checks photo and social links", () => {
+  const valid = { section: "Coaching Staff", name: " Coach Test ", role: "Coach", bio: "", image: "", visible: false, instagram: "instagram.com/test" };
+  const parsed = staffInputSchema.parse(valid);
+  assert.equal(parsed.name, "Coach Test");
+  assert.equal(parsed.instagram, "https://instagram.com/test");
+  assert.equal(parsed.facebook, null, "empty social boxes are stored as null");
+  assert.equal(staffInputSchema.safeParse({ ...valid, name: "  " }).success, false);
+  assert.equal(staffInputSchema.safeParse({ ...valid, role: "" }).success, false);
+  assert.equal(staffInputSchema.safeParse({ ...valid, section: "Players" }).success, false);
+  assert.equal(staffInputSchema.safeParse({ ...valid, image: "javascript:alert(1)" }).success, false);
+  const wrongSocial = staffInputSchema.safeParse({ ...valid, tiktok: "https://facebook.com/x" });
+  assert.equal(wrongSocial.success, false);
+  assert.equal(wrongSocial.error?.issues[0].path[0], "tiktok", "the error points at the right box");
+});
+
+test("new member slugs drop 'Coach' and accents", () => {
+  assert.equal(slugify("Coach Maroš Kováčik"), "maros-kovacik");
+  assert.equal(slugify("  Omar Al-Hassan "), "omar-al-hassan");
+  assert.equal(slugify("!!!"), "staff");
 });

@@ -3,7 +3,6 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/adminAuth";
 import { storage } from "@/lib/storage";
-import { BLOG_AUTHORS, authorPath } from "@/lib/content/authors";
 import { CONTENT_FIELDS, getContentField, getContentOverrides } from "@/lib/content/pageContent";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +13,6 @@ const PAGE_PATHS: Record<string, string[]> = {
   Programs: ["/programs"],
   Location: ["/facilities"],
   Staff: ["/coaches"],
-  "Blog Authors": BLOG_AUTHORS.map(authorPath),
   Methodology: ["/methodology"],
   "Contact Us": ["/contact"],
   FAQs: ["/faqs"],
@@ -41,7 +39,8 @@ export async function GET(request: NextRequest) {
   if (error) return error;
 
   const overrides = await getContentOverrides();
-  const rows = CONTENT_FIELDS.map((field) => {
+  // The Staff page header is edited in Admin → Staff, not here.
+  const rows = CONTENT_FIELDS.filter((field) => field.page !== "Staff").map((field) => {
     const row = overrides.get(field.key);
     return {
       key: field.key,

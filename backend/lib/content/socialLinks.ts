@@ -13,10 +13,6 @@ export const SOCIAL_PLATFORMS = [
 export type SocialPlatform = (typeof SOCIAL_PLATFORMS)[number]["id"];
 export type SocialLinks = Partial<Record<SocialPlatform, string>>;
 
-export function socialContentKey(slug: string, platform: SocialPlatform) {
-  return `social.${slug}.${platform}`;
-}
-
 /**
  * Normalizes a pasted profile link. Returns the https URL, "" for an empty box,
  * or an error message when it isn't a link to that platform.

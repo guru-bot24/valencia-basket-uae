@@ -9,7 +9,8 @@ import { blogPostStructuredData } from "@/lib/seo/structuredData";
 import { storage } from "@/lib/storage";
 import { blogPlainText, sanitizeBlogContent } from "@/lib/blog";
 import { blogAccessCookieName, isLiveBlogPost, verifyBlogAccessToken } from "@/lib/blogAccess";
-import { authorPath, getAuthorByName } from "@/lib/content/authors";
+import { authorDisplayName, authorPath } from "@/lib/content/staff";
+import { getAuthorForPost, staffPhotoAlt } from "@/lib/content/staffStore";
 import { getAltResolver } from "@/lib/seo/resolve";
 import { PasswordForm } from "./PasswordForm";
 
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: post.ogDescription || description,
       type: "article",
       publishedTime: post.publishedAt?.toISOString(),
-      authors: [getAuthorByName(post.authorName)?.name ?? post.authorName],
+      authors: [await getAuthorForPost(post.authorName).then((author) => (author ? authorDisplayName(author) : post.authorName))],
       images: post.ogImage || post.featuredImageSrc ? [{ url: post.ogImage || post.featuredImageSrc! }] : undefined,
     },
   };
@@ -61,7 +62,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       );
     }
   }
-  const author = getAuthorByName(post.authorName);
+  const author = await getAuthorForPost(post.authorName);
+  const authorName = author ? authorDisplayName(author) : post.authorName;
   const alt = await getAltResolver();
   const safeContent = sanitizeBlogContent(post.content);
   const hasRichContent = /<[a-z][\s\S]*>/i.test(safeContent);
@@ -75,7 +77,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         featuredImageSrc: post.featuredImageSrc,
         publishedAt: post.publishedAt,
         updatedAt: post.updatedAt,
-      })
+      }, author)
     : null;
 
   return (
@@ -95,7 +97,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <h1 className="text-4xl font-black uppercase leading-tight tracking-tight md:text-6xl">{post.title}</h1>
             {post.excerpt && <p className="mt-6 max-w-3xl text-xl leading-relaxed text-gray-400">{post.excerpt}</p>}
             <p className="mt-6 text-sm font-bold uppercase tracking-wider text-gray-400">
-              By {author ? <Link href={authorPath(author)} className="text-white hover:text-primary">{author.name}</Link> : post.authorName}
+              By {author ? <Link href={authorPath(author.slug)} className="text-white hover:text-primary">{authorName}</Link> : post.authorName}
             </p>
           </div>
         </header>
@@ -108,18 +110,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           )}
           {author && (
             <aside className="mt-16 flex flex-col gap-6 border-t border-gray-200 pt-10 sm:flex-row sm:items-start" data-testid="author-box">
-              <Link href={authorPath(author)} className="relative block aspect-square w-24 shrink-0 overflow-hidden bg-gray-100">
-                <Image src={author.image} alt={alt(author.imageKey)} fill sizes="96px" className="object-cover object-top" />
+              <Link href={authorPath(author.slug)} className="relative block aspect-square w-24 shrink-0 overflow-hidden bg-gray-100">
+                {author.image && <Image src={author.image} alt={staffPhotoAlt(author, alt)} fill sizes="96px" className="object-cover object-top" />}
               </Link>
               <div>
                 <p className="mb-1 text-xs font-bold uppercase tracking-widest text-primary">Written by</p>
                 <p className="text-2xl font-black uppercase leading-tight">
-                  <Link href={authorPath(author)} className="hover:text-primary">{author.name}</Link>
+                  <Link href={authorPath(author.slug)} className="hover:text-primary">{authorName}</Link>
                 </p>
                 <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-500">{author.role}</p>
-                <p className="leading-relaxed text-gray-600">{author.shortBio}</p>
-                <Link href={authorPath(author)} className="mt-3 inline-block text-sm font-bold uppercase tracking-wider text-primary hover:underline">
-                  More from {author.name.split(" ")[0]} →
+                <p className="leading-relaxed text-gray-600">{author.bio}</p>
+                <Link href={authorPath(author.slug)} className="mt-3 inline-block text-sm font-bold uppercase tracking-wider text-primary hover:underline">
+                  More from {authorName.split(" ")[0]} →
                 </Link>
               </div>
             </aside>

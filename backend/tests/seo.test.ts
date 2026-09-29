@@ -286,9 +286,10 @@ test("public-page image inventory uses managed alt values or decorative images",
       "home.methodology",
       "home.arena",
     ],
-    // Staff page records (incl. Maros and Martin, shared with the blog author pages).
-    "lib/content/authors.ts": ["coaches.maros-kovacik", "coaches.martin-pospisil"],
+    // Staff page defaults (the Admin → Staff table starts from these).
     "lib/content/staff.ts": [
+      "coaches.maros-kovacik",
+      "coaches.martin-pospisil",
       "coaches.saiid",
       "coaches.rabih",
       "coaches.majil",
@@ -392,11 +393,18 @@ test("public-page image inventory uses managed alt values or decorative images",
     );
   }
 
+  // Staff photos come from Admin → Staff; the original photos keep their
+  // SEO-managed alt text via staffPhotoAlt (a newly uploaded photo uses the name).
   const coaches = source("app/coaches/page.tsx");
   assert.match(
     coaches,
-    /imageAlt=\{alt\(person\.imageKey\)\}/,
-    "coach cards must resolve each static coach image through its managed key"
+    /staffPhotoAlt\(member, alt\)/,
+    "coach cards must resolve photo alt text through the managed-alt helper"
+  );
+  assert.match(
+    source("lib/content/staffStore.ts"),
+    /managedAlt\(member\.imageKey\)/,
+    "the staff alt helper must use the managed key for original photos"
   );
 
   const programs = source("app/programs/page.tsx");

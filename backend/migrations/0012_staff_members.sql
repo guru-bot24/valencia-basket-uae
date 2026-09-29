@@ -1,0 +1,20 @@
+CREATE TABLE "staff_members" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"slug" text NOT NULL,
+	"section" text NOT NULL,
+	"name" text NOT NULL,
+	"role" text NOT NULL,
+	"bio" text DEFAULT '' NOT NULL,
+	"image" text DEFAULT '' NOT NULL,
+	"image_key" text,
+	"sort_order" integer DEFAULT 0 NOT NULL,
+	"visible" boolean DEFAULT true NOT NULL,
+	"is_author" boolean DEFAULT false NOT NULL,
+	"author_bio" text,
+	"instagram" text,
+	"facebook" text,
+	"tiktok" text,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "staff_members_slug_unique" UNIQUE("slug")
+);

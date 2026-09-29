@@ -35,6 +35,7 @@ import { Users, Calendar, Plus, Pencil, Trash2, Trophy, LogOut, Shield, Lock, Se
 import { CopyValueButton, SeoManager } from "./SeoManager";
 import { BlogManager } from "./BlogManager";
 import { PageContentManager } from "./PageContentManager";
+import { StaffManager } from "./StaffManager";
 import { useToast } from "@/hooks/use-toast";
 import type {
   TrialBooking,
@@ -967,6 +968,7 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
             <TabsTrigger value="events" data-testid="tab-trigger-registrations">Event Registrations</TabsTrigger>
             <TabsTrigger value="manage-events" data-testid="tab-trigger-events">Events</TabsTrigger>
             <TabsTrigger value="blog" data-testid="tab-trigger-blog">Blog</TabsTrigger>
+            <TabsTrigger value="staff" data-testid="tab-trigger-staff">Staff</TabsTrigger>
             <TabsTrigger value="content" data-testid="tab-trigger-content">Page Content</TabsTrigger>
             <TabsTrigger value="seo" data-testid="tab-trigger-seo"><Search className="h-4 w-4 mr-1" /> Website SEO</TabsTrigger>
           </TabsList>
@@ -1266,6 +1268,10 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
 
           <TabsContent value="blog" className="mt-6">
             <BlogManager adminName={authUser.username} />
+          </TabsContent>
+
+          <TabsContent value="staff" className="mt-6">
+            <StaffManager />
           </TabsContent>
 
           <TabsContent value="content" className="mt-6">

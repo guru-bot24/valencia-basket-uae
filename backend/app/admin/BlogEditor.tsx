@@ -17,9 +17,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { sanitizeBlogContent, sanitizeBlogHtml } from "@/lib/blog";
 import type { SafeBlogPost } from "@/lib/storage";
-import { BLOG_AUTHORS } from "@/lib/content/authors";
+import { authorDisplayName, type StaffMember } from "@/lib/content/staff";
 
-const AUTHOR_OPTIONS = ["Valencia Basket Academy UAE", ...BLOG_AUTHORS.map((author) => author.name)];
+/** Staff blog authors (from Admin → Staff) for the Author field suggestions. */
+function useBlogAuthorNames() {
+  const { data = [] } = useQuery<{ members: StaffMember[] }, Error, string[]>({
+    queryKey: ["admin-staff"],
+    queryFn: async () => {
+      const res = await fetch("/api/admin/staff");
+      if (!res.ok) throw new Error("Failed to load staff");
+      return res.json();
+    },
+    select: (data) => data.members.filter((member) => member.isAuthor && member.visible).map(authorDisplayName),
+  });
+  return data;
+}
 
 type Visibility = "public" | "private" | "password";
 type Status = "draft" | "published" | "scheduled";
@@ -357,6 +369,7 @@ export function BlogEditor({ post, adminName, onClose, onSaved, onDelete }: {
 }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const authorNames = useBlogAuthorNames();
   const [form, setForm] = useState<BlogForm>(() => fromPost(post));
   const [slugTouched, setSlugTouched] = useState(!!post);
   const [editingSlug, setEditingSlug] = useState(false);
@@ -620,7 +633,7 @@ export function BlogEditor({ post, adminName, onClose, onSaved, onDelete }: {
           </Panel>
 
           <Panel title="Post settings" defaultOpen={false}>
-            <div className="space-y-3"><div><Label>Author</Label><Input list="blog-author-options" value={form.authorName} onChange={(event) => updateField("authorName", event.target.value)} data-testid="input-author" /><datalist id="blog-author-options">{AUTHOR_OPTIONS.map((name) => <option key={name} value={name} />)}</datalist><p className="mt-1 text-xs text-gray-500">Pick {BLOG_AUTHORS.map((author) => author.name).join(" or ")} to link the article to their author page.</p></div><label className="flex items-center gap-2 text-sm"><Checkbox checked={form.isFeatured} onCheckedChange={(value) => updateField("isFeatured", value === true)} /> Feature this article</label></div>
+            <div className="space-y-3"><div><Label>Author</Label><Input list="blog-author-options" value={form.authorName} onChange={(event) => updateField("authorName", event.target.value)} data-testid="input-author" /><datalist id="blog-author-options">{["Valencia Basket Academy UAE", ...authorNames].map((name) => <option key={name} value={name} />)}</datalist>{authorNames.length > 0 && <p className="mt-1 text-xs text-gray-500">Pick {authorNames.join(" or ")} to link the article to their author page.</p>}</div><label className="flex items-center gap-2 text-sm"><Checkbox checked={form.isFeatured} onCheckedChange={(value) => updateField("isFeatured", value === true)} /> Feature this article</label></div>
           </Panel>
         </aside>
       </div>

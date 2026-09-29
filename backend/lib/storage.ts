@@ -16,6 +16,8 @@ import {
   type SeoRedirect,
   type SeoSchemaOverride,
   type PageContentOverride,
+  type StaffMemberRow,
+  type InsertStaffMemberRow,
   type BlogPost,
   type BlogCategory,
   type BlogTag,
@@ -31,6 +33,7 @@ import {
   seoRedirects,
   seoSchemaOverrides,
   pageContentOverrides,
+  staffMembers,
   blogPosts,
   blogCategories,
   blogTags,
@@ -159,6 +162,14 @@ export interface IStorage {
   getAllPageContentOverrides(): Promise<PageContentOverride[]>;
   upsertPageContentOverride(key: string, value: string): Promise<PageContentOverride>;
   deletePageContentOverride(key: string): Promise<void>;
+
+  getStaffMembers(): Promise<StaffMemberRow[]>;
+  getStaffMemberById(id: number): Promise<StaffMemberRow | undefined>;
+  seedStaffMembers(rows: InsertStaffMemberRow[]): Promise<void>;
+  createStaffMember(row: InsertStaffMemberRow): Promise<StaffMemberRow>;
+  updateStaffMember(id: number, changes: Partial<InsertStaffMemberRow>): Promise<StaffMemberRow | undefined>;
+  deleteStaffMember(id: number): Promise<void>;
+  reorderStaffMembers(section: string, ids: number[]): Promise<void>;
 
   getAllSeoImageAltFiles(): Promise<SeoImageAlt[]>;
   getAllSeoImageAlts(): Promise<SeoImageAlt[]>;
@@ -483,6 +494,42 @@ export class DatabaseStorage implements IStorage {
   }
   async deletePageContentOverride(key: string): Promise<void> {
     await db.delete(pageContentOverrides).where(eq(pageContentOverrides.key, key));
+  }
+
+  async getStaffMembers(): Promise<StaffMemberRow[]> {
+    return db.select().from(staffMembers).orderBy(asc(staffMembers.sortOrder), asc(staffMembers.id));
+  }
+
+  async getStaffMemberById(id: number): Promise<StaffMemberRow | undefined> {
+    const [row] = await db.select().from(staffMembers).where(eq(staffMembers.id, id));
+    return row;
+  }
+
+  async seedStaffMembers(rows: InsertStaffMemberRow[]): Promise<void> {
+    if (rows.length) await db.insert(staffMembers).values(rows).onConflictDoNothing({ target: staffMembers.slug });
+  }
+
+  async createStaffMember(row: InsertStaffMemberRow): Promise<StaffMemberRow> {
+    const [created] = await db.insert(staffMembers).values(row).returning();
+    return created;
+  }
+
+  async updateStaffMember(id: number, changes: Partial<InsertStaffMemberRow>): Promise<StaffMemberRow | undefined> {
+    const [updated] = await db.update(staffMembers).set({ ...changes, updatedAt: new Date() }).where(eq(staffMembers.id, id)).returning();
+    return updated;
+  }
+
+  async deleteStaffMember(id: number): Promise<void> {
+    await db.delete(staffMembers).where(eq(staffMembers.id, id));
+  }
+
+  async reorderStaffMembers(section: string, ids: number[]): Promise<void> {
+    await db.transaction(async (tx) => {
+      for (const [index, id] of ids.entries()) {
+        await tx.update(staffMembers).set({ sortOrder: index, updatedAt: new Date() })
+          .where(and(eq(staffMembers.id, id), eq(staffMembers.section, section)));
+      }
+    });
   }
 
   async getAllSeoImageAltFiles(): Promise<SeoImageAlt[]> {

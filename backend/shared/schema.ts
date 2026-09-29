@@ -682,3 +682,32 @@ export const pageContentOverrides = pgTable("page_content_overrides", {
 });
 
 export type PageContentOverride = typeof pageContentOverrides.$inferSelect;
+
+/**
+ * Staff page members, edited in Admin → Staff. Maros and Martin are blog
+ * authors (is_author): their slugs back /blog/author/<slug>, so they can be
+ * hidden but never deleted. Filled from lib/content/staff.ts defaults the
+ * first time the admin Staff tab loads; until then the site uses the defaults.
+ */
+export const staffMembers = pgTable("staff_members", {
+  id: serial("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  section: text("section").notNull(),
+  name: text("name").notNull(),
+  role: text("role").notNull(),
+  bio: text("bio").notNull().default(""),
+  image: text("image").notNull().default(""),
+  imageKey: text("image_key"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  visible: boolean("visible").notNull().default(true),
+  isAuthor: boolean("is_author").notNull().default(false),
+  authorBio: text("author_bio"),
+  instagram: text("instagram"),
+  facebook: text("facebook"),
+  tiktok: text("tiktok"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export type StaffMemberRow = typeof staffMembers.$inferSelect;
+export type InsertStaffMemberRow = typeof staffMembers.$inferInsert;

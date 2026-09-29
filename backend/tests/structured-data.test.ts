@@ -52,6 +52,8 @@ test("event schema uses live start/end dates and offline attendance mode", () =>
 test("blog home page lists only public, indexable, schema-enabled articles and ignores manual overrides", async () => {
   const originalPosts = storage.getPublishedBlogPosts;
   const originalOverrides = storage.getAllSeoSchemaOverrides;
+  const originalStaff = storage.getStaffMembers;
+  storage.getStaffMembers = async () => [];
   const base = {
     authorName: "Coach", publishedAt: new Date("2026-09-01T00:00:00Z"), updatedAt: new Date("2026-09-02T00:00:00Z"),
     visibility: "public", noIndex: false, schemaEnabled: true, featuredImageSrc: null,
@@ -77,6 +79,7 @@ test("blog home page lists only public, indexable, schema-enabled articles and i
   } finally {
     storage.getPublishedBlogPosts = originalPosts;
     storage.getAllSeoSchemaOverrides = originalOverrides;
+    storage.getStaffMembers = originalStaff;
   }
 });
 
@@ -97,17 +100,22 @@ test("a saved page override fully replaces the computed default", async () => {
   }
 });
 
-test("post authorName matches staff authors with or without the Coach prefix", async () => {
-  const { getAuthorByName } = await import("@/lib/content/authors");
-  assert.equal(getAuthorByName("Maros Kovacik")?.slug, "maros-kovacik");
-  assert.equal(getAuthorByName("  coach maros   kovacik ")?.slug, "maros-kovacik");
-  assert.equal(getAuthorByName("Martin Pospisil")?.slug, "martin-pospisil");
-  assert.equal(getAuthorByName("Valencia Basket Academy UAE"), undefined);
+test("post authorName matches staff authors with or without Coach, and by slug after a rename", async () => {
+  const { DEFAULT_STAFF, matchAuthor } = await import("@/lib/content/staff");
+  assert.equal(matchAuthor(DEFAULT_STAFF, "Maros Kovacik")?.slug, "maros-kovacik");
+  assert.equal(matchAuthor(DEFAULT_STAFF, "  coach maros   kovacik ")?.slug, "maros-kovacik");
+  assert.equal(matchAuthor(DEFAULT_STAFF, "Martin Pospisil")?.slug, "martin-pospisil");
+  assert.equal(matchAuthor(DEFAULT_STAFF, "Valencia Basket Academy UAE"), undefined);
+  assert.equal(matchAuthor(DEFAULT_STAFF, "Coach Majil"), undefined, "only blog authors are matched");
+  const renamed = DEFAULT_STAFF.map((member) => (member.slug === "maros-kovacik" ? { ...member, name: "Coach Maroš Kováčik" } : member));
+  assert.equal(matchAuthor(renamed, "Maros Kovacik")?.slug, "maros-kovacik", "older posts keep linking after a rename");
 });
 
 test("author page schema is a ProfilePage listing only that author's public articles", async () => {
   const originalPosts = storage.getPublishedBlogPosts;
   const originalOverrides = storage.getAllSeoSchemaOverrides;
+  const originalStaff = storage.getStaffMembers;
+  storage.getStaffMembers = async () => [];
   const base = {
     publishedAt: new Date("2026-09-01T00:00:00Z"), updatedAt: new Date("2026-09-02T00:00:00Z"),
     visibility: "public", noIndex: false, schemaEnabled: true, featuredImageSrc: null,
@@ -129,5 +137,6 @@ test("author page schema is a ProfilePage listing only that author's public arti
   } finally {
     storage.getPublishedBlogPosts = originalPosts;
     storage.getAllSeoSchemaOverrides = originalOverrides;
+    storage.getStaffMembers = originalStaff;
   }
 });

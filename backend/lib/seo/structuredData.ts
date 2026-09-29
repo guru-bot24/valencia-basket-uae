@@ -5,7 +5,7 @@
  * editor by design.
  */
 
-import { authorPath, getAuthorByName } from "@/lib/content/authors";
+import { authorDisplayName, authorPath, type StaffMember } from "@/lib/content/staff";
 
 export const CONTACT_MAPS_URL =
   "https://www.google.com/maps/search/?api=1&query=AllSports+Arena+Al+Quoz+Dubai";
@@ -274,22 +274,23 @@ export const breadcrumbStructuredDataRegistry: ManagedStructuredDataEntry[] = br
  * by design. Toggle per post via blog_posts.schema_enabled.
  */
 /**
- * Person schema for a blog author. Staff authors with a bio page get a stable
- * @id, url, title and photo so search engines tie their articles together;
- * anyone else stays a plain named Person.
+ * Person schema for a blog author. A staff author (resolved by the caller)
+ * gets a stable @id, url, title, photo and social profiles so search engines
+ * tie their articles together; anyone else stays a plain named Person.
  */
-export function authorSchema(authorName: string) {
-  const author = getAuthorByName(authorName);
+export function authorSchema(authorName: string, author?: StaffMember) {
   if (!author) return { "@type": "Person", name: authorName };
-  const url = `${SITE}${authorPath(author)}`;
+  const url = `${SITE}${authorPath(author.slug)}`;
+  const sameAs = [author.instagram, author.facebook, author.tiktok].filter((link): link is string => !!link);
   return {
     "@type": "Person",
     "@id": `${url}#person`,
-    name: author.name,
+    name: authorDisplayName(author),
     url,
     jobTitle: author.role,
-    image: author.image,
+    image: author.image || undefined,
     worksFor: { "@type": "Organization", name: "Valencia Basket Academy UAE", url: SITE },
+    ...(sameAs.length ? { sameAs } : {}),
   };
 }
 
@@ -301,7 +302,7 @@ export function blogPostStructuredData(post: {
   featuredImageSrc: string | null;
   publishedAt: Date | string | null;
   updatedAt: Date | string | null;
-}) {
+}, author?: StaffMember) {
   const url = `${SITE}/blog/${post.slug}`;
   const iso = (value: Date | string | null) =>
     value ? new Date(value).toISOString() : undefined;
@@ -311,7 +312,7 @@ export function blogPostStructuredData(post: {
     headline: post.title,
     description: post.excerpt ?? undefined,
     image: post.featuredImageSrc ?? undefined,
-    author: authorSchema(post.authorName),
+    author: authorSchema(post.authorName, author),
     publisher: {
       "@type": "Organization",
       name: "Valencia Basket Academy UAE",
