@@ -122,6 +122,8 @@ interface SchemaRow {
   /** The full default-or-overridden JSON-LD array currently live for this page. */
   json: Record<string, unknown>[];
   isOverridden: boolean;
+  /** Generated from live data (e.g. the blog article list) — not editable. */
+  readOnly?: boolean;
   enabled: boolean;
   lastModified: string | null;
 }
@@ -1319,6 +1321,7 @@ function SchemaTab() {
                 <span className="font-black uppercase tracking-tight">{row.label}</span>
                 <span className="text-xs text-gray-500">{row.json.length} object{row.json.length === 1 ? "" : "s"}</span>
                 {row.isOverridden && <span className="text-xs font-bold uppercase text-[#FF6C0E]">Customized</span>}
+                {row.readOnly && <span className="text-xs font-bold uppercase text-gray-500">Auto-generated</span>}
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-4 pb-4">
@@ -1348,6 +1351,29 @@ function SchemaEditor({ row }: { row: SchemaRow }) {
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["seo-schema"] }); toast({ title: "Structured data saved" }); setPendingOverrides(undefined); },
     onError: (error: Error) => toast({ title: error.message, variant: "destructive" }),
   });
+
+  if (row.readOnly) {
+    return (
+      <div className="space-y-3">
+        <p className="text-xs text-gray-500">
+          Generated automatically from published blog articles. New articles appear here as soon as they go live; private, password-protected, and hidden-from-search articles are left out.
+        </p>
+        <label className="flex items-center gap-2 text-sm font-medium">
+          <Checkbox
+            checked={enabled}
+            onCheckedChange={(value) => {
+              const next = value === true;
+              setEnabled(next);
+              save.mutate({ enabled: next, overrides: null });
+            }}
+          />{" "}
+          Publish this page&apos;s schema {enabled ? "" : "(disabled)"}
+        </label>
+        <div className="flex justify-end"><CopyValueButton value={JSON.stringify(row.json, null, 2)} label="Copy JSON" /></div>
+        <pre className="max-h-96 overflow-auto whitespace-pre-wrap break-all bg-gray-50 p-4 text-xs">{JSON.stringify(row.json, null, 2)}</pre>
+      </div>
+    );
+  }
 
   const handleSaveClick = () => {
     try {

@@ -7,6 +7,7 @@ import {
   breadcrumbs,
   contactStructuredData,
   faqStructuredData,
+  SITE,
 } from "./structuredData";
 import { getCoachStructuredEntries } from "./coaches";
 
@@ -49,6 +50,38 @@ export function getEventStructuredData(event: {
 }
 
 /**
+ * Pages whose schema is generated from live data and must stay that way: a
+ * saved manual override would freeze the list and silently stop new content
+ * from appearing, so overrides are ignored (only the on/off toggle applies).
+ */
+export const AUTO_SCHEMA_PATHS = new Set(["/blog"]);
+
+async function blogListingSchema(): Promise<Record<string, unknown>> {
+  const posts = (await storage.getPublishedBlogPosts()).filter(
+    (post) => post.visibility === "public" && !post.noIndex && post.schemaEnabled,
+  );
+  const iso = (value: Date | string | null) => (value ? new Date(value).toISOString() : undefined);
+  // Legacy posts may hold base64 data URIs; never inline those into schema.
+  const imageUrl = (src: string | null) =>
+    src?.startsWith("https://") ? src : src?.startsWith("/") ? `${SITE}${src}` : undefined;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "The Valencia Basket UAE Blog",
+    url: `${SITE}/blog`,
+    blogPost: posts.map((post) => ({
+      "@type": "BlogPosting",
+      headline: post.title,
+      url: `${SITE}/blog/${post.slug}`,
+      datePublished: iso(post.publishedAt),
+      dateModified: iso(post.updatedAt) ?? iso(post.publishedAt),
+      image: imageUrl(post.featuredImageSrc),
+      author: { "@type": "Person", name: post.authorName },
+    })),
+  };
+}
+
+/**
  * The full default JSON-LD array for a page, before any admin override is
  * applied. Combines the static registry, the page's breadcrumb, and any
  * live-content schema (events, coaches, FAQs, contact) that belongs on it.
@@ -88,6 +121,9 @@ async function computeDefaultPageSchema(path: string, label?: string): Promise<R
   if (path === "/contact") {
     return withBreadcrumb([...staticEntries, contactStructuredData as unknown as Record<string, unknown>]);
   }
+  if (path === "/blog") {
+    return withBreadcrumb([...staticEntries, await blogListingSchema()]);
+  }
   if (path === "/events") {
     const events = await storage.getAllEvents();
     const eventSchemas = events.flatMap((event) => getEventStructuredData(event));
@@ -106,7 +142,9 @@ export async function getStructuredData(path: string, label?: string): Promise<R
   const saved = overrides.get(path);
   if (saved) {
     if (!saved.enabled) return [];
-    if (Array.isArray(saved.overrides)) return saved.overrides as Record<string, unknown>[];
+    if (Array.isArray(saved.overrides) && !AUTO_SCHEMA_PATHS.has(path)) {
+      return saved.overrides as Record<string, unknown>[];
+    }
   }
   return computeDefaultPageSchema(path, label);
 }

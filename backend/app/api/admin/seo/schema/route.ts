@@ -4,7 +4,7 @@ import { z } from "zod";
 import { requireAdmin } from "@/lib/adminAuth";
 import { storage } from "@/lib/storage";
 import { structuredDataRegistry, breadcrumbStructuredDataRegistry, breadcrumbPages } from "@/lib/seo/structuredData";
-import { getStructuredData, getStructuredDataOverrides } from "@/lib/seo/structuredDataResolve";
+import { AUTO_SCHEMA_PATHS, getStructuredData, getStructuredDataOverrides } from "@/lib/seo/structuredDataResolve";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +39,8 @@ export async function GET(request: NextRequest) {
         path,
         label,
         json,
-        isOverridden: Array.isArray(row?.overrides),
+        isOverridden: Array.isArray(row?.overrides) && !AUTO_SCHEMA_PATHS.has(path),
+        readOnly: AUTO_SCHEMA_PATHS.has(path),
         enabled: row?.enabled ?? true,
         lastModified: row?.updatedAt?.toISOString() ?? null,
       };
@@ -64,6 +65,12 @@ export async function PUT(request: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: "Invalid structured data update" }, { status: 400 });
 
   const { path, enabled, overrides } = parsed.data;
+  if (overrides && AUTO_SCHEMA_PATHS.has(path)) {
+    return NextResponse.json(
+      { error: "This page's structured data is generated automatically from published content and can't be edited" },
+      { status: 400 }
+    );
+  }
   if (overrides) {
     for (const item of overrides) {
       if (item["@context"] !== "https://schema.org") {

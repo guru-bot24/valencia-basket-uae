@@ -231,7 +231,7 @@ export interface ManagedStructuredDataEntry extends StructuredDataEntry {
   enabledByDefault: boolean;
 }
 
-const SITE = "https://valenciabasket.ae";
+export const SITE = "https://valenciabasket.ae";
 const organization = {
   "@context": "https://schema.org", "@type": "SportsOrganization",
   name: "Valencia Basket Academy UAE", url: SITE, telephone: "+971544386838",
