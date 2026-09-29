@@ -147,6 +147,24 @@ export const PAGE_SEO_DEFAULTS: PageSeoDefaults[] = [
     canonical: "/blog",
   },
   {
+    path: "/blog/author/maros-kovacik",
+    label: "Author: Maros Kovacik",
+    group: "Main",
+    title: "Maros Kovacik, Director & Head Coach | Valencia Basket UAE",
+    description:
+      "Articles and bio from Maros Kovacik, Director & Head Coach of Valencia Basket Academy UAE, EuroLeague Coach of the Year (2013) and 15-time champion.",
+    canonical: "/blog/author/maros-kovacik",
+  },
+  {
+    path: "/blog/author/martin-pospisil",
+    label: "Author: Martin Pospisil",
+    group: "Main",
+    title: "Martin Pospisil, Assistant Technical Director | Valencia Basket UAE",
+    description:
+      "Articles and bio from Martin Pospisil, Assistant Technical Director & Coach at Valencia Basket Academy UAE and head coach of the Slovak women's national team.",
+    canonical: "/blog/author/martin-pospisil",
+  },
+  {
     path: "/contact",
     label: "Contact",
     group: "Main",

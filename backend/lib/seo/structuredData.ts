@@ -5,6 +5,8 @@
  * editor by design.
  */
 
+import { authorPath, getAuthorByName } from "@/lib/content/authors";
+
 export const CONTACT_MAPS_URL =
   "https://www.google.com/maps/search/?api=1&query=AllSports+Arena+Al+Quoz+Dubai";
 
@@ -271,6 +273,26 @@ export const breadcrumbStructuredDataRegistry: ManagedStructuredDataEntry[] = br
  * Fully derived from the post's own fields — no per-post admin editing,
  * by design. Toggle per post via blog_posts.schema_enabled.
  */
+/**
+ * Person schema for a blog author. Staff authors with a bio page get a stable
+ * @id, url, title and photo so search engines tie their articles together;
+ * anyone else stays a plain named Person.
+ */
+export function authorSchema(authorName: string) {
+  const author = getAuthorByName(authorName);
+  if (!author) return { "@type": "Person", name: authorName };
+  const url = `${SITE}${authorPath(author)}`;
+  return {
+    "@type": "Person",
+    "@id": `${url}#person`,
+    name: author.name,
+    url,
+    jobTitle: author.role,
+    image: author.image,
+    worksFor: { "@type": "Organization", name: "Valencia Basket Academy UAE", url: SITE },
+  };
+}
+
 export function blogPostStructuredData(post: {
   title: string;
   slug: string;
@@ -289,7 +311,7 @@ export function blogPostStructuredData(post: {
     headline: post.title,
     description: post.excerpt ?? undefined,
     image: post.featuredImageSrc ?? undefined,
-    author: { "@type": "Person", name: post.authorName },
+    author: authorSchema(post.authorName),
     publisher: {
       "@type": "Organization",
       name: "Valencia Basket Academy UAE",

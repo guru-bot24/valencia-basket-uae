@@ -17,6 +17,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { sanitizeBlogContent, sanitizeBlogHtml } from "@/lib/blog";
 import type { SafeBlogPost } from "@/lib/storage";
+import { BLOG_AUTHORS } from "@/lib/content/authors";
+
+const AUTHOR_OPTIONS = ["Valencia Basket Academy UAE", ...BLOG_AUTHORS.map((author) => author.name)];
 
 type Visibility = "public" | "private" | "password";
 type Status = "draft" | "published" | "scheduled";
@@ -617,7 +620,7 @@ export function BlogEditor({ post, adminName, onClose, onSaved, onDelete }: {
           </Panel>
 
           <Panel title="Post settings" defaultOpen={false}>
-            <div className="space-y-3"><div><Label>Author</Label><Input value={form.authorName} onChange={(event) => updateField("authorName", event.target.value)} /></div><label className="flex items-center gap-2 text-sm"><Checkbox checked={form.isFeatured} onCheckedChange={(value) => updateField("isFeatured", value === true)} /> Feature this article</label></div>
+            <div className="space-y-3"><div><Label>Author</Label><Input list="blog-author-options" value={form.authorName} onChange={(event) => updateField("authorName", event.target.value)} data-testid="input-author" /><datalist id="blog-author-options">{AUTHOR_OPTIONS.map((name) => <option key={name} value={name} />)}</datalist><p className="mt-1 text-xs text-gray-500">Pick {BLOG_AUTHORS.map((author) => author.name).join(" or ")} to link the article to their author page.</p></div><label className="flex items-center gap-2 text-sm"><Checkbox checked={form.isFeatured} onCheckedChange={(value) => updateField("isFeatured", value === true)} /> Feature this article</label></div>
           </Panel>
         </aside>
       </div>

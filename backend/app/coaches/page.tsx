@@ -6,6 +6,7 @@ import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { getStructuredData } from "@/lib/seo/structuredDataResolve";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { getContent } from "@/lib/content/pageContent";
+import { authorPath, getAuthorBySlug, type BlogAuthor } from "@/lib/content/authors";
 
 export const revalidate = 60;
 
@@ -13,21 +14,17 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata("/coaches");
 }
 
-const director = {
-  name: "Coach Maros Kovacik",
-  role: "Director & Head Coach",
-  bio: "Maros Kovacik leads Valencia Basket Academy UAE as Director and Head Coach. A EuroLeague Coach of the Year (2013) and a 15-time champion, he brings elite coaching experience from across Europe and Asia, splitting his work between Valencia and Dubai.",
-  image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-maros.jpg",
-  imageKey: "coaches.maros-kovacik",
-};
-
-const assistantDirector = {
-  name: "Martin Pospisil",
-  role: "Assistant Technical Director & Coach",
-  bio: "Martin Pospisil joins Valencia Basket Academy UAE as Assistant Technical Director and Coach. Head coach of the Slovak women's national team and a longtime assistant to Maros Kovacik with the Polish and Slovak national teams, he brings elite European coaching experience with a focus on player development.",
-  image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-martin-pospisil.webp",
-  imageKey: "coaches.martin-pospisil",
-};
+// Leadership records are shared with the blog author pages.
+const toStaffCard = (author: BlogAuthor) => ({
+  name: author.staffName,
+  role: author.role,
+  bio: author.shortBio,
+  image: author.image,
+  imageKey: author.imageKey,
+  href: authorPath(author),
+});
+const director = toStaffCard(getAuthorBySlug("maros-kovacik")!);
+const assistantDirector = toStaffCard(getAuthorBySlug("martin-pospisil")!);
 
 const managementTeam = [
   {
@@ -100,6 +97,8 @@ interface TeamMember {
   bio: string;
   image: string;
   imageKey: string;
+  /** Leadership only: link to their blog author page. */
+  href?: string;
 }
 
 function DirectorCard({
@@ -128,6 +127,11 @@ function DirectorCard({
         <h3 className="text-3xl md:text-4xl font-black uppercase leading-none mb-2">{person.name}</h3>
         <p className="text-primary font-bold uppercase text-xs tracking-widest mb-5">{person.role}</p>
         <p className="text-sm md:text-base text-gray-600 leading-relaxed max-w-xl">{person.bio}</p>
+        {person.href && (
+          <Link href={person.href} className="mt-5 self-start text-sm font-bold uppercase tracking-wider text-primary hover:underline">
+            Articles &amp; full bio →
+          </Link>
+        )}
       </div>
     </div>
   );

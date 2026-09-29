@@ -8,8 +8,10 @@ import {
   contactStructuredData,
   faqStructuredData,
   SITE,
+  authorSchema,
 } from "./structuredData";
 import { getCoachStructuredEntries } from "./coaches";
+import { BLOG_AUTHORS, authorPath, getAuthorByName, getAuthorBySlug, type BlogAuthor } from "@/lib/content/authors";
 
 export const getStructuredDataOverrides = cache(async () => {
   try {
@@ -54,7 +56,7 @@ export function getEventStructuredData(event: {
  * saved manual override would freeze the list and silently stop new content
  * from appearing, so overrides are ignored (only the on/off toggle applies).
  */
-export const AUTO_SCHEMA_PATHS = new Set(["/blog"]);
+export const AUTO_SCHEMA_PATHS = new Set(["/blog", ...BLOG_AUTHORS.map(authorPath)]);
 
 async function blogListingSchema(): Promise<Record<string, unknown>> {
   const posts = (await storage.getPublishedBlogPosts()).filter(
@@ -76,9 +78,45 @@ async function blogListingSchema(): Promise<Record<string, unknown>> {
       datePublished: iso(post.publishedAt),
       dateModified: iso(post.updatedAt) ?? iso(post.publishedAt),
       image: imageUrl(post.featuredImageSrc),
-      author: { "@type": "Person", name: post.authorName },
+      author: authorSchema(post.authorName),
     })),
   };
+}
+
+/** Profile page for a blog author: their Person entity plus their public articles. */
+async function authorPageSchema(author: BlogAuthor): Promise<Record<string, unknown>[]> {
+  const path = authorPath(author);
+  const url = `${SITE}${path}`;
+  const person = authorSchema(author.name);
+  const posts = (await storage.getPublishedBlogPosts()).filter(
+    (post) => post.visibility === "public" && !post.noIndex && post.schemaEnabled && getAuthorByName(post.authorName)?.slug === author.slug,
+  );
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "@id": url,
+      url,
+      name: `${author.name} — ${author.role}`,
+      mainEntity: person,
+      hasPart: posts.map((post) => ({
+        "@type": "BlogPosting",
+        headline: post.title,
+        url: `${SITE}/blog/${post.slug}`,
+        datePublished: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
+        author: { "@id": person["@id"] },
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE },
+        { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}/blog` },
+        { "@type": "ListItem", position: 3, name: author.name, item: url },
+      ],
+    },
+  ];
 }
 
 /**
@@ -123,6 +161,11 @@ async function computeDefaultPageSchema(path: string, label?: string): Promise<R
   }
   if (path === "/blog") {
     return withBreadcrumb([...staticEntries, await blogListingSchema()]);
+  }
+  const authorSlugMatch = /^\/blog\/author\/([^/]+)$/.exec(path);
+  if (authorSlugMatch) {
+    const author = getAuthorBySlug(authorSlugMatch[1]);
+    return author ? authorPageSchema(author) : [];
   }
   if (path === "/events") {
     const events = await storage.getAllEvents();

@@ -96,3 +96,38 @@ test("a saved page override fully replaces the computed default", async () => {
     storage.getAllEvents = originalGetEvents;
   }
 });
+
+test("post authorName matches staff authors with or without the Coach prefix", async () => {
+  const { getAuthorByName } = await import("@/lib/content/authors");
+  assert.equal(getAuthorByName("Maros Kovacik")?.slug, "maros-kovacik");
+  assert.equal(getAuthorByName("  coach maros   kovacik ")?.slug, "maros-kovacik");
+  assert.equal(getAuthorByName("Martin Pospisil")?.slug, "martin-pospisil");
+  assert.equal(getAuthorByName("Valencia Basket Academy UAE"), undefined);
+});
+
+test("author page schema is a ProfilePage listing only that author's public articles", async () => {
+  const originalPosts = storage.getPublishedBlogPosts;
+  const originalOverrides = storage.getAllSeoSchemaOverrides;
+  const base = {
+    publishedAt: new Date("2026-09-01T00:00:00Z"), updatedAt: new Date("2026-09-02T00:00:00Z"),
+    visibility: "public", noIndex: false, schemaEnabled: true, featuredImageSrc: null,
+  };
+  storage.getPublishedBlogPosts = (async () => [
+    { ...base, title: "By Maros", slug: "by-maros", authorName: "Coach Maros Kovacik" },
+    { ...base, title: "By Martin", slug: "by-martin", authorName: "Martin Pospisil" },
+    { ...base, title: "Maros hidden", slug: "maros-hidden", authorName: "Maros Kovacik", noIndex: true },
+  ]) as unknown as typeof storage.getPublishedBlogPosts;
+  storage.getAllSeoSchemaOverrides = async () => [];
+  try {
+    const result = await getStructuredData("/blog/author/maros-kovacik", "Maros Kovacik");
+    const profile = result.find((item) => item["@type"] === "ProfilePage") as { mainEntity: Record<string, unknown>; hasPart: Array<Record<string, unknown>> };
+    assert.equal(profile.mainEntity.name, "Maros Kovacik");
+    assert.equal(profile.mainEntity.jobTitle, "Director & Head Coach");
+    assert.equal(profile.mainEntity.url, "https://valenciabasket.ae/blog/author/maros-kovacik");
+    assert.deepEqual(profile.hasPart.map((post) => post.headline), ["By Maros"]);
+    assert.ok(result.some((item) => item["@type"] === "BreadcrumbList"));
+  } finally {
+    storage.getPublishedBlogPosts = originalPosts;
+    storage.getAllSeoSchemaOverrides = originalOverrides;
+  }
+});

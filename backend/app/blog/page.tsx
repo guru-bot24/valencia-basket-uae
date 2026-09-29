@@ -1,28 +1,15 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { BookOpen, CalendarDays } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo/resolve";
 import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
-import { storage, type BlogPostWithTaxonomy } from "@/lib/storage";
-import { blogPlainText } from "@/lib/blog";
+import { storage } from "@/lib/storage";
+import { BlogPostCard } from "@/components/blog/BlogPostCard";
 import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata("/blog");
-}
-
-function postSummary(post: BlogPostWithTaxonomy) {
-  if (post.visibility === "password") return "This article is password protected.";
-  const content = blogPlainText(post.content);
-  return post.excerpt || `${content.slice(0, 180).trim()}${content.length > 180 ? "…" : ""}`;
-}
-
-function postDate(post: BlogPostWithTaxonomy) {
-  return post.publishedAt
-    ? new Date(post.publishedAt).toLocaleDateString("en-AE", { year: "numeric", month: "long", day: "numeric" })
-    : "Coming soon";
 }
 
 export default async function BlogPage() {
@@ -67,20 +54,7 @@ export default async function BlogPage() {
           ) : (
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {posts.map((post) => (
-                <article key={post.id} className="group overflow-hidden border border-gray-200 bg-white" data-testid={`card-blog-post-${post.id}`}>
-                  {post.featuredImageSrc && (
-                    <img src={post.featuredImageSrc} alt={post.featuredImageAlt ?? post.title} className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                  )}
-                  <div className="p-6">
-                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
-                      <CalendarDays className="h-4 w-4" /> {postDate(post)}
-                      {post.isFeatured && <span className="text-gray-400">• Featured</span>}
-                    </div>
-                    <h2 className="mb-3 text-2xl font-black uppercase leading-tight">{post.title}</h2>
-                    <p className="mb-5 text-gray-600">{postSummary(post)}</p>
-                    <Link href={`/blog/${post.slug}`} className="font-bold uppercase tracking-wider text-primary hover:underline">Read article →</Link>
-                  </div>
-                </article>
+                <BlogPostCard key={post.id} post={post} />
               ))}
             </div>
           )}

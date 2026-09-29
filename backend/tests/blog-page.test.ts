@@ -13,7 +13,8 @@ test("blog landing page is linked from Explore and has registered metadata", () 
 
   assert.match(page, /export default async function BlogPage/);
   assert.match(page, /getPublishedBlogPosts/);
-  assert.match(page, /href=\{`\/blog\/\$\{post\.slug\}`\}/);
+  assert.match(page, /<BlogPostCard /);
+  assert.match(projectFile("components/blog/BlogPostCard.tsx"), /href=\{`\/blog\/\$\{post\.slug\}`\}/);
   assert.match(page, /buildPageMetadata\("\/blog"\)/);
   assert.match(
     footer,

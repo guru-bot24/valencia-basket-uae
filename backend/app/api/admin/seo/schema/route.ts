@@ -4,6 +4,7 @@ import { z } from "zod";
 import { requireAdmin } from "@/lib/adminAuth";
 import { storage } from "@/lib/storage";
 import { structuredDataRegistry, breadcrumbStructuredDataRegistry, breadcrumbPages } from "@/lib/seo/structuredData";
+import { BLOG_AUTHORS, authorPath } from "@/lib/content/authors";
 import { AUTO_SCHEMA_PATHS, getStructuredData, getStructuredDataOverrides } from "@/lib/seo/structuredDataResolve";
 
 export const dynamic = "force-dynamic";
@@ -11,6 +12,7 @@ export const dynamic = "force-dynamic";
 const labelForPath = new Map<string, string>(breadcrumbPages.map(([path, label]) => [path, label]));
 labelForPath.set("/", "Home");
 labelForPath.set("/__schema/sitewide-organization", "Sitewide (Organization)");
+for (const author of BLOG_AUTHORS) labelForPath.set(authorPath(author), `Author: ${author.name}`);
 
 function labelOf(path: string) {
   return labelForPath.get(path) ?? path;
@@ -28,6 +30,7 @@ export async function GET(request: NextRequest) {
     if (entry.key !== "/__schema/sitewide-organization") paths.add(entry.path);
   }
   for (const entry of breadcrumbStructuredDataRegistry) paths.add(entry.path);
+  for (const author of BLOG_AUTHORS) paths.add(authorPath(author));
   for (const event of events) paths.add(`/events/${event.slug}`);
 
   const rows = await Promise.all(

@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
     const parsed = blogPostInputSchema.parse(await request.json());
     const post = await storage.createBlogPost(await preparePost(parsed));
     revalidatePath("/blog");
+    revalidatePath("/blog/author/[slug]", "page");
     revalidatePath("/sitemap.xml");
     if (post.status !== "draft") revalidatePath(`/blog/${post.slug}`);
     return NextResponse.json(withoutPasswordHash(post), { status: 201 });

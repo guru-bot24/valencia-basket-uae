@@ -1,6 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { storage } from "@/lib/storage";
+import { BLOG_AUTHORS } from "@/lib/content/authors";
 
 export type ContentFieldType = "text" | "textarea" | "image";
 
@@ -709,6 +710,16 @@ export const CONTENT_FIELDS: ContentField[] = [
     maxLength: 220,
     default: "FIBA-certified and Spanish-licensed coaches with experience at the highest levels of European basketball, dedicated to your child's growth.",
   },
+
+  // ---- Blog Authors (one bio per author page; blank line = new paragraph) ----
+  ...BLOG_AUTHORS.map((author): ContentField => ({
+    key: `author.${author.slug}.bio`,
+    page: "Blog Authors",
+    label: `${author.name} — author page bio`,
+    type: "textarea",
+    maxLength: 1500,
+    default: author.defaultBio,
+  })),
 ];
 
 const fieldMap = new Map(CONTENT_FIELDS.map((field) => [field.key, field]));

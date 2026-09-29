@@ -42,6 +42,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const parsed = blogPostInputSchema.parse(await request.json());
     const updated = await storage.updateBlogPost(id, await preparePost(parsed, existing));
     revalidatePath("/blog");
+    revalidatePath("/blog/author/[slug]", "page");
     revalidatePath("/sitemap.xml");
     revalidatePath(`/blog/${existing.slug}`);
     if (updated.status !== "draft") revalidatePath(`/blog/${updated.slug}`);
@@ -72,6 +73,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     if (!existing) return NextResponse.json({ error: "Blog post not found" }, { status: 404 });
     await storage.deleteBlogPost(id);
     revalidatePath("/blog");
+    revalidatePath("/blog/author/[slug]", "page");
     revalidatePath("/sitemap.xml");
     revalidatePath(`/blog/${existing.slug}`);
     return NextResponse.json({ success: true });

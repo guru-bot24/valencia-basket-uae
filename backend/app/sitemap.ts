@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { storage } from "@/lib/storage";
 import { getSeoOverrides } from "@/lib/seo/resolve";
+import { BLOG_AUTHORS, authorPath } from "@/lib/content/authors";
 
 export const dynamic = "force-dynamic";
 
@@ -127,13 +128,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
+  const authorPages: MetadataRoute.Sitemap = BLOG_AUTHORS.map((author) => ({
+    url: `${baseUrl}${authorPath(author)}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
+
   // A page an admin has marked noindex should not be advertised in the sitemap.
   const overrides = await getSeoOverrides();
   const noIndexPaths = new Set(
     [...overrides.values()].filter((row) => row.noIndex).map((row) => row.path)
   );
 
-  return [...staticPages, ...eventPages, ...blogPages].filter((entry) => {
+  return [...staticPages, ...eventPages, ...blogPages, ...authorPages].filter((entry) => {
     const path = entry.url.slice(baseUrl.length) || "/";
     return !noIndexPaths.has(path);
   });
