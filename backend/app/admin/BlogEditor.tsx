@@ -145,10 +145,28 @@ async function uploadImageFile(file: File): Promise<string> {
   return result.url as string;
 }
 
+const IMAGE_SIZES = [
+  { value: "small", label: "Small" },
+  { value: "medium", label: "Medium" },
+  { value: "large", label: "Large" },
+  { value: "full", label: "Full width" },
+] as const;
+const IMAGE_ALIGNS = [
+  { value: "left", label: "Left" },
+  { value: "center", label: "Center" },
+  { value: "right", label: "Right" },
+] as const;
+
+function escapeAttribute(value: string) {
+  return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
+
 function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (value: string) => void; onBlur: () => void }) {
   const [codeMode, setCodeMode] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null);
+  const [, forceRender] = useState(0);
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -156,13 +174,36 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
     if (!codeMode && editorRef.current) editorRef.current.innerHTML = sanitizeBlogHtml(value);
   }, [codeMode]);
 
+  // The selection outline is an editor-only marker; it must never be saved.
+  const readHtml = () => {
+    if (!editorRef.current) return "";
+    const clone = editorRef.current.cloneNode(true) as HTMLDivElement;
+    clone.querySelectorAll("[data-editor-selected]").forEach((node) => node.removeAttribute("data-editor-selected"));
+    return clone.innerHTML;
+  };
+  const emit = () => onChange(readHtml());
+
+  const selectImage = (image: HTMLImageElement | null) => {
+    editorRef.current?.querySelectorAll("[data-editor-selected]").forEach((node) => node.removeAttribute("data-editor-selected"));
+    image?.setAttribute("data-editor-selected", "true");
+    setSelectedImage(image);
+  };
+
+  const updateSelectedImage = (attribute: "data-size" | "data-align" | "alt", next: string) => {
+    if (!selectedImage?.isConnected) return selectImage(null);
+    selectedImage.setAttribute(attribute, next);
+    forceRender((count) => count + 1);
+    emit();
+  };
+
   const command = (name: string, argument?: string) => {
     editorRef.current?.focus();
     document.execCommand(name, false, argument);
-    if (editorRef.current) onChange(editorRef.current.innerHTML);
+    emit();
   };
 
   const switchMode = () => {
+    selectImage(null);
     if (codeMode) {
       const safe = sanitizeBlogContent(value);
       onChange(safe);
@@ -171,7 +212,7 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
         if (editorRef.current) editorRef.current.innerHTML = sanitizeBlogHtml(safe);
       });
     } else {
-      if (editorRef.current) onChange(editorRef.current.innerHTML);
+      emit();
       setCodeMode(true);
     }
   };
@@ -188,7 +229,9 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
     setUploading(true);
     try {
       const url = await uploadImageFile(file);
-      command("insertImage", url);
+      command("insertHTML", `<img src="${escapeAttribute(url)}" alt="" data-size="medium" data-align="center">`);
+      const inserted = [...(editorRef.current?.querySelectorAll("img") ?? [])].filter((image) => image.getAttribute("src") === url).pop();
+      if (inserted) selectImage(inserted);
     } catch (error) {
       window.alert(error instanceof Error ? error.message : "Failed to upload image");
     } finally {
@@ -208,7 +251,7 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
     const html = `<iframe src="https://www.instagram.com/${type}/${code}/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>`;
     editorRef.current?.focus();
     document.execCommand("insertHTML", false, html);
-    if (editorRef.current) onChange(editorRef.current.innerHTML);
+    emit();
   };
 
   const toolbarButton = (label: string, icon: React.ReactNode, action: () => void) => (
@@ -242,10 +285,61 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
         <button type="button" onClick={switchMode} className={`ml-auto flex h-8 items-center gap-1 border-l px-2 text-xs font-bold ${codeMode ? "bg-black text-white" : ""}`}><Code2 className="h-4 w-4" /> {codeMode ? "Visual" : "Code"}</button>
         <button type="button" onClick={() => setFullscreen((value) => !value)} className="flex h-8 items-center border-l px-2" title="Fullscreen"><Maximize2 className="h-4 w-4" /></button>
       </div>
+      {!codeMode && selectedImage && (
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b bg-orange-50 px-3 py-2 text-xs" data-testid="image-toolbar">
+          <span className="font-bold uppercase text-gray-600">Image</span>
+          <div className="flex items-center gap-1">
+            <span className="text-gray-500">Size</span>
+            {IMAGE_SIZES.map((size) => {
+              const active = (selectedImage.getAttribute("data-size") ?? "full") === size.value;
+              return (
+                <button key={size.value} type="button" onMouseDown={(event) => { event.preventDefault(); updateSelectedImage("data-size", size.value); }} className={`border px-2 py-1 font-bold ${active ? "border-black bg-black text-white" : "border-gray-300 bg-white"}`}>
+                  {size.label}
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="text-gray-500">Align</span>
+            {IMAGE_ALIGNS.map((align) => {
+              const active = (selectedImage.getAttribute("data-align") ?? "center") === align.value;
+              return (
+                <button key={align.value} type="button" onMouseDown={(event) => { event.preventDefault(); updateSelectedImage("data-align", align.value); }} className={`border px-2 py-1 font-bold ${active ? "border-black bg-black text-white" : "border-gray-300 bg-white"}`}>
+                  {align.label}
+                </button>
+              );
+            })}
+          </div>
+          <label className="flex min-w-[240px] flex-1 items-center gap-2">
+            <span className="text-gray-500">Alt text</span>
+            <input
+              key={selectedImage.getAttribute("src") ?? ""}
+              defaultValue={selectedImage.getAttribute("alt") ?? ""}
+              onChange={(event) => updateSelectedImage("alt", event.target.value)}
+              placeholder="Describe the image for search engines and screen readers"
+              maxLength={160}
+              className="h-7 flex-1 border border-gray-300 px-2"
+            />
+          </label>
+          <button type="button" onClick={() => selectImage(null)} className="ml-auto text-gray-500 underline">Done</button>
+        </div>
+      )}
       {codeMode ? (
         <Textarea aria-label="Article HTML code" className="min-h-[420px] flex-1 resize-y rounded-none border-0 font-mono focus-visible:ring-0" value={value} onChange={(event) => onChange(event.target.value)} onBlur={onBlur} />
       ) : (
-        <div ref={editorRef} contentEditable suppressContentEditableWarning aria-label="Article content" className="prose min-h-[420px] max-w-none flex-1 resize-y overflow-auto p-5 outline-none" onInput={(event) => onChange(event.currentTarget.innerHTML)} onBlur={onBlur} />
+        <div
+          ref={editorRef}
+          contentEditable
+          suppressContentEditableWarning
+          aria-label="Article content"
+          className="prose blog-content min-h-[420px] max-w-none flex-1 resize-y overflow-auto p-5 outline-none"
+          onClick={(event) => selectImage(event.target instanceof HTMLImageElement ? event.target : null)}
+          onInput={() => {
+            if (selectedImage && !selectedImage.isConnected) setSelectedImage(null);
+            emit();
+          }}
+          onBlur={onBlur}
+        />
       )}
     </div>
   );

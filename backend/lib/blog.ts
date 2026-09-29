@@ -38,6 +38,14 @@ export function sanitizeBlogHtml(input: string) {
         attributes.push(`src="${value.replace(/"/g, "&quot;")}"`);
         continue;
       }
+      if (tag === "img" && name === "data-size") {
+        if (/^(?:small|medium|large|full)$/.test(value)) attributes.push(`data-size="${value}"`);
+        continue;
+      }
+      if (tag === "img" && name === "data-align") {
+        if (/^(?:left|center|right)$/.test(value)) attributes.push(`data-align="${value}"`);
+        continue;
+      }
       if (tag === "iframe" && (name === "width" || name === "height")) {
         if (/^[0-9]{1,4}%?$/.test(value)) attributes.push(`${name}="${value}"`);
         continue;

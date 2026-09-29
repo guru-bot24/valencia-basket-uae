@@ -81,3 +81,12 @@ test("blog admin and public routes use authenticated persisted content", () => {
   assert.match(detailPage, /getBlogPostBySlug/);
   assert.doesNotMatch(detailPage, /dangerouslySetInnerHTML=\{\{ __html: post\.content/);
 });
+test("blog images keep only whitelisted size and alignment presets", () => {
+  const safe = sanitizeBlogHtml(
+    '<img src="https://cdn.example.com/a.jpg" alt="Court" data-size="medium" data-align="left" data-editor-selected="true">' +
+    '<img src="https://cdn.example.com/b.jpg" data-size="huge" data-align="middle" style="width:900px" width="900">'
+  );
+  assert.match(safe, /<img src="https:\/\/cdn\.example\.com\/a\.jpg" alt="Court" data-size="medium" data-align="left">/);
+  assert.doesNotMatch(safe, /data-editor-selected/, "the editor's selection marker must never be saved");
+  assert.doesNotMatch(safe, /huge|middle|width/, "unknown presets and free-form sizing must be stripped");
+});

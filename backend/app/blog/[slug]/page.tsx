@@ -95,7 +95,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <div className="container mx-auto max-w-4xl px-4 py-12 md:px-6 md:py-20">
           {post.featuredImageSrc && <img src={post.featuredImageSrc} alt={post.featuredImageAlt ?? post.title} className="mb-12 max-h-[32rem] w-full rounded object-cover" />}
           {hasRichContent ? (
-            <div className="prose max-w-none text-lg leading-8 text-gray-700" dangerouslySetInnerHTML={{ __html: safeContent }} />
+            <div className="prose blog-content max-w-none text-lg leading-8 text-gray-700" dangerouslySetInnerHTML={{ __html: safeContent }} />
           ) : (
             <div className="whitespace-pre-line text-lg leading-8 text-gray-700">{safeContent}</div>
           )}
