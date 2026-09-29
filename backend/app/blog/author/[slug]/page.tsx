@@ -9,6 +9,8 @@ import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { storage } from "@/lib/storage";
 import { getContent } from "@/lib/content/pageContent";
 import { authorPath, getAuthorByName, getAuthorBySlug } from "@/lib/content/authors";
+import { getStaffSocialLinks } from "@/lib/content/staffSocial";
+import { SocialIcons } from "@/components/SocialIcons";
 
 export const revalidate = 60;
 
@@ -22,13 +24,14 @@ export default async function BlogAuthorPage({ params }: { params: Promise<{ slu
   const author = getAuthorBySlug((await params).slug);
   if (!author) notFound();
 
-  const [allPosts, bio, alt] = await Promise.all([
+  const [allPosts, bio, alt, socials] = await Promise.all([
     storage.getPublishedBlogPosts().catch((error) => {
       console.error("[blog] failed to load author posts:", error);
       return [];
     }),
     getContent(`author.${author.slug}.bio`),
     getAltResolver(),
+    getStaffSocialLinks(author.slug),
   ]);
   const posts = allPosts.filter((post) => getAuthorByName(post.authorName)?.slug === author.slug);
   const paragraphs = bio.split(/\n\s*\n/).map((paragraph) => paragraph.trim()).filter(Boolean);
@@ -50,6 +53,7 @@ export default async function BlogAuthorPage({ params }: { params: Promise<{ slu
               <span className="mb-4 block text-sm font-bold uppercase tracking-widest text-primary">Author</span>
               <h1 className="mb-3 text-4xl font-black uppercase leading-none tracking-tighter md:text-6xl">{author.staffName}</h1>
               <p className="mb-6 text-sm font-bold uppercase tracking-widest text-primary">{author.role}</p>
+              <SocialIcons links={socials} personName={author.name} tone="dark" className="mb-6" />
               <div className="max-w-2xl space-y-4 text-lg leading-relaxed text-gray-300">
                 {paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
               </div>

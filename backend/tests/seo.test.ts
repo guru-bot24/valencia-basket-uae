@@ -286,9 +286,9 @@ test("public-page image inventory uses managed alt values or decorative images",
       "home.methodology",
       "home.arena",
     ],
-    // Leadership cards (Maros, Martin) are shared with the blog author pages.
+    // Staff page records (incl. Maros and Martin, shared with the blog author pages).
     "lib/content/authors.ts": ["coaches.maros-kovacik", "coaches.martin-pospisil"],
-    "app/coaches/page.tsx": [
+    "lib/content/staff.ts": [
       "coaches.saiid",
       "coaches.rabih",
       "coaches.majil",

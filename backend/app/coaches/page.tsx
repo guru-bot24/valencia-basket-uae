@@ -6,7 +6,10 @@ import { buildPageMetadata, getAltResolver } from "@/lib/seo/resolve";
 import { getStructuredData } from "@/lib/seo/structuredDataResolve";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { getContent } from "@/lib/content/pageContent";
-import { authorPath, getAuthorBySlug, type BlogAuthor } from "@/lib/content/authors";
+import { staffInGroup, type StaffMember } from "@/lib/content/staff";
+import { getStaffSocialLinks } from "@/lib/content/staffSocial";
+import type { SocialLinks } from "@/lib/content/socialLinks";
+import { SocialIcons } from "@/components/SocialIcons";
 
 export const revalidate = 60;
 
@@ -14,92 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata("/coaches");
 }
 
-// Leadership records are shared with the blog author pages.
-const toStaffCard = (author: BlogAuthor) => ({
-  name: author.staffName,
-  role: author.role,
-  bio: author.shortBio,
-  image: author.image,
-  imageKey: author.imageKey,
-  href: authorPath(author),
-});
-const director = toStaffCard(getAuthorBySlug("maros-kovacik")!);
-const assistantDirector = toStaffCard(getAuthorBySlug("martin-pospisil")!);
-
-const managementTeam = [
-  {
-    name: "Coach Saiid",
-    role: "General Manager",
-    bio: "FIBA-certified coach with solid experience in the basketball environment of Dubai and Lebanon. Coach Saiid brings strong international knowledge and leadership to the academy.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach_new/saiid.jpeg",
-    imageKey: "coaches.saiid",
-  },
-  {
-    name: "Rabih",
-    role: "Operations Manager",
-    bio: "Rabih is an experienced manager of basketball academies and brings his empathy, dedication to Valencia.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach_new/rabih.jpeg",
-    imageKey: "coaches.rabih",
-  },
-];
-
-const coachingTeam = [
-  {
-    name: "Coach Majil",
-    role: "Coach",
-    bio: "Coach with extensive experience in Dubai, working with both individual skill development and team programs.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach_new/majil.jpeg",
-    imageKey: "coaches.majil",
-  },
-  {
-    name: "Coach Ahmed",
-    role: "Coach",
-    bio: "Coach with experience in Dubai, specialized in individual and team development programs.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach_new/doksal.jpeg",
-    imageKey: "coaches.ahmed",
-  },
-];
-
-const alumniTeam = [
-  {
-    name: "Coach Guillem",
-    role: "Technical Director",
-    bio: "Level 3 coach certified in Spain, with experience in the EuroLeague Adidas Next Generation Tournament and as a U18 and U16 coach at Valencia Basket. He oversees the technical and developmental direction of the academy.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-guillem.jpg",
-    imageKey: "coaches.guillem",
-  },
-  {
-    name: "Coach Andreu",
-    role: "Assistant Coordinator",
-    bio: "Coach with experience in Valencia Basket's Elite Program, holding official Spanish coaching licenses. Actively involved in player development and program coordination.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-andreu.jpg",
-    imageKey: "coaches.andreu",
-  },
-  {
-    name: "Coach Ruben",
-    role: "Coach",
-    bio: "Coach with experience in Valencia Basket's Elite youth programs, focused on long-term player development in formative categories.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-ruben.jpg",
-    imageKey: "coaches.ruben",
-  },
-  {
-    name: "Coach Carles",
-    role: "Coach",
-    bio: "Coach with experience in elite development programs, working mainly in youth and formative categories.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-carles.jpg",
-    imageKey: "coaches.carles",
-  },
-];
-
-interface TeamMember {
-  name: string;
-  role: string;
-  bio: string;
-  image: string;
-  imageKey: string;
-  /** Leadership only: link to their blog author page. */
-  href?: string;
-}
+type TeamMember = StaffMember & { socials: SocialLinks };
 
 function DirectorCard({
   person,
@@ -126,6 +44,7 @@ function DirectorCard({
         <span className="text-primary font-bold uppercase tracking-widest text-xs mb-3 block">Leadership</span>
         <h3 className="text-3xl md:text-4xl font-black uppercase leading-none mb-2">{person.name}</h3>
         <p className="text-primary font-bold uppercase text-xs tracking-widest mb-5">{person.role}</p>
+        <SocialIcons links={person.socials} personName={person.name} className="mb-5" />
         <p className="text-sm md:text-base text-gray-600 leading-relaxed max-w-xl">{person.bio}</p>
         {person.href && (
           <Link href={person.href} className="mt-5 self-start text-sm font-bold uppercase tracking-wider text-primary hover:underline">
@@ -167,6 +86,7 @@ function CoachCard({
       </div>
       <h3 className="text-xl md:text-2xl font-black uppercase leading-none mb-1">{person.name}</h3>
       <p className="text-primary font-bold uppercase text-xs tracking-widest mb-2">{person.role}</p>
+      <SocialIcons links={person.socials} personName={person.name} size="sm" className="mb-3" />
       {/* Bio always visible on mobile */}
       <p className="md:hidden text-sm text-gray-600 leading-relaxed">{person.bio}</p>
     </div>
@@ -177,6 +97,14 @@ export default async function Coaches() {
   const alt = await getAltResolver();
   const schema = await getStructuredData("/coaches", "Coaches");
   const heroSubtext = await getContent("staff.hero.subtext");
+  const withSocials = (members: StaffMember[]) =>
+    Promise.all(members.map(async (member): Promise<TeamMember> => ({ ...member, socials: await getStaffSocialLinks(member.slug) })));
+  const [leadership, managementTeam, coachingTeam, alumniTeam] = await Promise.all([
+    withSocials(staffInGroup("Leadership")),
+    withSocials(staffInGroup("Management & Operations")),
+    withSocials(staffInGroup("Coaching Staff")),
+    withSocials(staffInGroup("Alumni Coaches")),
+  ]);
   return (
     <>
       <StructuredData data={schema} />
@@ -194,8 +122,9 @@ export default async function Coaches() {
       <div className="container mx-auto px-4 md:px-6 pt-20 pb-12">
         <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-8">Leadership</h2>
         <div className="space-y-6">
-          <DirectorCard person={director} imageAlt={alt(director.imageKey)} />
-          <DirectorCard person={assistantDirector} imageAlt={alt(assistantDirector.imageKey)} />
+          {leadership.map((person) => (
+            <DirectorCard key={person.slug} person={person} imageAlt={alt(person.imageKey)} />
+          ))}
         </div>
       </div>
 

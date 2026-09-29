@@ -11,6 +11,7 @@ import {
   authorSchema,
 } from "./structuredData";
 import { getCoachStructuredEntries } from "./coaches";
+import { getStaffSocialLinks, socialSameAs } from "@/lib/content/staffSocial";
 import { BLOG_AUTHORS, authorPath, getAuthorByName, getAuthorBySlug, type BlogAuthor } from "@/lib/content/authors";
 
 export const getStructuredDataOverrides = cache(async () => {
@@ -87,7 +88,8 @@ async function blogListingSchema(): Promise<Record<string, unknown>> {
 async function authorPageSchema(author: BlogAuthor): Promise<Record<string, unknown>[]> {
   const path = authorPath(author);
   const url = `${SITE}${path}`;
-  const person = authorSchema(author.name);
+  const sameAs = socialSameAs(await getStaffSocialLinks(author.slug));
+  const person = { ...authorSchema(author.name), ...(sameAs ? { sameAs } : {}) };
   const posts = (await storage.getPublishedBlogPosts()).filter(
     (post) => post.visibility === "public" && !post.noIndex && post.schemaEnabled && getAuthorByName(post.authorName)?.slug === author.slug,
   );

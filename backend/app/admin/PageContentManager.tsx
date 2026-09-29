@@ -12,6 +12,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useToast } from "@/hooks/use-toast";
+import { StaffSocialManager } from "./StaffSocialManager";
 
 interface ContentRow {
   key: string;
@@ -166,6 +167,14 @@ export function PageContentManager() {
             </AccordionContent>
           </AccordionItem>
         ))}
+        <AccordionItem value="staff-social-links" className="border-b border-gray-200 last:border-b-0">
+          <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-gray-50">
+            <span className="font-black uppercase tracking-tight">Staff Social Links</span>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4">
+            <StaffSocialManager />
+          </AccordionContent>
+        </AccordionItem>
       </Accordion>
     </div>
   );
