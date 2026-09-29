@@ -7,44 +7,48 @@ import { CONTENT_FIELDS, getContentField, getContentOverrides } from "@/lib/cont
 
 export const dynamic = "force-dynamic";
 
+const PROGRAM_DETAIL_PAGES = [
+  "/programs/future-ballers",
+  "/programs/mini-basket",
+  "/programs/youth-academy",
+  "/programs/private-training",
+];
+
 const PAGE_PATHS: Record<string, string[]> = {
   Home: ["/"],
   Blog: ["/blog"],
-  Programs: ["/programs"],
+  // Program photos and Home card blurbs live here too, so refresh everywhere they show.
+  Programs: ["/", "/programs", ...PROGRAM_DETAIL_PAGES],
   Location: ["/facilities"],
   Staff: ["/coaches"],
   Methodology: ["/methodology"],
-  "Contact Us": ["/contact"],
-  FAQs: ["/faqs"],
   Admissions: ["/admissions"],
   "Events & Camps": ["/events"],
   "Future Ballers": ["/programs/future-ballers"],
   "Mini Basket": ["/programs/mini-basket"],
   "Youth Academy": ["/programs/youth-academy"],
   "Private Training": ["/programs/private-training"],
-  // Each field here shows on Home AND the Programs listing (and, for four of
-  // them, their own dedicated program page too) — revalidate everywhere.
-  "Program Images": [
-    "/",
-    "/programs",
-    "/programs/future-ballers",
-    "/programs/mini-basket",
-    "/programs/youth-academy",
-    "/programs/private-training",
-  ],
 };
+
+/** Edited at the top of their own admin tab (Staff, Events, Blog), not in Page Content. */
+const OWN_TAB_PAGES = new Set(["Staff", "Events & Camps", "Blog"]);
 
 export async function GET(request: NextRequest) {
   const error = await requireAdmin(request);
   if (error) return error;
 
   const overrides = await getContentOverrides();
-  // The Staff page header is edited in Admin → Staff, not here.
-  const rows = CONTENT_FIELDS.filter((field) => field.page !== "Staff").map((field) => {
+  // ?key=… returns that one field (used by the intro boxes in the Staff, Events and Blog tabs).
+  const onlyKey = request.nextUrl.searchParams.get("key");
+  const fields = onlyKey
+    ? CONTENT_FIELDS.filter((field) => field.key === onlyKey)
+    : CONTENT_FIELDS.filter((field) => !OWN_TAB_PAGES.has(field.page));
+  const rows = fields.map((field) => {
     const row = overrides.get(field.key);
     return {
       key: field.key,
       page: field.page,
+      section: field.section ?? null,
       label: field.label,
       type: field.type,
       maxLength: field.maxLength ?? null,

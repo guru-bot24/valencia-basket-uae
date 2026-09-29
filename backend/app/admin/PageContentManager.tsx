@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 interface ContentRow {
   key: string;
   page: string;
+  section: string | null;
   label: string;
   type: "text" | "textarea" | "image";
   maxLength: number | null;
@@ -158,11 +159,19 @@ export function PageContentManager() {
               <span className="font-black uppercase tracking-tight">{page}</span>
             </AccordionTrigger>
             <AccordionContent className="space-y-6 px-4 pb-4">
-              {fields.map((row, index) => (
-                <div key={row.key} className={index > 0 ? "border-t border-gray-100 pt-6" : ""}>
-                  <ContentFieldEditor row={row} />
-                </div>
-              ))}
+              {fields.map((row, index) => {
+                const startsSection = row.section && row.section !== fields[index - 1]?.section;
+                return (
+                  <div key={row.key}>
+                    {startsSection && (
+                      <h3 className={`mb-4 border-b-2 border-[#FF6C0E] pb-1 text-sm font-black uppercase tracking-wide ${index > 0 ? "mt-4" : ""}`}>{row.section}</h3>
+                    )}
+                    <div className={index > 0 && !startsSection ? "border-t border-gray-100 pt-6" : ""}>
+                      <ContentFieldEditor row={row} />
+                    </div>
+                  </div>
+                );
+              })}
             </AccordionContent>
           </AccordionItem>
         ))}

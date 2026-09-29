@@ -36,6 +36,7 @@ import { CopyValueButton, SeoManager } from "./SeoManager";
 import { BlogManager } from "./BlogManager";
 import { PageContentManager } from "./PageContentManager";
 import { StaffManager } from "./StaffManager";
+import { ContentIntroEditor } from "./ContentIntroEditor";
 import { useToast } from "@/hooks/use-toast";
 import type {
   TrialBooking,
@@ -1186,6 +1187,7 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
           </TabsContent>
 
           <TabsContent value="manage-events" className="mt-6">
+            <div className="mb-6"><ContentIntroEditor contentKey="events.intro" title="Events page intro" hint="Text under the title on /events" /></div>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold uppercase tracking-tight" data-testid="text-events-heading">Events Management</h2>
               <Button
@@ -1283,6 +1285,7 @@ function AdminDashboard({ authUser, onLogout }: { authUser: AdminAuthUser; onLog
           </TabsContent>
 
           <TabsContent value="blog" className="mt-6">
+            <div className="mb-6"><ContentIntroEditor contentKey="blog.hero.subtext" title="Blog page intro" hint="Text under the title on /blog" /></div>
             <BlogManager adminName={authUser.username} />
           </TabsContent>
 

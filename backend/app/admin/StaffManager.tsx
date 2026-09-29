@@ -9,12 +9,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { SocialIcon } from "@/components/SocialIcons";
+import { ContentIntroEditor } from "./ContentIntroEditor";
 import { SOCIAL_PLATFORMS, normalizeSocialUrl } from "@/lib/content/socialLinks";
 import { STAFF_LIMITS, STAFF_SECTIONS, authorDisplayName, type StaffMember, type StaffSection } from "@/lib/content/staff";
 
 interface StaffResponse {
   members: StaffMember[];
-  hero: { key: string; value: string; default: string; maxLength: number | null; isOverridden: boolean };
 }
 
 interface Draft {
@@ -71,45 +71,6 @@ function Avatar({ member, size = "h-10 w-10" }: { member: { name: string; image:
 
 function Counter({ value, max }: { value: string; max: number }) {
   return <p className="mt-1 text-xs text-gray-400">{value.length}/{max} characters</p>;
-}
-
-function HeroEditor({ hero }: { hero: StaffResponse["hero"] }) {
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
-  const [value, setValue] = useState(hero.value);
-  const save = useMutation({
-    mutationFn: async (next: string | null) => {
-      const res = await fetch("/api/admin/content", {
-        method: "PUT",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ key: hero.key, value: next }),
-      });
-      if (!res.ok) throw await readError(res, "Unable to save");
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-staff"] });
-      toast({ title: "Staff page header saved" });
-    },
-    onError: (error: Error) => toast({ title: error.message, variant: "destructive" }),
-  });
-  return (
-    <section className="border border-gray-200 bg-white" data-testid="staff-hero">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-200 px-4 py-3">
-        <span className="font-black uppercase tracking-tight">Staff page header</span>
-        <span className="text-xs text-gray-500">Text under &quot;Our Team&quot;</span>
-      </div>
-      <div className="space-y-2 p-4">
-        <Textarea value={value} onChange={(event) => setValue(event.target.value)} rows={2} maxLength={hero.maxLength ?? undefined} />
-        {hero.maxLength && <Counter value={value} max={hero.maxLength} />}
-        <div className="flex flex-wrap gap-2">
-          <Button type="button" onClick={() => save.mutate(value)} disabled={save.isPending || !value.trim() || value === hero.value}>Save</Button>
-          {hero.isOverridden && (
-            <Button type="button" variant="ghost" onClick={() => { setValue(hero.default); save.mutate(null); }} disabled={save.isPending}>Reset to default</Button>
-          )}
-        </div>
-      </div>
-    </section>
-  );
 }
 
 function MemberEditor({
@@ -392,7 +353,7 @@ export function StaffManager() {
 
   return (
     <div className="space-y-6" data-testid="staff-manager">
-      <HeroEditor key={data.hero.value} hero={data.hero} />
+      <ContentIntroEditor contentKey="staff.hero.subtext" title="Staff page header" hint={'Text under "Our Team"'} />
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
         <section className={`border border-gray-200 bg-white ${mobileEditing ? "hidden lg:block" : ""}`}>

@@ -5,7 +5,6 @@ import { TikTokIcon } from "@/components/shared/TikTokIcon";
 import { BookTrialForm } from "@/components/home/BookTrialForm";
 import { buildPageMetadata } from "@/lib/seo/resolve";
 import { BreadcrumbJsonLd } from "@/components/seo/StructuredData";
-import { getContent } from "@/lib/content/pageContent";
 
 export const revalidate = 60;
 
@@ -47,7 +46,6 @@ const infoRows = [
 ];
 
 export default async function Contact() {
-  const heroSubtext = await getContent("contact.hero.subtext");
   return (
     <>
       <BreadcrumbJsonLd path="/contact" label="Contact" />
@@ -60,7 +58,7 @@ export default async function Contact() {
           </span>
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4">Contact Us</h1>
           <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
-            {heroSubtext}
+            Questions about programs, trials, or partnerships? We&apos;re here to help.
           </p>
         </div>
       </div>

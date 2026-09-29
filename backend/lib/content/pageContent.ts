@@ -7,6 +7,8 @@ export type ContentFieldType = "text" | "textarea" | "image";
 export interface ContentField {
   key: string;
   page: string;
+  /** Optional sub-heading inside the page group in Admin → Page Content. */
+  section?: string;
   label: string;
   type: ContentFieldType;
   maxLength?: number;
@@ -38,46 +40,6 @@ export const CONTENT_FIELDS: ContentField[] = [
     type: "textarea",
     maxLength: 200,
     default: "A comprehensive development structure for every stage of an athlete's journey.",
-  },
-  {
-    key: "home.program.future-ballers.description",
-    page: "Home",
-    label: "Future Ballers card blurb (short — separate from the Programs page description)",
-    type: "textarea",
-    maxLength: 140,
-    default: "Playful first steps into basketball, building coordination, confidence, and fun.",
-  },
-  {
-    key: "home.program.mini-basket.description",
-    page: "Home",
-    label: "Mini Basket card blurb (short — separate from the Programs page description)",
-    type: "textarea",
-    maxLength: 140,
-    default: "Fun, fundamentals, and coordination. The perfect start to structured basketball.",
-  },
-  {
-    key: "home.program.youth-academy.description",
-    page: "Home",
-    label: "Youth Academy card blurb (short — separate from the Programs page description)",
-    type: "textarea",
-    maxLength: 140,
-    default: "Technical mastery, tactical understanding, and competition preparation.",
-  },
-  {
-    key: "home.program.elite.description",
-    page: "Home",
-    label: "Elite / Select card blurb (short — separate from the Programs page description)",
-    type: "textarea",
-    maxLength: 140,
-    default: "High-performance training for top-tier talent aiming for professional pathways.",
-  },
-  {
-    key: "home.program.private-training.description",
-    page: "Home",
-    label: "Private Training card blurb (short — separate from the Programs page description)",
-    type: "textarea",
-    maxLength: 140,
-    default: "Personalized attention to correct mechanics and accelerate growth.",
   },
   {
     key: "home.methodology.blurb",
@@ -202,103 +164,158 @@ export const CONTENT_FIELDS: ContentField[] = [
     default: "Book a free assessment session. Let our coaches evaluate your potential and place you in the right program.",
   },
 
-  // ---- Programs ----
+  // ---- Programs: one block per program (photo, Programs page text, Home card blurb) ----
   {
     key: "programs.intro",
     page: "Programs",
-    label: "Intro subtext",
+    section: "Programs page",
+    label: "Programs page intro",
     type: "textarea",
     maxLength: 220,
     default: "From first dribbles to professional pathways. A structured journey for every stage of development.",
   },
   {
+    key: "program.future-ballers.image",
+    page: "Programs",
+    section: "Future Ballers",
+    label: "Photo (shown on Home and Programs)",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
+  },
+  {
     key: "programs.future-ballers.description",
     page: "Programs",
-    label: "Future Ballers full description",
+    section: "Future Ballers",
+    label: "Programs page description",
     type: "textarea",
     maxLength: 400,
     default:
       "The very first step into basketball. Playful, movement-rich sessions that build coordination, confidence, and a love for the ball.",
   },
   {
+    key: "home.program.future-ballers.description",
+    page: "Programs",
+    section: "Future Ballers",
+    label: "Home page card blurb (short)",
+    type: "textarea",
+    maxLength: 140,
+    default: "Playful first steps into basketball, building coordination, confidence, and fun.",
+  },
+  {
+    key: "program.mini-basket.image",
+    page: "Programs",
+    section: "Mini Basket",
+    label: "Photo (shown on Home and Programs)",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg",
+  },
+  {
     key: "programs.mini-basket.description",
     page: "Programs",
-    label: "Mini Basket full description",
+    section: "Mini Basket",
+    label: "Programs page description",
     type: "textarea",
     maxLength: 400,
     default:
       "The perfect introduction to structured basketball. We focus on coordination, basic ball handling, and falling in love with the game in a low-pressure environment.",
   },
   {
+    key: "home.program.mini-basket.description",
+    page: "Programs",
+    section: "Mini Basket",
+    label: "Home page card blurb (short)",
+    type: "textarea",
+    maxLength: 140,
+    default: "Fun, fundamentals, and coordination. The perfect start to structured basketball.",
+  },
+  {
+    key: "program.youth-academy.image",
+    page: "Programs",
+    section: "Youth Academy",
+    label: "Photo (shown on Home and Programs)",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg",
+  },
+  {
     key: "programs.youth-academy.description",
     page: "Programs",
-    label: "Youth Academy full description",
+    section: "Youth Academy",
+    label: "Programs page description",
     type: "textarea",
     maxLength: 400,
     default:
       "Building the complete player. Technical mastery, including shooting form, dribbling mechanics, and defensive footwork, progressing into complex tactical concepts, physical conditioning, and competition preparation.",
   },
   {
+    key: "home.program.youth-academy.description",
+    page: "Programs",
+    section: "Youth Academy",
+    label: "Home page card blurb (short)",
+    type: "textarea",
+    maxLength: 140,
+    default: "Technical mastery, tactical understanding, and competition preparation.",
+  },
+  {
+    key: "program.elite.image",
+    page: "Programs",
+    section: "Elite / Select",
+    label: "Photo (shown on Home and Programs)",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/team-award.jpg",
+  },
+  {
     key: "programs.elite.description",
     page: "Programs",
-    label: "Elite / Select full description",
+    section: "Elite / Select",
+    label: "Programs page description",
     type: "textarea",
     maxLength: 400,
     default: "For athletes with professional aspirations. Intensive training, personalized development plans, and exposure to international pathways.",
   },
   {
+    key: "home.program.elite.description",
+    page: "Programs",
+    section: "Elite / Select",
+    label: "Home page card blurb (short)",
+    type: "textarea",
+    maxLength: 140,
+    default: "High-performance training for top-tier talent aiming for professional pathways.",
+  },
+  {
+    key: "program.private-training.image",
+    page: "Programs",
+    section: "Private Training",
+    label: "Photo (shown on Home and Programs)",
+    type: "image",
+    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg",
+  },
+  {
     key: "programs.private-training.description",
     page: "Programs",
-    label: "Private Training section description",
+    section: "Private Training",
+    label: "Programs page section description",
     type: "textarea",
     maxLength: 400,
     default:
       "Accelerate your development with focused, personalized instruction from our expert staff. Private training builds the individual tools needed to execute at the highest level through high-volume repetition and immediate feedback.",
   },
   {
+    key: "home.program.private-training.description",
+    page: "Programs",
+    section: "Private Training",
+    label: "Home page card blurb (short)",
+    type: "textarea",
+    maxLength: 140,
+    default: "Personalized attention to correct mechanics and accelerate growth.",
+  },
+  {
     key: "programs.not-sure.description",
     page: "Programs",
+    section: "Programs page",
     label: "\"Not sure which level?\" description",
     type: "textarea",
     maxLength: 260,
     default: "Book a free assessment session and our coaches will evaluate your skills and recommend the perfect program.",
-  },
-
-  // ---- Program Images (shared — each appears on BOTH the Home page card and the Programs page) ----
-  {
-    key: "program.future-ballers.image",
-    page: "Program Images",
-    label: "Future Ballers photo (shown on Home and Programs)",
-    type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
-  },
-  {
-    key: "program.mini-basket.image",
-    page: "Program Images",
-    label: "Mini Basket photo (shown on Home and Programs)",
-    type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg",
-  },
-  {
-    key: "program.youth-academy.image",
-    page: "Program Images",
-    label: "Youth Academy photo (shown on Home and Programs)",
-    type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg",
-  },
-  {
-    key: "program.elite.image",
-    page: "Program Images",
-    label: "Elite / Select photo (shown on Home and Programs)",
-    type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/team-award.jpg",
-  },
-  {
-    key: "program.private-training.image",
-    page: "Program Images",
-    label: "Private Training photo (shown on Home and Programs)",
-    type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg",
   },
 
   // ---- Facilities ----
@@ -433,26 +450,6 @@ export const CONTENT_FIELDS: ContentField[] = [
     label: "\"Long-Term Vision\" image",
     type: "image",
     default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/methodology.jpeg",
-  },
-
-  // ---- Contact ----
-  {
-    key: "contact.hero.subtext",
-    page: "Contact Us",
-    label: "Hero subtext",
-    type: "textarea",
-    maxLength: 200,
-    default: "Questions about programs, trials, or partnerships? We're here to help.",
-  },
-
-  // ---- FAQs ----
-  {
-    key: "faqs.still-have-question.description",
-    page: "FAQs",
-    label: "\"Still have a question?\" subtext",
-    type: "textarea",
-    maxLength: 200,
-    default: "We're happy to help. Reach out directly and we'll get back to you.",
   },
 
   // ---- Admissions ----

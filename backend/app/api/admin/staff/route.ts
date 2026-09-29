@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/adminAuth";
 import { storage } from "@/lib/storage";
-import { getContentField, getContentOverrides } from "@/lib/content/pageContent";
 import { slugify, sortStaff, staffInputSchema } from "@/lib/content/staff";
 import { rowToStaffMember, seedStaffIfEmpty } from "@/lib/content/staffStore";
 import { revalidateStaffPages } from "@/lib/content/staffRevalidate";
 
 export const dynamic = "force-dynamic";
-
-const HERO_KEY = "staff.hero.subtext";
 
 export async function GET(request: NextRequest) {
   const error = await requireAdmin(request);
@@ -16,18 +13,8 @@ export async function GET(request: NextRequest) {
 
   // First visit fills the table with today's staff, so edits have rows to change.
   await seedStaffIfEmpty();
-  const [rows, overrides] = await Promise.all([storage.getStaffMembers(), getContentOverrides()]);
-  const heroField = getContentField(HERO_KEY)!;
-  return NextResponse.json({
-    members: sortStaff(rows.map(rowToStaffMember)),
-    hero: {
-      key: HERO_KEY,
-      value: overrides.get(HERO_KEY)?.value ?? heroField.default,
-      default: heroField.default,
-      maxLength: heroField.maxLength ?? null,
-      isOverridden: overrides.has(HERO_KEY),
-    },
-  });
+  const rows = await storage.getStaffMembers();
+  return NextResponse.json({ members: sortStaff(rows.map(rowToStaffMember)) });
 }
 
 export async function POST(request: NextRequest) {
