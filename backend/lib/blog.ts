@@ -3,7 +3,15 @@ import { z } from "zod";
 const allowedHtmlTags = new Set([
   "p", "br", "strong", "b", "em", "i", "u", "s", "h1", "h2", "h3", "h4",
   "blockquote", "ul", "ol", "li", "a", "span", "font", "img", "hr", "div", "iframe",
+  // Tables keep their structure; widths, colours and borders from the source are dropped
+  // (the site's own table style applies instead).
+  "table", "caption", "thead", "tbody", "tfoot", "tr", "th", "td",
 ]);
+
+const tableCellTags = new Set(["th", "td"]);
+
+/** Longest article body that can be saved (characters of stored HTML). */
+export const BLOG_CONTENT_MAX = 200_000;
 
 // Only Instagram's own no-JS embed endpoint is ever allowed as an iframe src.
 const instagramEmbedPattern = /^https:\/\/(?:www\.)?instagram\.com\/(?:p|reel|tv)\/[A-Za-z0-9_-]+\/embed(?:\/captioned)?\/?(?:\?[^\s"'<>]*)?$/i;
@@ -44,6 +52,14 @@ export function sanitizeBlogHtml(input: string) {
       }
       if (tag === "img" && name === "data-align") {
         if (/^(?:left|center|right)$/.test(value)) attributes.push(`data-align="${value}"`);
+        continue;
+      }
+      if (tableCellTags.has(tag) && (name === "colspan" || name === "rowspan")) {
+        if (/^[1-9][0-9]?$/.test(value)) attributes.push(`${name}="${value}"`);
+        continue;
+      }
+      if (tag === "th" && name === "scope") {
+        if (/^(?:row|col|rowgroup|colgroup)$/i.test(value)) attributes.push(`scope="${value.toLowerCase()}"`);
         continue;
       }
       if (tag === "iframe" && (name === "width" || name === "height")) {
@@ -110,7 +126,18 @@ export const blogPostInputSchema = z.object({
   title: z.string().trim().min(3).max(160),
   slug: z.string().trim().min(3).max(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers, and hyphens"),
   excerpt: z.string().trim().max(320).nullable().optional(),
-  content: z.string().trim().min(1).max(200_000),
+  content: z.string().trim().min(1, "Add article content").superRefine((value, context) => {
+    if (value.length <= BLOG_CONTENT_MAX) return;
+    const pastedImages = countInlineImages(value);
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message:
+        `This article is too long to save (${value.length.toLocaleString("en-US")} of ${BLOG_CONTENT_MAX.toLocaleString("en-US")} characters).` +
+        (pastedImages
+          ? ` It contains ${pastedImages} pasted image${pastedImages === 1 ? "" : "s"} stored inside the text. Re-add ${pastedImages === 1 ? "it" : "them"} with Add Media instead.`
+          : " Try splitting it into two articles."),
+    });
+  }),
   featuredImageSrc: imageSource.nullable().optional(),
   featuredImageAlt: z.string().trim().max(160).nullable().optional(),
   authorName: z.string().trim().min(2).max(120),
@@ -139,6 +166,25 @@ export const blogPostInputSchema = z.object({
     });
   }
 });
+
+/** Images pasted into an article that were stored inside the text (data: URLs) instead of uploaded. */
+export function countInlineImages(html: string) {
+  return (html.match(/<img\b[^>]*\bsrc\s*=\s*["']?data:image\//gi) ?? []).length;
+}
+
+/**
+ * One readable sentence for a failed save, instead of the raw validation dump
+ * (e.g. the "too_big" JSON admins used to see).
+ */
+export function formatBlogValidationError(error: unknown): string {
+  const issues = (error as { issues?: Array<{ message: string; path: Array<string | number> }> })?.issues;
+  if (!Array.isArray(issues) || !issues.length) return error instanceof Error ? error.message : "Invalid blog post";
+  const labels: Record<string, string> = { title: "Title", slug: "Permalink", excerpt: "Excerpt", content: "Article", featuredImageSrc: "Featured image", categoryNames: "Categories" };
+  const { message, path } = issues[0];
+  const field = String(path[0] ?? "");
+  if (field === "content" || !labels[field] || message.startsWith(labels[field])) return message;
+  return `${labels[field]}: ${message}`;
+}
 
 export function normalizeBlogPostInput(input: z.infer<typeof blogPostInputSchema>) {
   const featuredImageSrc = input.featuredImageSrc?.trim() || null;

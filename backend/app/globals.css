@@ -249,3 +249,44 @@
 @media (max-width: 640px) {
   .blog-content img[data-size] { max-width: 100%; }
 }
+
+/* Blog tables: one house style whatever the source (pasted tables arrive
+   without their own widths, colours or borders). Wide tables scroll sideways
+   inside the article instead of stretching the page on phones. */
+.blog-content table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1.75rem 0;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  -webkit-overflow-scrolling: touch;
+}
+.blog-content caption {
+  caption-side: top;
+  padding-bottom: 0.5rem;
+  text-align: left;
+  font-weight: 700;
+  color: #111827;
+}
+.blog-content th,
+.blog-content td {
+  border: 1px solid #e5e7eb;
+  padding: 0.625rem 0.875rem;
+  text-align: left;
+  vertical-align: top;
+  min-width: 7rem;
+}
+.blog-content th,
+.blog-content thead td {
+  background: #f9fafb;
+  font-weight: 700;
+  color: #111827;
+}
+.blog-content tbody tr:nth-child(even) td { background: #fcfcfd; }
+.blog-content th p,
+.blog-content td p { margin: 0; }
+.blog-content th p + p,
+.blog-content td p + p { margin-top: 0.5rem; }

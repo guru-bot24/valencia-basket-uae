@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import test from "node:test";
-import { blogPostInputSchema, sanitizeBlogHtml } from "@/lib/blog";
+import { BLOG_CONTENT_MAX, blogPostInputSchema, countInlineImages, formatBlogValidationError, sanitizeBlogHtml } from "@/lib/blog";
 
 const projectFile = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
 
@@ -89,4 +89,30 @@ test("blog images keep only whitelisted size and alignment presets", () => {
   assert.match(safe, /<img src="https:\/\/cdn\.example\.com\/a\.jpg" alt="Court" data-size="medium" data-align="left">/);
   assert.doesNotMatch(safe, /data-editor-selected/, "the editor's selection marker must never be saved");
   assert.doesNotMatch(safe, /huge|middle|width/, "unknown presets and free-form sizing must be stripped");
+});
+
+test("pasted tables keep their structure but lose source widths, colours and borders", () => {
+  const pasted = '<table style="width:600px;border:2px solid red" border="1" cellpadding="4" bgcolor="#ff0"><colgroup><col width="200"></colgroup>'
+    + '<thead><tr><th scope="col" style="background:#123456">Academy</th><th colspan="2" class="x">Ages</th></tr></thead>'
+    + '<tbody><tr><td rowspan="2" width="120" onclick="alert(1)">Valencia</td><td>4</td><td>18</td></tr></tbody></table>';
+  const clean = sanitizeBlogHtml(pasted);
+  assert.equal(clean, '<table><thead><tr><th scope="col">Academy</th><th colspan="2">Ages</th></tr></thead><tbody><tr><td rowspan="2">Valencia</td><td>4</td><td>18</td></tr></tbody></table>');
+  assert.equal(sanitizeBlogHtml('<td colspan="9999" rowspan="x">a</td>'), "<td>a</td>", "only sensible spans are kept");
+});
+
+test("an over-long article gets a readable error that points at pasted images", () => {
+  const huge = `<p>Intro</p><img src="data:image/png;base64,${"A".repeat(BLOG_CONTENT_MAX)}">`;
+  const result = blogPostInputSchema.safeParse({ title: "Long post", slug: "long-post", content: huge, authorName: "Coach", status: "draft", categoryNames: ["News"] });
+  assert.equal(result.success, false);
+  const message = formatBlogValidationError(result.error);
+  assert.match(message, /^This article is too long to save \([\d,]+ of 200,000 characters\)\./);
+  assert.match(message, /1 pasted image stored inside the text/);
+  assert.doesNotMatch(message, /too_big|"code"/, "no raw validation JSON");
+  assert.equal(countInlineImages('<img src="https://x/a.png"><img alt="" src="data:image/jpeg;base64,AA">'), 1);
+});
+
+test("other validation errors name the field in plain words", () => {
+  const result = blogPostInputSchema.safeParse({ title: "Ok title", slug: "Bad Slug!", content: "<p>x</p>", authorName: "Coach", status: "draft", categoryNames: ["News"] });
+  assert.equal(result.success, false);
+  assert.equal(formatBlogValidationError(result.error), "Permalink: Use lowercase letters, numbers, and hyphens");
 });

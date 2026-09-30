@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/adminAuth";
 import { storage } from "@/lib/storage";
-import { blogPostInputSchema, normalizeBlogPostInput } from "@/lib/blog";
+import { blogPostInputSchema, normalizeBlogPostInput, formatBlogValidationError } from "@/lib/blog";
 import bcrypt from "bcryptjs";
 
 export const dynamic = "force-dynamic";
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(withoutPasswordHash(post), { status: 201 });
   } catch (error: any) {
     if (error?.name === "ZodError" || error?.message?.includes("Featured image") || error?.message?.includes("password-protected")) {
-      return NextResponse.json({ error: error.message ?? "Invalid blog post", details: error.errors }, { status: 400 });
+      return NextResponse.json({ error: formatBlogValidationError(error), details: error.errors }, { status: 400 });
     }
     if (error?.code === "23505" || error?.code === "BLOG_TAXONOMY_CONFLICT") {
       if (error?.code === "BLOG_TAXONOMY_CONFLICT") {

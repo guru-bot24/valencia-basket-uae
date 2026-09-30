@@ -15,7 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { sanitizeBlogContent, sanitizeBlogHtml } from "@/lib/blog";
+import { BLOG_CONTENT_MAX, countInlineImages, sanitizeBlogContent, sanitizeBlogHtml } from "@/lib/blog";
+import { MAX_IMAGE_BYTES, cleanPastedHtml, dataUrlToFile, findInlineImages, isImageOnlyHtml } from "@/lib/blogPaste";
 import type { SafeBlogPost } from "@/lib/storage";
 import { authorDisplayName, type StaffMember } from "@/lib/content/staff";
 
@@ -181,12 +182,17 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
   const [fullscreen, setFullscreen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null);
+  const [pendingUploads, setPendingUploads] = useState(0);
   const [, forceRender] = useState(0);
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!codeMode && editorRef.current) editorRef.current.innerHTML = sanitizeBlogHtml(value);
+    if (!codeMode && editorRef.current) {
+      editorRef.current.innerHTML = sanitizeBlogHtml(value);
+      // Articles saved before pasted images were uploaded may still hold them inline.
+      void uploadInlineEditorImages();
+    }
   }, [codeMode]);
 
   // The selection outline is an editor-only marker; it must never be saved.
@@ -225,6 +231,7 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
       setCodeMode(false);
       window.requestAnimationFrame(() => {
         if (editorRef.current) editorRef.current.innerHTML = sanitizeBlogHtml(safe);
+        void uploadInlineEditorImages();
       });
     } else {
       emit();
@@ -239,19 +246,91 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
 
   const insertImage = () => fileInputRef.current?.click();
 
-  const handleImageFileSelected = async (file?: File) => {
-    if (!file) return;
+  const insertImageFiles = async (files: File[]) => {
+    const images = files.filter((file) => /^image\/(?:png|jpeg|webp|gif)$/.test(file.type));
+    if (!images.length) return;
     setUploading(true);
     try {
-      const url = await uploadImageFile(file);
-      command("insertHTML", `<img src="${escapeAttribute(url)}" alt="" data-size="medium" data-align="center">`);
-      const inserted = [...(editorRef.current?.querySelectorAll("img") ?? [])].filter((image) => image.getAttribute("src") === url).pop();
-      if (inserted) selectImage(inserted);
+      let last: HTMLImageElement | undefined;
+      for (const file of images) {
+        const url = await uploadImageFile(file);
+        command("insertHTML", `<img src="${escapeAttribute(url)}" alt="" data-size="medium" data-align="center">`);
+        last = [...(editorRef.current?.querySelectorAll("img") ?? [])].filter((image) => image.getAttribute("src") === url).pop();
+      }
+      if (last) selectImage(last);
     } catch (error) {
       window.alert(error instanceof Error ? error.message : "Failed to upload image");
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleImageFileSelected = (file?: File) => {
+    if (file) void insertImageFiles([file]);
+  };
+
+  /**
+   * Uploads every image sitting inside the article as a data: URL (pasted
+   * from elsewhere) and swaps in the uploaded link, so the article stays small.
+   */
+  async function uploadInlineEditorImages() {
+    const root = editorRef.current;
+    if (!root) return;
+    const images = findInlineImages(root);
+    if (!images.length) return;
+    setPendingUploads(images.length);
+    const removed: string[] = [];
+    let failed = 0;
+    for (const [index, image] of images.entries()) {
+      const file = dataUrlToFile(image.getAttribute("src") ?? "", index);
+      if (!file || file.size > MAX_IMAGE_BYTES) {
+        removed.push(!file ? "an image in an unsupported format" : `an image over 5 MB (${(file.size / 1048576).toFixed(1)} MB)`);
+        image.remove();
+      } else {
+        try {
+          image.setAttribute("src", await uploadImageFile(file));
+          if (!image.getAttribute("data-size")) image.setAttribute("data-size", "medium");
+          if (!image.getAttribute("data-align")) image.setAttribute("data-align", "center");
+        } catch {
+          failed += 1;
+        }
+      }
+      setPendingUploads((count) => Math.max(0, count - 1));
+    }
+    setPendingUploads(0);
+    emit();
+    if (removed.length) window.alert(`Removed ${removed.join(", ")} from the pasted content. Re-add it with Add Media (PNG, JPEG, WebP or GIF, up to 5 MB).`);
+    if (failed) window.alert(`${failed} pasted image${failed === 1 ? "" : "s"} couldn't be uploaded. Check your connection, then re-add ${failed === 1 ? "it" : "them"} with Add Media.`);
+  }
+
+  const handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
+    const html = event.clipboardData.getData("text/html");
+    const files = Array.from(event.clipboardData.files);
+    // A copied image (screenshot, "Copy image"): upload the file itself.
+    if (files.length && (!html || isImageOnlyHtml(html))) {
+      event.preventDefault();
+      void insertImageFiles(files);
+      return;
+    }
+    if (!html) return; // plain text: the browser's own paste is fine
+    event.preventDefault();
+    editorRef.current?.focus();
+    document.execCommand("insertHTML", false, sanitizeBlogHtml(cleanPastedHtml(html)));
+    emit();
+    void uploadInlineEditorImages();
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    const files = Array.from(event.dataTransfer.files);
+    if (!files.length) return;
+    event.preventDefault();
+    const range = document.caretRangeFromPoint?.(event.clientX, event.clientY);
+    if (range) {
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+    void insertImageFiles(files);
   };
 
   const insertInstagram = () => {
@@ -278,7 +357,7 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
   return (
     <div className={fullscreen ? "fixed inset-0 z-50 flex flex-col bg-white p-4" : "border border-gray-300 bg-white"}>
       <div className="sticky top-0 z-10 flex flex-wrap items-center border-b bg-gray-50">
-        <button type="button" onClick={insertImage} disabled={uploading} className="flex h-8 items-center gap-1 border-r px-2 text-xs font-bold disabled:opacity-50"><ImagePlus className="h-4 w-4" /> {uploading ? "Uploading…" : "Add Media"}</button>
+        <button type="button" onClick={insertImage} disabled={uploading || pendingUploads > 0} className="flex h-8 items-center gap-1 border-r px-2 text-xs font-bold disabled:opacity-50"><ImagePlus className="h-4 w-4" /> {uploading || pendingUploads > 0 ? "Uploading…" : "Add Media"}</button>
         <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="hidden" onChange={(event) => { handleImageFileSelected(event.target.files?.[0]); event.target.value = ""; }} />
         <button type="button" onClick={insertInstagram} className="flex h-8 items-center gap-1 border-r px-2 text-xs font-bold"><Instagram className="h-4 w-4" /> Embed Instagram</button>
         <select aria-label="Block format" className="h-8 border-r bg-white px-2 text-xs" defaultValue="p" onChange={(event) => command("formatBlock", event.target.value)}>
@@ -300,6 +379,11 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
         <button type="button" onClick={switchMode} className={`ml-auto flex h-8 items-center gap-1 border-l px-2 text-xs font-bold ${codeMode ? "bg-black text-white" : ""}`}><Code2 className="h-4 w-4" /> {codeMode ? "Visual" : "Code"}</button>
         <button type="button" onClick={() => setFullscreen((value) => !value)} className="flex h-8 items-center border-l px-2" title="Fullscreen"><Maximize2 className="h-4 w-4" /></button>
       </div>
+      {pendingUploads > 0 && (
+        <div className="border-b bg-orange-50 px-3 py-2 text-xs font-semibold text-orange-800" data-testid="pasted-image-upload">
+          Uploading {pendingUploads} pasted image{pendingUploads === 1 ? "" : "s"}… Please wait before saving.
+        </div>
+      )}
       {!codeMode && selectedImage && (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b bg-orange-50 px-3 py-2 text-xs" data-testid="image-toolbar">
           <span className="font-bold uppercase text-gray-600">Image</span>
@@ -349,6 +433,8 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
           aria-label="Article content"
           className="prose blog-content min-h-[420px] max-w-none flex-1 resize-y overflow-auto p-5 outline-none"
           onClick={(event) => selectImage(event.target instanceof HTMLImageElement ? event.target : null)}
+          onPaste={handlePaste}
+          onDrop={handleDrop}
           onInput={() => {
             if (selectedImage && !selectedImage.isConnected) setSelectedImage(null);
             emit();
@@ -428,12 +514,20 @@ export function BlogEditor({ post, adminName, onClose, onSaved, onDelete }: {
 
   const saveMutation = useMutation({
     mutationFn: async ({ intent }: { intent: "draft" | "primary" | "autosave" }) => {
+      const inlineImages = countInlineImages(form.content);
+      if (inlineImages) {
+        throw new Error(`${inlineImages} pasted image${inlineImages === 1 ? " is" : "s are"} still uploading. Wait a moment, then save again.`);
+      }
+      const content = sanitizeBlogContent(form.content);
+      if (content.length > BLOG_CONTENT_MAX) {
+        throw new Error(`This article is too long to save (${content.length.toLocaleString("en-US")} of ${BLOG_CONTENT_MAX.toLocaleString("en-US")} characters). Try splitting it into two articles.`);
+      }
       const status: Status = intent === "draft" || intent === "autosave" ? "draft" : form.status === "draft" ? "published" : form.status;
       const payload = {
         ...form,
         status,
         excerpt: form.excerpt || null,
-        content: sanitizeBlogContent(form.content),
+        content,
         publishedAt: form.publishedAt ? new Date(form.publishedAt).toISOString() : null,
         featuredImageSrc: form.featuredImageSrc || null,
         featuredImageAlt: form.featuredImageAlt || null,
@@ -490,13 +584,13 @@ export function BlogEditor({ post, adminName, onClose, onSaved, onDelete }: {
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      if (dirtyRef.current && form.status === "draft" && hasRequired && !saveMutation.isPending) saveMutation.mutate({ intent: "autosave" });
+      if (dirtyRef.current && form.status === "draft" && hasRequired && !countInlineImages(form.content) && !saveMutation.isPending) saveMutation.mutate({ intent: "autosave" });
     }, 60_000);
     return () => window.clearInterval(timer);
   }, [form, hasRequired, saveMutation.isPending]);
 
   const autosaveOnBlur = () => {
-    if (post && dirtyRef.current && form.status === "draft" && hasRequired && !saveMutation.isPending) saveMutation.mutate({ intent: "autosave" });
+    if (post && dirtyRef.current && form.status === "draft" && hasRequired && !countInlineImages(form.content) && !saveMutation.isPending) saveMutation.mutate({ intent: "autosave" });
   };
 
   const [uploadingFeaturedImage, setUploadingFeaturedImage] = useState(false);
