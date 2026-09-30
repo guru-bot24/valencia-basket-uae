@@ -19,20 +19,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async rewrites() {
-    // Fallback only: covers any /images/* path not already migrated to a
-    // direct R2 URL (e.g. legacy DB rows). Direct references bypass this.
-    return {
-      beforeFiles: [
-        {
-          source: "/images/:path*",
-          destination: `${process.env.R2_PUBLIC_URL || "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev"}/:path*`,
-        },
-      ],
-      afterFiles: [],
-      fallback: [],
-    };
-  },
   async redirects() {
     return [
       // www → non-www (primary canonical domain)
@@ -82,6 +68,14 @@ const nextConfig: NextConfig = {
           },
         ],
         destination: "https://valenciabasket.ae/:path*",
+        statusCode: 301,
+      },
+      // Legacy /images/* paths (from before the R2 migration) → the file in R2.
+      // A redirect, not a rewrite: proxying to r2.dev forwarded Host: valenciabasket.ae,
+      // which Cloudflare rejects as a loop (error 1000, "DNS points to prohibited IP").
+      {
+        source: "/images/:path*",
+        destination: `${process.env.R2_PUBLIC_URL || "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev"}/:path*`,
         statusCode: 301,
       },
       {

@@ -234,11 +234,13 @@ export interface ManagedStructuredDataEntry extends StructuredDataEntry {
 }
 
 export const SITE = "https://valenciabasket.ae";
+/** Logo served straight from R2 (a /images/ path on the site only redirects there). */
+export const LOGO_URL = "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/logo.png";
 const organization = {
   "@context": "https://schema.org", "@type": "SportsOrganization",
   name: "Valencia Basket Academy UAE", url: SITE, telephone: "+971544386838",
   email: "info@valenciabasket.ae",
-  logo: `${SITE}/images/logo.png`,
+  logo: LOGO_URL,
   address: { "@type": "PostalAddress", streetAddress: "Hadaeq Mohammed Bin Rashid, AllSports Arena, Latifa Bint Hamdan St, Al Quoz Ind. First", addressLocality: "Dubai", addressCountry: "AE" },
   sameAs: ["https://www.instagram.com/valenciabasketuae", "https://www.tiktok.com/@valenciabasketuae", "https://www.facebook.com/profile.php?id=61587608243652", "https://www.linkedin.com/company/valencia-basket-academy-uae/"],
 };
@@ -316,7 +318,7 @@ export function blogPostStructuredData(post: {
     publisher: {
       "@type": "Organization",
       name: "Valencia Basket Academy UAE",
-      logo: { "@type": "ImageObject", url: `${SITE}/images/logo.png` },
+      logo: { "@type": "ImageObject", url: LOGO_URL },
     },
     datePublished: iso(post.publishedAt),
     dateModified: iso(post.updatedAt) ?? iso(post.publishedAt),
