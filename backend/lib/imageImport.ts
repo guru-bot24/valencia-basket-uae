@@ -8,7 +8,7 @@ import { isIP } from "node:net";
  * aren't guaranteed to keep working).
  *
  * Guard rails: https only, public addresses only (no localhost/private
- * networks, re-checked on every redirect), 60s timeout, 5 MB cap enforced
+ * networks, re-checked on every redirect), 60s timeout, a size cap enforced
  * while streaming, and the bytes must really be a PNG/JPEG/WebP/GIF.
  */
 

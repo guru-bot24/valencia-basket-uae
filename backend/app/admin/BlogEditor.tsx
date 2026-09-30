@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { BLOG_CONTENT_MAX, countInlineImages, sanitizeBlogContent, sanitizeBlogHtml } from "@/lib/blog";
-import { MAX_IMAGE_BYTES, cleanPastedHtml, dataUrlToFile, findInlineImages, findRemoteImages, isImageOnlyHtml } from "@/lib/blogPaste";
+import { IMAGE_LIMITS_TEXT, cleanPastedHtml, dataUrlToFile, findInlineImages, findRemoteImages, imageFileProblem, isImageOnlyHtml } from "@/lib/blogPaste";
 import type { SafeBlogPost } from "@/lib/storage";
 import { authorDisplayName, type StaffMember } from "@/lib/content/staff";
 
@@ -263,6 +263,11 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
   const insertImageFiles = async (files: File[]) => {
     const images = files.filter((file) => /^image\/(?:png|jpeg|webp|gif)$/.test(file.type));
     if (!images.length) return;
+    const problems = images.map(imageFileProblem).filter(Boolean);
+    if (problems.length) {
+      window.alert(problems.join("\n"));
+      return;
+    }
     setUploading(true);
     try {
       let last: HTMLImageElement | undefined;
@@ -311,8 +316,9 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
     let failed = 0;
     for (const [index, image] of images.entries()) {
       const file = dataUrlToFile(image.getAttribute("src") ?? "", index);
-      if (!file || file.size > MAX_IMAGE_BYTES) {
-        removed.push(!file ? "an image in an unsupported format" : `an image over 5 MB (${(file.size / 1048576).toFixed(1)} MB)`);
+      const problem = file ? imageFileProblem(file) : "an image in an unsupported format";
+      if (!file || problem) {
+        removed.push(problem!.replace(/\.$/, ""));
         image.remove();
       } else {
         try {
@@ -327,10 +333,10 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
     }
     setPendingUploads(0);
     emit();
-    if (removed.length) window.alert(`Removed ${removed.join(", ")} from the pasted content. Re-add it with Add Media (PNG, JPEG, WebP or GIF, up to 5 MB).`);
+    if (removed.length) window.alert(`Removed ${removed.join(", ")} from the pasted content. Re-add it with Add Media (${IMAGE_LIMITS_TEXT})`);
     if (failed) window.alert(`${failed} pasted image${failed === 1 ? "" : "s"} couldn't be uploaded. Check your connection, then re-add ${failed === 1 ? "it" : "them"} with Add Media.`);
     if (notCopied.length) {
-      window.alert(`${notCopied.length} pasted image${notCopied.length === 1 ? " is" : "s are"} still loading from another website and could disappear later:\n• ${notCopied.join("\n• ")}\nSave ${notCopied.length === 1 ? "it" : "them"} to your computer (as PNG, JPEG, WebP or GIF, under 5 MB) and re-add with Add Media.`);
+      window.alert(`${notCopied.length} pasted image${notCopied.length === 1 ? " is" : "s are"} still loading from another website and could disappear later:\n• ${notCopied.join("\n• ")}\nSave ${notCopied.length === 1 ? "it" : "them"} to your computer and re-add with Add Media (${IMAGE_LIMITS_TEXT})`);
     }
   }
 
@@ -628,14 +634,17 @@ export function BlogEditor({ post, adminName, onClose, onSaved, onDelete }: {
 
   const uploadFeaturedImage = async (file?: File) => {
     if (!file) return;
-    if (!file.type.match(/^image\/(?:png|jpeg|webp|gif)$/) || file.size > 5 * 1024 * 1024) {
-      toast({ title: "Use a PNG, JPEG, WebP, or GIF image no larger than 5 MB", variant: "destructive" });
+    const problem = imageFileProblem(file);
+    if (problem) {
+      toast({ title: problem, variant: "destructive" });
       return;
     }
     setUploadingFeaturedImage(true);
     try {
       const body = new FormData();
       body.set("file", file);
+      // Also the link-preview image, so it is stored as JPEG (see imageOptimize.ts).
+      body.set("purpose", "social");
       const response = await fetch("/api/admin/blog/upload-image", { method: "POST", body });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Failed to upload image");

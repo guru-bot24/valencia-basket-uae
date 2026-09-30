@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
+import { IMAGE_LIMITS_TEXT, imageFileProblem } from "@/lib/blogPaste";
 import { SocialIcon } from "@/components/SocialIcons";
 import { ContentIntroEditor } from "./ContentIntroEditor";
 import { SOCIAL_PLATFORMS, normalizeSocialUrl } from "@/lib/content/socialLinks";
@@ -149,8 +150,9 @@ function MemberEditor({
 
   const uploadPhoto = async (file?: File) => {
     if (!file) return;
-    if (!file.type.match(/^image\/(?:png|jpeg|webp|gif)$/) || file.size > 5 * 1024 * 1024) {
-      toast({ title: "Use a PNG, JPEG, WebP, or GIF image no larger than 5 MB", variant: "destructive" });
+    const problem = imageFileProblem(file);
+    if (problem) {
+      toast({ title: problem, variant: "destructive" });
       return;
     }
     setUploading(true);
@@ -190,7 +192,7 @@ function MemberEditor({
               {uploading ? "Uploading…" : draft.image ? "Replace photo" : "Upload photo"}
               <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="sr-only" disabled={uploading} onChange={(event) => uploadPhoto(event.target.files?.[0])} data-testid="staff-photo-input" />
             </label>
-            <p className="mt-2 text-xs text-gray-500">PNG, JPEG, WebP or GIF, up to 5 MB. Portrait photos look best.</p>
+            <p className="mt-2 text-xs text-gray-500">{IMAGE_LIMITS_TEXT} Portrait photos look best.</p>
           </div>
         </div>
 

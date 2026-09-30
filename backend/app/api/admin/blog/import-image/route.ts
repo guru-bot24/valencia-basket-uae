@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/adminAuth";
-import { BLOG_IMAGE_MAX_BYTES, R2_PUBLIC_URL, uploadBlogImage } from "@/lib/r2";
+import { BLOG_IMAGE_MAX_BYTES, R2_PUBLIC_URL, blogImageTooBig, storeBlogImage } from "@/lib/r2";
+import { ImageOptimizeError } from "@/lib/imageOptimize";
 import { ImageImportError, fetchRemoteImage } from "@/lib/imageImport";
 
 export const dynamic = "force-dynamic";
@@ -31,9 +32,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: message }, { status: 422 });
   }
 
+  const tooBig = blogImageTooBig(image.body.byteLength, image.contentType);
+  if (tooBig) return NextResponse.json({ error: tooBig }, { status: 422 });
+
   try {
-    return NextResponse.json({ url: await uploadBlogImage(image.body, image.contentType), copied: true, bytes: image.body.byteLength });
+    return NextResponse.json({ ...(await storeBlogImage(image.body, image.contentType)), copied: true });
   } catch (error) {
+    if (error instanceof ImageOptimizeError) return NextResponse.json({ error: error.message }, { status: 422 });
     console.error("[blog] failed to store imported image in R2:", error);
     return NextResponse.json({ error: "Failed to save the copied image" }, { status: 500 });
   }

@@ -5,7 +5,18 @@
  */
 
 const UPLOADABLE_IMAGE = /^data:(image\/(?:png|jpeg|webp|gif));base64,([A-Za-z0-9+/=\s]+)$/i;
-export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+/** Upload limits (kept in step with lib/r2.ts): photos are shrunk on the server, GIFs aren't. */
+export const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
+export const MAX_GIF_BYTES = 5 * 1024 * 1024;
+export const IMAGE_LIMITS_TEXT = "PNG, JPEG, WebP or GIF. Photos up to 20 MB are shrunk automatically; GIFs up to 5 MB.";
+
+/** Why a chosen file can't be uploaded, or null when it's fine. */
+export function imageFileProblem(file: { type: string; size: number }): string | null {
+  if (!/^image\/(?:png|jpeg|webp|gif)$/.test(file.type)) return "Use a PNG, JPEG, WebP, or GIF image.";
+  if (file.type === "image/gif" && file.size > MAX_GIF_BYTES) return `GIFs must be 5 MB or smaller (this one is ${(file.size / 1048576).toFixed(1)} MB).`;
+  if (file.size > MAX_IMAGE_BYTES) return `Images must be 20 MB or smaller (this one is ${(file.size / 1048576).toFixed(1)} MB).`;
+  return null;
+}
 
 /** Keeps only an element's text alignment from pasted inline styles. */
 function keepAlignmentOnly(element: HTMLElement) {

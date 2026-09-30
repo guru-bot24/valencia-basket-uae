@@ -1,5 +1,6 @@
 import "server-only";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { optimizeBlogImage, type ImagePurpose } from "@/lib/imageOptimize";
 
 export const r2Client = new S3Client({
   region: "auto",
@@ -21,7 +22,16 @@ export const BLOG_IMAGE_TYPES: Record<string, string> = {
   "image/gif": "gif",
 };
 
-export const BLOG_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+/** Largest photo accepted for upload; it's shrunk before storing (see imageOptimize.ts). */
+export const BLOG_IMAGE_MAX_BYTES = 20 * 1024 * 1024;
+/** GIFs are stored untouched (to keep animation), so they keep a lower limit. */
+export const BLOG_GIF_MAX_BYTES = 5 * 1024 * 1024;
+
+export function blogImageTooBig(bytes: number, contentType: string): string | null {
+  if (contentType === "image/gif" && bytes > BLOG_GIF_MAX_BYTES) return "GIFs must be 5 MB or smaller";
+  if (bytes > BLOG_IMAGE_MAX_BYTES) return "Image must be 20 MB or smaller";
+  return null;
+}
 
 /** Stores a blog image in R2 under blog/<uuid>.<ext> and returns its public URL. */
 export async function uploadBlogImage(body: Uint8Array, contentType: string): Promise<string> {
@@ -30,4 +40,11 @@ export async function uploadBlogImage(body: Uint8Array, contentType: string): Pr
   const key = `blog/${crypto.randomUUID()}.${extension}`;
   await r2Client.send(new PutObjectCommand({ Bucket: R2_BUCKET_NAME, Key: key, Body: body, ContentType: contentType }));
   return `${R2_PUBLIC_URL}/${key}`;
+}
+
+/** Shrinks the image (see optimizeBlogImage) and stores it in R2. */
+export async function storeBlogImage(input: Uint8Array, contentType: string, purpose: ImagePurpose = "content") {
+  const image = await optimizeBlogImage(input, contentType, purpose);
+  const url = await uploadBlogImage(image.body, image.contentType);
+  return { url, bytes: image.body.byteLength, originalBytes: image.originalBytes, width: image.width, height: image.height, optimized: image.optimized };
 }

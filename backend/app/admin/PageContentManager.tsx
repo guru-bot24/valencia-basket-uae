@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { IMAGE_LIMITS_TEXT, imageFileProblem } from "@/lib/blogPaste";
 
 interface ContentRow {
   key: string;
@@ -59,8 +60,9 @@ function ContentFieldEditor({ row }: { row: ContentRow }) {
 
   const uploadImage = async (file?: File) => {
     if (!file) return;
-    if (!file.type.match(/^image\/(?:png|jpeg|webp|gif)$/) || file.size > 5 * 1024 * 1024) {
-      toast({ title: "Use a PNG, JPEG, WebP, or GIF image no larger than 5 MB", variant: "destructive" });
+    const problem = imageFileProblem(file);
+    if (problem) {
+      toast({ title: problem, variant: "destructive" });
       return;
     }
     setUploading(true);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/adminAuth";
-import { BLOG_IMAGE_MAX_BYTES, BLOG_IMAGE_TYPES, uploadBlogImage } from "@/lib/r2";
+import { BLOG_IMAGE_TYPES, blogImageTooBig, storeBlogImage } from "@/lib/r2";
+import { ImageOptimizeError } from "@/lib/imageOptimize";
 
 export const dynamic = "force-dynamic";
 
@@ -16,13 +17,15 @@ export async function POST(request: NextRequest) {
   if (!BLOG_IMAGE_TYPES[file.type]) {
     return NextResponse.json({ error: "Use a PNG, JPEG, WebP, or GIF image" }, { status: 400 });
   }
-  if (file.size > BLOG_IMAGE_MAX_BYTES) {
-    return NextResponse.json({ error: "Image must be 5 MB or smaller" }, { status: 400 });
-  }
+  const tooBig = blogImageTooBig(file.size, file.type);
+  if (tooBig) return NextResponse.json({ error: tooBig }, { status: 400 });
 
   try {
-    return NextResponse.json({ url: await uploadBlogImage(new Uint8Array(await file.arrayBuffer()), file.type) });
+    const purpose = form?.get("purpose") === "social" ? "social" : "content";
+    const stored = await storeBlogImage(new Uint8Array(await file.arrayBuffer()), file.type, purpose);
+    return NextResponse.json(stored);
   } catch (error) {
+    if (error instanceof ImageOptimizeError) return NextResponse.json({ error: error.message }, { status: 400 });
     console.error("[blog] failed to upload image to R2:", error);
     return NextResponse.json({ error: "Failed to upload image" }, { status: 500 });
   }
