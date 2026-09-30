@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { storage } from "@/lib/storage";
 import { requireAdmin } from "@/lib/adminAuth";
 import { trialBookingFormSchema } from "@shared/schema";
-import { sendTrialBookingNotification } from "@/lib/email";
+import { sendTrialBookingNotification, sendCustomerAutoReply } from "@/lib/email";
 import { appendTrialBookingToSheet } from "@/lib/sheets";
 
 export async function GET(request: NextRequest) {
@@ -45,6 +45,8 @@ export async function POST(request: NextRequest) {
     sendTrialBookingNotification(booking).catch((err) =>
       console.error("Email notification failed for trial booking:", err)
     );
+
+    sendCustomerAutoReply({ email: booking.email, name: booking.parentName, form: booking.sourcePage === "contact" ? "contact" : "trial booking" });
 
     appendTrialBookingToSheet(booking).catch((err) =>
       console.error("Sheets sync failed for trial booking:", err)

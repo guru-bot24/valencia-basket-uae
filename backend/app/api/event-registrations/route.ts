@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { storage } from "@/lib/storage";
 import { requireAdmin } from "@/lib/adminAuth";
 import { insertEventRegistrationSchema } from "@shared/schema";
-import { sendEventRegistrationNotification } from "@/lib/email";
+import { sendEventRegistrationNotification, sendCustomerAutoReply } from "@/lib/email";
 import { isPastEvent } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
@@ -42,6 +42,8 @@ export async function POST(request: NextRequest) {
       playerName: registration.playerName,
       playerAge: registration.playerAge,
     }).catch((err) => console.error("Email notification failed for event registration:", err));
+
+    sendCustomerAutoReply({ email: registration.email, name: registration.parentName, form: "event registration" });
 
     return NextResponse.json(registration, { status: 201 });
   } catch (error) {

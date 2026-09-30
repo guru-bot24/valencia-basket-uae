@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { buildAutoReply } from "@/lib/emailTemplates/autoReply";
 
 function getTransporter() {
   return nodemailer.createTransport({
@@ -254,5 +255,55 @@ export async function sendEventRegistrationNotification(registration: {
     console.log("Event registration notification email sent successfully");
   } catch (error) {
     console.error("Failed to send event registration notification email:", error);
+  }
+}
+
+// ---- Automatic reply to the person who submitted a form ----
+
+/** Off until AUTO_REPLY_ENABLED=true is set in Railway, so it can be tested before going live. */
+export function isAutoReplyEnabled(): boolean {
+  return process.env.AUTO_REPLY_ENABLED === "true" && !!(process.env.SMTP_USER && process.env.SMTP_PASS);
+}
+
+/** At most one auto-reply per address per 10 minutes, so the form can't be used to spam someone. */
+const recentAutoReplies = new Map<string, number>();
+const AUTO_REPLY_COOLDOWN_MS = 10 * 60 * 1000;
+
+export function shouldSendAutoReply(email: string, now = Date.now()): boolean {
+  const key = email.trim().toLowerCase();
+  for (const [address, sentAt] of recentAutoReplies) {
+    if (now - sentAt > AUTO_REPLY_COOLDOWN_MS) recentAutoReplies.delete(address);
+  }
+  if (recentAutoReplies.has(key)) return false;
+  recentAutoReplies.set(key, now);
+  return true;
+}
+
+/**
+ * Sends the shared "thanks, we've got your message" email (see
+ * lib/emailTemplates/autoReply.ts). Never throws: a failed auto-reply must not
+ * affect the submission, the team notification or the Google Sheet.
+ */
+export async function sendCustomerAutoReply(recipient: { email: string; name: string | null | undefined; form: string }): Promise<void> {
+  if (!isAutoReplyEnabled()) return;
+  if (!shouldSendAutoReply(recipient.email)) {
+    console.log(`[AutoReply] Skipped (${recipient.form}): already replied to this address in the last 10 minutes`);
+    return;
+  }
+  const { subject, html, text } = buildAutoReply(recipient.name);
+  try {
+    await getTransporter().sendMail({
+      from: `"Valencia Basket Academy UAE" <${getFromEmail()}>`,
+      to: recipient.email,
+      replyTo: getFromEmail(),
+      subject,
+      html,
+      text,
+      // Marks it as automatic, so other auto-responders don't reply back (RFC 3834).
+      headers: { "Auto-Submitted": "auto-replied", "X-Auto-Response-Suppress": "All" },
+    });
+    console.log(`[AutoReply] Sent (${recipient.form})`);
+  } catch (error) {
+    console.error(`[AutoReply] Failed to send (${recipient.form}):`, error);
   }
 }
