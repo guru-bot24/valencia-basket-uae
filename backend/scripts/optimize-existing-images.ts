@@ -56,16 +56,17 @@ async function main() {
   for (const item of plan) {
     const name = item.candidate.src.startsWith("data:") ? `inline image (${kb(item.beforeBytes)})` : item.candidate.src.split("/").pop();
     const used = item.candidate.refs.map((ref) => ref.label).join("; ");
-    if (item.action === "shrink") {
+    if (item.action !== "skip") {
       before += item.beforeBytes;
       after += item.afterBytes!;
-      console.log(`  ✔ shrink  ${name}: ${kb(item.beforeBytes)} → ${kb(item.afterBytes!)} (${item.optimized!.contentType})  — ${used}`);
+      const why = item.action === "move" ? ` [moving: ${item.reason}]` : "";
+      console.log(`  ✔ ${item.action.padEnd(6)}  ${name}: ${kb(item.beforeBytes)} → ${kb(item.afterBytes!)} (${item.optimized!.contentType})${why}  — ${used}`);
     } else {
       console.log(`  · skip    ${name}: ${item.reason}  — ${used}`);
     }
   }
-  const toShrink = plan.filter((item) => item.action === "shrink");
-  console.log(`\n${toShrink.length} to shrink, ${plan.length - toShrink.length} left as they are. Total ${kb(before)} → ${kb(after)}.`);
+  const toShrink = plan.filter((item) => item.action !== "skip");
+  console.log(`\n${toShrink.length} to shrink or move, ${plan.length - toShrink.length} left as they are. Total ${kb(before)} → ${kb(after)}.`);
 
   if (!apply) {
     console.log("\nDry run only. Re-run with --apply to store the smaller copies and switch the links.");

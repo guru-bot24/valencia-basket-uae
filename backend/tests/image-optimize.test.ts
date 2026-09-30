@@ -100,3 +100,20 @@ test("existing images: links are switched everywhere they appear", () => {
   assert.equal(replaceImageSrc(html, from, "NEW"), `<img src="NEW"><p>text ${from}</p><img alt="" src="NEW">`, "only image sources change, not mentions in text");
   assert.equal(replaceImageSrc(from, from, "NEW"), "NEW");
 });
+
+test("existing images: inline and preview-unsafe images are moved even when not smaller", async () => {
+  const bytes = (n: number) => new Uint8Array(n);
+  const same = async (body: Uint8Array, contentType: string) => ({ body, contentType, width: 1, height: 1, originalBytes: body.byteLength, optimized: false });
+  const plan = await planBackfill([
+    { src: "data:image/webp;base64,AAAA", purpose: "social", refs: [] },
+    { src: "https://pub-test.r2.dev/blog/small.webp", purpose: "social", refs: [] },
+    { src: "https://pub-test.r2.dev/blog/small.jpg", purpose: "social", refs: [] },
+    { src: "https://pub-test.r2.dev/blog/small.webp", purpose: "content", refs: [] },
+  ], {
+    load: async (src) => ({ body: bytes(50_000), contentType: src.endsWith(".jpg") ? "image/jpeg" : "image/webp" }),
+    optimize: same,
+  });
+  assert.deepEqual(plan.map((item) => item.action), ["move", "move", "skip", "skip"]);
+  assert.match(plan[0].reason, /inside the database/);
+  assert.match(plan[1].reason, /link previews/);
+});

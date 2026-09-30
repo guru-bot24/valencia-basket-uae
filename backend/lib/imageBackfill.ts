@@ -87,7 +87,8 @@ export interface PlanItem {
   candidate: Candidate;
   beforeBytes: number;
   afterBytes: number | null;
-  action: "shrink" | "skip";
+  /** shrink: smaller copy; move: out of the database / into a preview-safe format even if not smaller. */
+  action: "shrink" | "move" | "skip";
   reason: string;
   optimized?: OptimizedImage;
 }
@@ -116,13 +117,19 @@ export async function planBackfill(
       const optimized = await deps.optimize(loaded.body, loaded.contentType, candidate.purpose);
       const saved = loaded.body.byteLength - optimized.body.byteLength;
       const worthIt = optimized.optimized && saved >= MIN_SAVING_BYTES && saved / loaded.body.byteLength >= MIN_SAVING_RATIO;
+      // Moved regardless of size: images stored inside the database (bloat every
+      // page load, and link previews need a real address), and featured images
+      // in a format some preview apps can't read.
+      const inline = candidate.src.startsWith("data:");
+      const previewUnsafe = candidate.purpose === "social" && !["image/jpeg", "image/png"].includes(loaded.contentType);
+      const action = worthIt ? "shrink" : inline || previewUnsafe ? "move" : "skip";
       plan.push({
         candidate,
         beforeBytes: loaded.body.byteLength,
         afterBytes: optimized.body.byteLength,
-        action: worthIt ? "shrink" : "skip",
-        reason: worthIt ? "" : "already small enough",
-        optimized: worthIt ? optimized : undefined,
+        action,
+        reason: action === "move" ? (inline ? "stored inside the database" : "format link previews may not read") : action === "skip" ? "already small enough" : "",
+        optimized: action === "skip" ? undefined : optimized,
       });
     } catch (error) {
       plan.push({ candidate, beforeBytes: loaded.body.byteLength, afterBytes: null, action: "skip", reason: `couldn't process it (${(error as Error).message})` });
