@@ -129,3 +129,16 @@ export function dataUrlToFile(dataUrl: string, index: number): File | null {
 export function findInlineImages(root: ParentNode): HTMLImageElement[] {
   return Array.from(root.querySelectorAll("img")).filter((image) => /^data:image\//i.test(image.getAttribute("src") ?? ""));
 }
+
+/** Pasted images still loaded from another site (e.g. Google Docs' googleusercontent.com links). */
+export function findRemoteImages(root: ParentNode, ownHosts: string[]): HTMLImageElement[] {
+  return Array.from(root.querySelectorAll("img")).filter((image) => {
+    const src = image.getAttribute("src") ?? "";
+    if (!/^https:\/\//i.test(src)) return false;
+    try {
+      return !ownHosts.includes(new URL(src).hostname);
+    } catch {
+      return false;
+    }
+  });
+}

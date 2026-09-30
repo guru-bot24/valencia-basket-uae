@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { BLOG_CONTENT_MAX, countInlineImages, sanitizeBlogContent, sanitizeBlogHtml } from "@/lib/blog";
-import { MAX_IMAGE_BYTES, cleanPastedHtml, dataUrlToFile, findInlineImages, isImageOnlyHtml } from "@/lib/blogPaste";
+import { MAX_IMAGE_BYTES, cleanPastedHtml, dataUrlToFile, findInlineImages, findRemoteImages, isImageOnlyHtml } from "@/lib/blogPaste";
 import type { SafeBlogPost } from "@/lib/storage";
 import { authorDisplayName, type StaffMember } from "@/lib/content/staff";
 
@@ -161,6 +161,20 @@ async function uploadImageFile(file: File): Promise<string> {
   return result.url as string;
 }
 
+/** Hosts whose images are already ours: the R2 bucket, this site and the live domain. */
+const OWN_IMAGE_HOSTS = ["pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev", "valenciabasket.ae", "www.valenciabasket.ae"];
+
+async function importRemoteImage(url: string): Promise<string> {
+  const response = await fetch("/api/admin/blog/import-image", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ url }),
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(result.error ?? "Couldn't copy that image");
+  return result.url as string;
+}
+
 const IMAGE_SIZES = [
   { value: "small", label: "Small" },
   { value: "medium", label: "Medium" },
@@ -273,12 +287,26 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
    * Uploads every image sitting inside the article as a data: URL (pasted
    * from elsewhere) and swaps in the uploaded link, so the article stays small.
    */
-  async function uploadInlineEditorImages() {
+  async function uploadInlineEditorImages({ includeRemote = false }: { includeRemote?: boolean } = {}) {
     const root = editorRef.current;
     if (!root) return;
     const images = findInlineImages(root);
-    if (!images.length) return;
-    setPendingUploads(images.length);
+    // Runs after a paste: any image still loading from another site (pasted now or
+    // earlier) is copied to R2. Merely opening an article doesn't copy anything.
+    const remote = includeRemote ? findRemoteImages(root, [...OWN_IMAGE_HOSTS, window.location.hostname]) : [];
+    if (!images.length && !remote.length) return;
+    setPendingUploads(images.length + remote.length);
+    const notCopied: string[] = [];
+    for (const image of remote) {
+      try {
+        image.setAttribute("src", await importRemoteImage(image.getAttribute("src")!));
+        if (!image.getAttribute("data-size")) image.setAttribute("data-size", "medium");
+        if (!image.getAttribute("data-align")) image.setAttribute("data-align", "center");
+      } catch (error) {
+        notCopied.push(error instanceof Error ? error.message : "Couldn't copy an image");
+      }
+      setPendingUploads((count) => Math.max(0, count - 1));
+    }
     const removed: string[] = [];
     let failed = 0;
     for (const [index, image] of images.entries()) {
@@ -301,6 +329,9 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
     emit();
     if (removed.length) window.alert(`Removed ${removed.join(", ")} from the pasted content. Re-add it with Add Media (PNG, JPEG, WebP or GIF, up to 5 MB).`);
     if (failed) window.alert(`${failed} pasted image${failed === 1 ? "" : "s"} couldn't be uploaded. Check your connection, then re-add ${failed === 1 ? "it" : "them"} with Add Media.`);
+    if (notCopied.length) {
+      window.alert(`${notCopied.length} pasted image${notCopied.length === 1 ? " is" : "s are"} still loading from another website and could disappear later:\n• ${notCopied.join("\n• ")}\nSave ${notCopied.length === 1 ? "it" : "them"} to your computer (as PNG, JPEG, WebP or GIF, under 5 MB) and re-add with Add Media.`);
+    }
   }
 
   const handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
@@ -317,7 +348,7 @@ function RichEditor({ value, onChange, onBlur }: { value: string; onChange: (val
     editorRef.current?.focus();
     document.execCommand("insertHTML", false, sanitizeBlogHtml(cleanPastedHtml(html)));
     emit();
-    void uploadInlineEditorImages();
+    void uploadInlineEditorImages({ includeRemote: true });
   };
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
