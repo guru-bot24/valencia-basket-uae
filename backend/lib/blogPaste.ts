@@ -46,6 +46,54 @@ export function cleanPastedHtml(html: string): string {
 
   doc.body.querySelectorAll<HTMLElement>("[style]").forEach(keepAlignmentOnly);
 
+  doc.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((link) => {
+    // Google Docs/Gmail wrap links in a google.com/url?q=<real link> redirect.
+    try {
+      const url = new URL(link.getAttribute("href")!);
+      const real = url.searchParams.get("q");
+      if (/^(?:www\.)?google\.[a-z.]+$/i.test(url.hostname) && url.pathname === "/url" && real && /^https?:\/\//i.test(real)) {
+        link.setAttribute("href", real);
+      }
+    } catch {
+      // relative or malformed links are left for the sanitizer to judge
+    }
+    // Docs splits some links into an empty fragment plus the real link; the
+    // fragment only holds the space between words, so keep that text.
+    if (!link.textContent?.trim() && !link.querySelector("img")) unwrap(link);
+  });
+
+  // Blank lines typed for spacing in the source; the site spaces paragraphs itself.
+  doc.body.querySelectorAll("p, h1, h2, h3, h4").forEach((block) => {
+    if (!block.textContent?.trim() && !block.querySelector("img, iframe, br + br")) block.remove();
+  });
+
+  // Google Docs has no real header row: a first row whose cells are all bold is one.
+  doc.querySelectorAll("table").forEach((table) => {
+    if (table.querySelector("thead, th")) return;
+    const firstRow = table.querySelector("tr");
+    const cells = firstRow ? Array.from(firstRow.children) : [];
+    const allBold = cells.length > 1 && cells.every((cell) => {
+      const text = cell.textContent?.replace(/\s+/g, "") ?? "";
+      const boldText = Array.from(cell.querySelectorAll("strong, b")).map((node) => node.textContent ?? "").join("").replace(/\s+/g, "");
+      return text.length > 0 && boldText === text;
+    });
+    if (!firstRow || !allBold) return;
+    const head = doc.createElement("thead");
+    const row = doc.createElement("tr");
+    for (const cell of cells) {
+      const th = doc.createElement("th");
+      th.textContent = cell.textContent?.trim() ?? "";
+      for (const name of ["colspan", "rowspan"]) {
+        const value = cell.getAttribute(name);
+        if (value) th.setAttribute(name, value);
+      }
+      row.appendChild(th);
+    }
+    head.appendChild(row);
+    firstRow.remove();
+    table.insertBefore(head, table.firstChild);
+  });
+
   // A header row pasted as ordinary cells inside <thead> should still be header cells.
   doc.querySelectorAll("thead td").forEach((cell) => {
     const th = doc.createElement("th");
