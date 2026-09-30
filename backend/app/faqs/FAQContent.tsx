@@ -108,7 +108,15 @@ const categories: FAQCategory[] = [
       {
         id: "book-trial",
         q: "How do I book a free trial?",
-        a: "Fill in the Book a Free Trial form on our website with your child's name, age group, and your contact details, or message us directly on WhatsApp. We'll confirm a trial session at AllSports Arena.",
+        a: (
+          <>
+            Fill in the{" "}
+            <Link href="/#book-trial" className="text-primary hover:underline font-medium">
+              Book a Free Trial form
+            </Link>{" "}
+            on our website with your child&apos;s name, age group, and your contact details, or message us directly on WhatsApp. We&apos;ll confirm a trial session at AllSports Arena.
+          </>
+        ),
       },
       {
         id: "documents",
