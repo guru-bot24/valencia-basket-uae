@@ -47,6 +47,20 @@ const nextConfig: NextConfig = {
         destination: "https://valenciabasket.ae/:path*",
         statusCode: 301,
       },
+      // Railway's own addresses (e.g. web-production-xxxx.up.railway.app) → the real domain,
+      // so the site is only ever reached at valenciabasket.ae. Cloudflare forwards the
+      // original Host (valenciabasket.ae), so this never matches real visitors.
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "(?<railwayHost>.+)\\.up\\.railway\\.app",
+          },
+        ],
+        destination: "https://valenciabasket.ae/:path*",
+        statusCode: 301,
+      },
       // Legacy domain redirects
       {
         source: "/:path*",
