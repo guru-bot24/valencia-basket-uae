@@ -219,7 +219,7 @@ export default async function MiniBasket() {
             </div>
             {/* image RIGHT — mobile: stacks second */}
             <div className="order-2 aspect-[3/4] w-full relative">
-              <Image src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg" alt={alt("mini-basket.session")} fill className="object-cover" />
+              <Image src="/images/youth-team-small.jpg" alt={alt("mini-basket.session")} fill className="object-cover" />
             </div>
           </div>
         </div>

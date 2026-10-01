@@ -37,7 +37,7 @@ export async function EventStrip() {
                     </span>
                   </div>
                   <Image 
-                    src={resolveImageSrc(event.image) || "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"}
+                    src={resolveImageSrc(event.image) || "/images/mini-basket-team.jpg"}
                     alt={event.imageAlt?.trim() || event.title}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"

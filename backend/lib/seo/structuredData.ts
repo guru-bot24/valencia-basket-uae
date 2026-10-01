@@ -234,8 +234,8 @@ export interface ManagedStructuredDataEntry extends StructuredDataEntry {
 }
 
 export const SITE = "https://valenciabasket.ae";
-/** Logo served straight from R2 (a /images/ path on the site only redirects there). */
-export const LOGO_URL = "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/logo.png";
+/** The academy logo at its original address on the site (absolute, as schema.org needs). */
+export const LOGO_URL = `${SITE}/images/logo.png`;
 const organization = {
   "@context": "https://schema.org", "@type": "SportsOrganization",
   name: "Valencia Basket Academy UAE", url: SITE, telephone: "+971544386838",

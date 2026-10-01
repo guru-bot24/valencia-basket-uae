@@ -222,7 +222,7 @@ export default async function FutureBallers() {
             </div>
             {/* image RIGHT — mobile: stacks second */}
             <div className="order-2 aspect-[3/4] w-full relative">
-              <Image src="https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg" alt={alt("future-ballers.session")} fill className="object-cover" />
+              <Image src="/images/mini-basket-team.jpg" alt={alt("future-ballers.session")} fill className="object-cover" />
             </div>
           </div>
         </div>

@@ -12,12 +12,12 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const SLIDES = [
   {
     key: "facilities.arena-render",
-    src: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/allsports-arena-render.jpg",
+    src: "/images/allsports-arena-render.jpg",
     alt: "AllSports Arena facility overview render",
   },
   {
     key: "facilities.arena-courts",
-    src: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/All-sports-arena.jpg",
+    src: "/images/All-sports-arena.jpg",
     alt: "AllSports Arena multi-court indoor facility",
   },
 ] as const;

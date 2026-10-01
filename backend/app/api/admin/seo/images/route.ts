@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
             id: event.id,
             title: event.title,
             slug: event.slug,
-            src: resolveImageSrc(event.image?.trim()) || "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
+            src: resolveImageSrc(event.image?.trim()) || "/images/mini-basket-team.jpg",
             usesFallbackImage: !event.image?.trim(),
             altText: event.imageAlt?.trim() || null,
             fallbackAlt: event.title,

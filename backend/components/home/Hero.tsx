@@ -7,7 +7,7 @@ import Image from "next/image";
 export function Hero({
   imageAlt = "Valencia Basket UAE Action",
   subtext = "Join Valencia Basketball Academy in Dubai and follow an elite player development pathway inspired by L'Alqueria del Basket. Excellence, culture, and high performance for youth and kids.",
-  imageSrc = "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/hero-players-2.jpg",
+  imageSrc = "/images/hero-players-2.jpg",
 }: {
   imageAlt?: string;
   subtext?: string;

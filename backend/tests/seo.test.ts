@@ -258,7 +258,7 @@ test("managed image assets unify duplicate placement files", () => {
   );
 
   const futureBallers = MANAGED_IMAGE_ASSETS.find(
-    (asset) => asset.src === "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"
+    (asset) => asset.src === "/images/mini-basket-team.jpg"
   );
   assert.ok(futureBallers, "expected the shared Future Ballers image asset");
   assert.deepEqual(
@@ -432,20 +432,20 @@ test("file-level image alt overrides apply to every placement and preserve fallb
   storage.getAllSeoImageAltFiles = async () =>
     [
       {
-        imageKey: "file:https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
-        imageSrc: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
+        imageKey: "file:/images/mini-basket-team.jpg",
+        imageSrc: "/images/mini-basket-team.jpg",
         altText: "Players practicing basketball together",
         isDecorative: false,
       },
       {
-        imageKey: "file:https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/hero-players-2.jpg",
-        imageSrc: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/hero-players-2.jpg",
+        imageKey: "file:/images/hero-players-2.jpg",
+        imageSrc: "/images/hero-players-2.jpg",
         altText: " \n\t ",
         isDecorative: false,
       },
       {
-        imageKey: "file:https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/logo.png",
-        imageSrc: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/logo.png",
+        imageKey: "file:/images/logo.png",
+        imageSrc: "/images/logo.png",
         altText: null,
         isDecorative: true,
       },
@@ -465,7 +465,7 @@ test("file-level image alt overrides apply to every placement and preserve fallb
 
 test("image alt review queue exposes conflicting legacy placement descriptions", () => {
   const asset = MANAGED_IMAGE_ASSETS.find(
-    (candidate) => candidate.src === "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"
+    (candidate) => candidate.src === "/images/mini-basket-team.jpg"
   );
   assert.ok(asset, "expected the shared Future Ballers image asset");
 
@@ -547,7 +547,7 @@ test("pending image description conflicts cannot be reset without review", () =>
 
 test("authenticated image API preserves conflicts until an administrator confirms the built-in fallback", async () => {
   const asset = MANAGED_IMAGE_ASSETS.find(
-    (candidate) => candidate.src === "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg"
+    (candidate) => candidate.src === "/images/mini-basket-team.jpg"
   );
   assert.ok(asset, "expected the shared Future Ballers image asset");
 

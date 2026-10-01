@@ -33,7 +33,7 @@ export const CONTENT_FIELDS: ContentField[] = [
     section: "Hero",
     label: "Hero background image",
     type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/hero-players-2.jpg",
+    default: "/images/hero-players-2.jpg",
   },
   {
     key: "home.programs.description",
@@ -198,7 +198,7 @@ export const CONTENT_FIELDS: ContentField[] = [
     section: "Future Ballers",
     label: "Photo (shown on Home and Programs)",
     type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/mini-basket-team.jpg",
+    default: "/images/mini-basket-team.jpg",
   },
   {
     key: "programs.future-ballers.description",
@@ -225,7 +225,7 @@ export const CONTENT_FIELDS: ContentField[] = [
     section: "Mini Basket",
     label: "Photo (shown on Home and Programs)",
     type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-team-small.jpg",
+    default: "/images/youth-team-small.jpg",
   },
   {
     key: "programs.mini-basket.description",
@@ -252,7 +252,7 @@ export const CONTENT_FIELDS: ContentField[] = [
     section: "Youth Academy",
     label: "Photo (shown on Home and Programs)",
     type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/youth-program.jpeg",
+    default: "/images/youth-program.jpeg",
   },
   {
     key: "programs.youth-academy.description",
@@ -279,7 +279,7 @@ export const CONTENT_FIELDS: ContentField[] = [
     section: "Elite / Select",
     label: "Photo (shown on Home and Programs)",
     type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/team-award.jpg",
+    default: "/images/team-award.jpg",
   },
   {
     key: "programs.elite.description",
@@ -305,7 +305,7 @@ export const CONTENT_FIELDS: ContentField[] = [
     section: "Private Training",
     label: "Photo (shown on Home and Programs)",
     type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/1v1-a.jpg",
+    default: "/images/1v1-a.jpg",
   },
   {
     key: "programs.private-training.description",
@@ -400,14 +400,14 @@ export const CONTENT_FIELDS: ContentField[] = [
     page: "Location",
     label: "Arena carousel — image 1",
     type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/allsports-arena-render.jpg",
+    default: "/images/allsports-arena-render.jpg",
   },
   {
     key: "facilities.image.arena-courts",
     page: "Location",
     label: "Arena carousel — image 2",
     type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/All-sports-arena.jpg",
+    default: "/images/All-sports-arena.jpg",
   },
 
   // ---- Methodology ----
@@ -467,7 +467,7 @@ export const CONTENT_FIELDS: ContentField[] = [
     page: "Methodology",
     label: "\"Long-Term Vision\" image",
     type: "image",
-    default: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/methodology.jpeg",
+    default: "/images/methodology.jpeg",
   },
 
   // ---- Admissions ----

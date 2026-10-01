@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { SOCIAL_PLATFORMS, normalizeSocialUrl } from "@/lib/content/socialLinks";
+import { isLegacyImagePath } from "@/lib/content/legacyImages";
 
 /**
  * Staff page (/coaches) members. The live list is stored in the
@@ -44,7 +45,7 @@ const DEFAULTS: DefaultStaff[] = [
     name: "Coach Maros Kovacik",
     role: "Director & Head Coach",
     bio: "Maros Kovacik leads Valencia Basket Academy UAE as Director and Head Coach. A EuroLeague Coach of the Year (2013) and a 15-time champion, he brings elite coaching experience from across Europe and Asia, splitting his work between Valencia and Dubai.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-maros.jpg",
+    image: "/images/coach-maros.jpg",
     imageKey: "coaches.maros-kovacik",
     visible: true,
     isAuthor: true,
@@ -68,7 +69,7 @@ const DEFAULTS: DefaultStaff[] = [
     name: "Coach Saiid",
     role: "General Manager",
     bio: "FIBA-certified coach with solid experience in the basketball environment of Dubai and Lebanon. Coach Saiid brings strong international knowledge and leadership to the academy.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach_new/saiid.jpeg",
+    image: "/images/coach_new/saiid.jpeg",
     imageKey: "coaches.saiid",
     visible: true,
     isAuthor: false,
@@ -80,7 +81,7 @@ const DEFAULTS: DefaultStaff[] = [
     name: "Rabih",
     role: "Operations Manager",
     bio: "Rabih is an experienced manager of basketball academies and brings his empathy, dedication to Valencia.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach_new/rabih.jpeg",
+    image: "/images/coach_new/rabih.jpeg",
     imageKey: "coaches.rabih",
     visible: true,
     isAuthor: false,
@@ -92,7 +93,7 @@ const DEFAULTS: DefaultStaff[] = [
     name: "Coach Majil",
     role: "Coach",
     bio: "Coach with extensive experience in Dubai, working with both individual skill development and team programs.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach_new/majil.jpeg",
+    image: "/images/coach_new/majil.jpeg",
     imageKey: "coaches.majil",
     visible: true,
     isAuthor: false,
@@ -104,7 +105,7 @@ const DEFAULTS: DefaultStaff[] = [
     name: "Coach Ahmed",
     role: "Coach",
     bio: "Coach with experience in Dubai, specialized in individual and team development programs.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach_new/doksal.jpeg",
+    image: "/images/coach_new/doksal.jpeg",
     imageKey: "coaches.ahmed",
     visible: true,
     isAuthor: false,
@@ -116,7 +117,7 @@ const DEFAULTS: DefaultStaff[] = [
     name: "Coach Guillem",
     role: "Technical Director",
     bio: "Level 3 coach certified in Spain, with experience in the EuroLeague Adidas Next Generation Tournament and as a U18 and U16 coach at Valencia Basket. He oversees the technical and developmental direction of the academy.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-guillem.jpg",
+    image: "/images/coach-guillem.jpg",
     imageKey: "coaches.guillem",
     visible: true,
     isAuthor: false,
@@ -128,7 +129,7 @@ const DEFAULTS: DefaultStaff[] = [
     name: "Coach Andreu",
     role: "Assistant Coordinator",
     bio: "Coach with experience in Valencia Basket's Elite Program, holding official Spanish coaching licenses. Actively involved in player development and program coordination.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-andreu.jpg",
+    image: "/images/coach-andreu.jpg",
     imageKey: "coaches.andreu",
     visible: true,
     isAuthor: false,
@@ -140,7 +141,7 @@ const DEFAULTS: DefaultStaff[] = [
     name: "Coach Ruben",
     role: "Coach",
     bio: "Coach with experience in Valencia Basket's Elite youth programs, focused on long-term player development in formative categories.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-ruben.jpg",
+    image: "/images/coach-ruben.jpg",
     imageKey: "coaches.ruben",
     visible: true,
     isAuthor: false,
@@ -152,7 +153,7 @@ const DEFAULTS: DefaultStaff[] = [
     name: "Coach Carles",
     role: "Coach",
     bio: "Coach with experience in elite development programs, working mainly in youth and formative categories.",
-    image: "https://pub-b2680f6e721d4a92b41f30395b8feb3c.r2.dev/coach-carles.jpg",
+    image: "/images/coach-carles.jpg",
     imageKey: "coaches.carles",
     visible: true,
     isAuthor: false,
@@ -236,7 +237,7 @@ export const staffInputSchema = z.object({
     .string()
     .trim()
     .max(1000)
-    .refine((value) => value === "" || /^https:\/\//i.test(value), "Photo must be an uploaded image (HTTPS link)")
+    .refine((value) => value === "" || /^https:\/\//i.test(value) || isLegacyImagePath(value), "Photo must be an uploaded image (HTTPS link)")
     .default(""),
   visible: z.boolean(),
   authorBio: z.string().trim().max(STAFF_LIMITS.authorBio).nullable().optional(),
